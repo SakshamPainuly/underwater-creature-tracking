@@ -10,7 +10,8 @@ Decisions: `docs/DECISIONS.md`. Experiments: `docs/EXPERIMENTS.md`.
 ## Status
 
 Phases 1–2 (dataset audit, session-level split, negative-image audit, YOLO dataset view)
-and P3 (versioning, provenance, tests) are implemented. **No model has been trained.**
+and P3 (versioning, provenance, tests) are implemented. P4 (Colab training setup, experiment
+configs, run records; docs/COLAB.md) is in progress on `p4/colab-baseline`. **No model has been trained.**
 `data/raw/biology/` is read-only and never written to by any script.
 
 ## Project layout
@@ -23,7 +24,11 @@ data/
   processed/<vX.Y>/    later dataset versions (drafts until frozen)
   yolo/                per-machine YOLO dataset views (git-ignored, rebuilt on each machine)
 src/dataset_audit/     scan, xlsx metadata, split, image manifest, versioning (stdlib only)
-src/yolo_prep/         YOLO dataset view builder (stdlib only)
+src/yolo_prep/         YOLO dataset view builder (stdlib only); verify.py (Ultralytics, GPU only)
+src/training/          experiment configs + run records (stdlib); train.py (GPU only)
+configs/experiments/   E###_<slug>.yaml experiment configs
+experiments/           registry.csv (registered full runs), final_candidates.csv (declared test candidates)
+notebooks/             Colab notebook (calls scripts only)
 scripts/               CLI entry points
 tests/                 CPU unit tests (stdlib unittest)
 docs/                  data card, decision log, experiment log

@@ -36,6 +36,9 @@ Thumbs.db
 # Training/inference run folders (off-repo per CLAUDE.md §5/§8)
 runs/
 
+# Notebook autosaves (notebooks are committed without outputs)
+.ipynb_checkpoints/
+
 # Credentials and secrets -- never commit
 .env
 .env.*

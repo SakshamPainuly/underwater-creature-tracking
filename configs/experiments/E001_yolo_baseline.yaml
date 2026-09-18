@@ -1,0 +1,19 @@
+# E001 -- first baseline lobster detector (D-012). GPU only: see docs/COLAB.md.
+# Restricted YAML subset (src/training/experiment.py): validated locally with the standard library
+# and cross-checked against PyYAML on Colab. The runner sets data/split/project/name/seed/model;
+# the training data file has no test split (CLAUDE.md rule 7).
+id: E001
+slug: yolo_baseline
+parent: none
+changed: "initial baseline (no parent experiment)"
+dataset_version: v1
+dataset_fingerprint: "9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810"
+model: yolo26s.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 640
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true

@@ -131,3 +131,42 @@ Short, dated records of project decisions. New dataset versions must reference a
     identical to the value computed before deletion.
   - `verify_frozen('v1')` (hashes against `FROZEN.json`): VERIFIED. `raw_fingerprint.json` is
     unchanged vs HEAD.
+
+## D-012 — P4 Colab training setup and E001/E002 baseline (2026-09-18, accepted)
+- **Context:** P4 sets up reproducible GPU training on Google Colab for frozen dataset v1. The
+  local PC stays standard-library only (D-010).
+- **Decision (user-approved choices):**
+  - **Code on Colab:** the private GitHub repo, read with a dedicated fine-grained token (this
+    repository only, Contents read-only) stored in Colab Secrets as `UWCT_GITHUB_TOKEN`.
+    - The token is read from Colab Secrets at each clone/fetch and handed to that git process
+      only, through its environment and a `GIT_ASKPASS` helper that holds no secret.
+    - It is never in a command-line argument, URL, file or `.git/config`, and credential helpers
+      are disabled.
+    - The notebook checks out one exact commit and never reuses the general GitHub CLI credential.
+  - **Data on Colab:** only the v1 training sources (Set 100; Set 2000 images and labels) are copied
+    to `MyDrive/uwct/raw/biology/`, then to Colab local disk, where the structural raw check
+    (`--subset training`) runs. zExtra is never copied.
+  - **Runs:** `MyDrive/uwct/runs/<run>/` (off-repo). Weights are referenced by path and sha256 and
+    never committed.
+  - **E001:** `yolo26s.pt`, imgsz 640, max 100 epochs, patience 30, batch 16, seed 0,
+    `deterministic=True`, ultralytics 8.4.155, dataset v1 (fingerprint `9f2bf857…`). If
+    `yolo26s.pt` is unavailable in 8.4.155, stop and report; no substitute model.
+  - **E002 (prepared, not run):** identical to E001 except imgsz 1280. Its full run is blocked
+    until E001 is registered in `experiments/registry.csv`.
+  - **Configs:** YAML in a restricted subset, validated locally with the standard library and
+    cross-checked against PyYAML on Colab (no local PyYAML install).
+  - **Test split:** the training process gets a data file with only train and val. Configs cannot
+    name a split or a data file. Validation after training uses `split="val"`.
+  - **Final test evaluation:** a separate stage (`src/training/final_test.py`,
+    `scripts/final_test_eval.py`, notebook cells 16–17), never imported by training.
+    - It runs only for experiments declared in `experiments/final_candidates.csv` at the
+      checked-out commit, once per finished full run.
+    - The operating confidence is chosen on val first; then `best.pt` is evaluated with the full
+      `data.yaml` and `split="test"`.
+    - Metrics, plots and prediction examples go to `runs/<id>/final_test/` on Drive, and each
+      evaluation is logged in docs/EXPERIMENTS.md.
+  - **Checkpoint selection:** `best.pt` within a run uses Ultralytics' built-in fitness on val
+    (exact 8.4.155 weights UNKNOWN — requires confirmation). Experiments are compared on val mAP50
+    (docs/EXPERIMENTS.md).
+- **Consequence:** no dataset version, split or frozen file changes. The run records and registry
+  implement CLAUDE.md §5. Runbook: docs/COLAB.md.

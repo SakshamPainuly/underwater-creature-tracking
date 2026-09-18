@@ -1,0 +1,1 @@
+experiment_id,run_name,created_utc,parent,changed,dataset_version,dataset_fingerprint,model,model_sha256,imgsz,epochs_completed,seed,git_commit,git_dirty,ultralytics,torch,cuda,gpu,val_precision,val_recall,val_map50,val_map50_95,best_weights_sha256,run_dir

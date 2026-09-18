@@ -1,0 +1,19 @@
+# E002 -- PLANNED, not run: launch only after E001 is registered and reviewed (D-012).
+# Single variable changed vs E001: imgsz 640 -> 1280. Everything else is identical to E001.
+# If batch 16 does not fit in GPU memory at 1280, stop and record a new decision before changing
+# batch (a second changed variable must be justified, CLAUDE.md section 5).
+id: E002
+slug: yolo_imgsz1280
+parent: E001
+changed: "train_args.imgsz 640 -> 1280"
+dataset_version: v1
+dataset_fingerprint: "9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810"
+model: yolo26s.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 1280
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true
