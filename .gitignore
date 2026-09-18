@@ -18,3 +18,37 @@ venv/
 Thumbs.db
 .vscode/
 .idea/
+
+# Model weights and videos (large; stored off-repo per CLAUDE.md §5/§8, referenced by path + sha256)
+*.pt
+*.pth
+*.onnx
+*.mp4
+*.mov
+*.avi
+*.mkv
+# Uppercase variants (GoPro writes .MP4); needed where git matches case-sensitively (Linux/Colab)
+*.MP4
+*.MOV
+*.AVI
+*.MKV
+
+# Training/inference run folders (off-repo per CLAUDE.md §5/§8)
+runs/
+
+# Credentials and secrets -- never commit
+.env
+.env.*
+.streamlit/secrets.toml
+kaggle.json
+.netrc
+credentials.json
+token.json
+client_secret*.json
+service_account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
