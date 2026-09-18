@@ -1,0 +1,20 @@
+# Raw biology dataset is large (~9 GB), read-only, and provided out-of-band.
+# Never commit it -- only derived/processed outputs under data/processed/ are tracked.
+data/raw/
+
+# Generated YOLO dataset view (links + small label files); rebuilt per machine by
+# scripts/prepare_yolo_dataset.py, so it is never committed.
+data/yolo/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

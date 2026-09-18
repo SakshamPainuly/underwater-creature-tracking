@@ -1,0 +1,3 @@
+# Frozen dataset artifacts are hash-registered in data/processed/FROZEN.json: store their
+# bytes exactly (no line-ending conversion), or checkouts on Colab/Linux fail verification.
+data/processed/** -text

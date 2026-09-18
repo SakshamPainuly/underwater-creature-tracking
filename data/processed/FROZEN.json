@@ -1,0 +1,17 @@
+{
+  "versions": {
+    "v1": {
+      "dir": ".",
+      "parent": null,
+      "decision": "D-005",
+      "frozen_on": "2026-09-17",
+      "files": {
+        "dataset_consistency_report.json": "cbf54dc481f197752ca8bcbee0c27a72478c9f7444d700dcd405613d29a822ca",
+        "deployment_metadata.csv": "dd26fc1aa7655f89d877fc2c2fff69e8c5f511222771828dd0e6d1556a34034a",
+        "deployment_metadata.json": "a24c07c200a922308405db4db2e547fa5498ce9b682c2c662786dba416f8062d",
+        "image_manifest.csv": "368bdfa0d127480d119c81047fb155ed80e39da392d15b92edc169b1c7ab9e0d",
+        "split_manifest.csv": "fccb4050e4fcdc25d5647d7b6fc7e59662b75e41000f525769a3eb95fac6aa71"
+      }
+    }
+  }
+}

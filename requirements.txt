@@ -1,0 +1,5 @@
+# Local development (Windows PC): Python standard library only -- nothing to install.
+# Phases 1-3 (audit, split, versioning, YOLO dataset preparation, tests) need no packages.
+#
+# GPU machines (Colab / lab GPU) install requirements-gpu.txt instead.
+# Do NOT install requirements-gpu.txt on the local PC (it pulls in torch).
