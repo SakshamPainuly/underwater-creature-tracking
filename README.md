@@ -17,8 +17,9 @@ and P3 (versioning, provenance, tests) are implemented. **No model has been trai
 
 ```
 data/
-  raw/biology/         read-only provided dataset (git-ignored, ~9 GB)
-  processed/           dataset version v1 manifests (frozen, see FROZEN.json) + raw_fingerprint.json
+  raw/biology/         read-only provided dataset (git-ignored, ~5.5 GB)
+  processed/           dataset version v1 manifests (frozen, see FROZEN.json) + raw fingerprints
+                       (raw_fingerprint.json = historical v1; raw_fingerprint_d011_post_cleanup.json = current)
   processed/<vX.Y>/    later dataset versions (drafts until frozen)
   yolo/                per-machine YOLO dataset views (git-ignored, rebuilt on each machine)
 src/dataset_audit/     scan, xlsx metadata, split, image manifest, versioning (stdlib only)

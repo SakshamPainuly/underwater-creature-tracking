@@ -87,3 +87,47 @@ Short, dated records of project decisions. New dataset versions must reference a
   - Commits only after explicit user approval of a commit plan.
   - Detection work (P4–P6) does not wait for MP4s. Only video inference and tracking (P7/P8) do;
     without video, only clearly labeled sparse-frame/timelapse analysis is allowed.
+
+## D-011 — Raw-data storage cleanup: remove redundant ZIP archives (2026-09-18, accepted)
+- **Context:** `data/raw/biology/Set 2000/` holds two ZIP archives that duplicate folders already
+  extracted next to them:
+  - `Set 2000/batch_2 (2k - imgOnly).zip` (4,029,491,083 bytes) ↔ `Set 2000/batch_2 (2k - imgOnly)/`
+  - `Set 2000/batch_2_2k_labels.zip` (610,869 bytes) ↔ `Set 2000/batch_2_2k_labels/`
+
+  They are not used by any code, manifest or frozen v1 artifact (`FROZEN.json`, split/image
+  manifests, consistency report, deployment metadata). They appear only as two entries in the v1
+  raw fingerprint (`data/processed/raw_fingerprint.json`, D-009).
+- **Verification before deletion (OBSERVED, 2026-09-18, read-only):**
+  - Image ZIP: 2,000 entries vs 2,000 extracted files; all names and uncompressed sizes match,
+    nothing only in the ZIP or only on disk. PNG contents were not compared byte-for-byte
+    (LIMITATION).
+  - Label ZIP: 1,759 entries vs 1,759 extracted files; all names and sizes match, and CRC32 of all
+    1,759 extracted label files matches the ZIP's recorded CRC32.
+  - `scripts/check_raw_unchanged.py` (default structural check) against the v1 fingerprint:
+    4,409 expected / 4,409 present, 0 missing / added / size-changed / content-changed.
+- **Decision:**
+  - Explicit, user-approved, one-time exception to CLAUDE.md hard rule 1 for storage cleanup: the
+    two ZIP archives above are deleted from `data/raw/biology/` by the user. No other raw file is
+    removed, moved, renamed or modified, and the extracted folders are kept unchanged.
+  - The v1 raw fingerprint `data/processed/raw_fingerprint.json` stays unchanged and preserved in
+    git as the historical, pre-cleanup record of the raw directory (4,409 files). It is not
+    overwritten, renamed or edited; D-009 is not reversed.
+  - A separately named post-cleanup fingerprint,
+    `data/processed/raw_fingerprint_d011_post_cleanup.json`, is recorded once after deletion. It
+    represents the raw directory after removal of the redundant ZIP archives, and must equal the v1
+    fingerprint minus exactly the two ZIP entries, with all other entries identical.
+  - `FROZEN.json` and all frozen v1 manifest/split artifacts are unchanged; dataset v1 content,
+    splits and labels are unaffected, so no new dataset version is created.
+  - Expected retained raw size (computed before deletion, to be confirmed by measurement after
+    deletion): 4,407 files, 5,477,325,614 bytes. Documentation uses the measured value.
+- **Outcome (OBSERVED, 2026-09-18, read-only verification after the user deleted the ZIPs):**
+  - Search for `*.zip` under `data/raw/`: none found.
+  - `scripts/check_raw_unchanged.py` (default structural check) against the v1 fingerprint
+    `data/processed/raw_fingerprint.json`: 4,409 expected / 4,407 present; missing 2 (exactly
+    `Set 2000/batch_2 (2k - imgOnly).zip` and `Set 2000/batch_2_2k_labels.zip`); added 0; size
+    changed 0; content changed 0. Exit 1 is expected, because the v1 fingerprint is the pre-cleanup
+    record.
+  - Retained raw directory (measured): 4,407 files, 5,477,325,614 bytes (5.48 GB / 5.10 GiB),
+    identical to the value computed before deletion.
+  - `verify_frozen('v1')` (hashes against `FROZEN.json`): VERIFIED. `raw_fingerprint.json` is
+    unchanged vs HEAD.

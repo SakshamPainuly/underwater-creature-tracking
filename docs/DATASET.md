@@ -3,8 +3,10 @@
 Evidence labels: OBSERVED (verified from files), INFERRED, UNKNOWN — requires confirmation.
 
 ## Source
-Biology department delivery, stored read-only at `data/raw/biology/` (about 8.9 GB, 4,409 files,
-structural fingerprint in `data/processed/raw_fingerprint.json`). PNG frames exported from GoPro
+Biology department delivery, stored read-only at `data/raw/biology/` (4,407 files, 5,477,325,614
+bytes ≈ 5.5 GB / 5.1 GiB, after the D-011 ZIP cleanup). Structural fingerprints:
+`data/processed/raw_fingerprint_d011_post_cleanup.json` (current, default for checks) and
+`data/processed/raw_fingerprint.json` (historical v1, pre-cleanup, 4,409 files). PNG frames exported from GoPro
 MP4 videos (1920×1080 or 1920×1088, 8-bit RGB), YOLO labels made with LabelImg. **No video files
 are included** (OBSERVED).
 
@@ -14,7 +16,8 @@ are included** (OBSERVED).
 | Set2000 | `Set 2000/batch_2 (2k - imgOnly)/batch_2 (2k - imgOnly)/` + `batch_2_2k_labels/batch_2_2k_labels/` | 2,000 | 1,759 | negative (docs: no label = no lobster) |
 | zExtra | `zExtra Photos/` | 436 | 0 | pending (excluded; not confirmed negative) |
 
-The two `.zip` files in `Set 2000/` duplicate the extracted folders and are not used.
+The two redundant `.zip` archives in `Set 2000/` (duplicates of the extracted folders, never used)
+were removed on 2026-09-18 under D-011; the extracted folders are unchanged.
 
 ## Labels
 - Format (OBSERVED, all 6,522 rows validated): `class x_center y_center width height`, normalized

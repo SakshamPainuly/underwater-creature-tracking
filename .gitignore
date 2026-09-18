@@ -1,4 +1,4 @@
-# Raw biology dataset is large (~9 GB), read-only, and provided out-of-band.
+# Raw biology dataset is large (~5.5 GB), read-only, and provided out-of-band.
 # Never commit it -- only derived/processed outputs under data/processed/ are tracked.
 data/raw/
 

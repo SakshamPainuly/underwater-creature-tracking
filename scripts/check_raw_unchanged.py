@@ -5,10 +5,18 @@ Default fingerprint = STRUCTURAL / COMPLETENESS check:
     every file's relative path + size, and sha256 of .txt / .xlsx / .docx contents.
     PNG (and other binary) files are covered by path + size only, so the default check
     does NOT cryptographically prove PNG pixel content is unchanged.
---full additionally sha256-hashes every file (cryptographic content check; slow, ~9 GB).
+--full additionally sha256-hashes every file (cryptographic content check; slow, ~5.5 GB).
 
-    python scripts/check_raw_unchanged.py --write [--full]     # create the fingerprint (once)
+Fingerprints (docs/DECISIONS.md D-009, D-011):
+    data/processed/raw_fingerprint.json                     v1, pre-cleanup (4,409 files); historical,
+                                                            never rewritten
+    data/processed/raw_fingerprint_d011_post_cleanup.json   after removal of the two redundant ZIPs
+                                                            (D-011); the default for checks
+
+    python scripts/check_raw_unchanged.py --write [--full]     # create the default fingerprint (once)
     python scripts/check_raw_unchanged.py [--full]             # check local raw data
+    python scripts/check_raw_unchanged.py --fingerprint data/processed/raw_fingerprint.json
+                                          # compare against the historical v1 fingerprint
     python scripts/check_raw_unchanged.py --root /content/raw/biology --subset training
                                           # check a partial copy (e.g. Colab upload)
 Exit code: 0 = match, 1 = differences found, 2 = usage/fingerprint problem.
@@ -24,7 +32,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from dataset_audit.config import BIOLOGY_ROOT, DATASET_SOURCES, PROJECT_ROOT
 
-FINGERPRINT_PATH = PROJECT_ROOT / "data" / "processed" / "raw_fingerprint.json"
+V1_FINGERPRINT_PATH = PROJECT_ROOT / "data" / "processed" / "raw_fingerprint.json"
+DEFAULT_FINGERPRINT_PATH = PROJECT_ROOT / "data" / "processed" / "raw_fingerprint_d011_post_cleanup.json"
 CONTENT_HASHED_SUFFIXES = {".txt", ".xlsx", ".docx"}
 
 
@@ -47,6 +56,19 @@ def compute(root: Path, full: bool) -> dict:
     return files
 
 
+def write_refusal(path: Path, raw_roots: list) -> str | None:
+    """Reason `path` must not be written as a fingerprint, or None if it may be."""
+    p = path.resolve()
+    if p == V1_FINGERPRINT_PATH.resolve():
+        return (f"{p} is the historical v1 raw fingerprint (D-009, D-011); it is never rewritten. "
+                "Choose a new --fingerprint path.")
+    for root in raw_roots:
+        r = root.resolve()
+        if p == r or r in p.parents:
+            return f"{p} is inside the raw root {r}, which is read-only; write the fingerprint elsewhere."
+    return None
+
+
 def training_prefixes() -> list:
     """Folders of sources that have annotation folders (the ones uploaded for training)."""
     prefixes = []
@@ -64,25 +86,32 @@ def main():
     ap.add_argument("--write", action="store_true", help="create the fingerprint (refuses if it exists)")
     ap.add_argument("--full", action="store_true", help="hash every file's contents, incl. PNGs")
     ap.add_argument("--subset", choices=["all", "training"], default="all")
+    ap.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT_PATH,
+                    help="fingerprint file to check against or write (default: D-011 post-cleanup)")
     args = ap.parse_args()
+    fingerprint = args.fingerprint
 
     if not args.root.is_dir():
         sys.exit(f"raw root not found: {args.root}")
 
     if args.write:
-        if FINGERPRINT_PATH.exists():
-            print(f"{FINGERPRINT_PATH} already exists; the fingerprint is written once and never "
+        reason = write_refusal(fingerprint, [args.root, BIOLOGY_ROOT])
+        if reason:
+            print(f"refusing to write: {reason}")
+            sys.exit(2)
+        if fingerprint.exists():
+            print(f"{fingerprint} already exists; the fingerprint is written once and never "
                   "overwritten. Delete it deliberately (with a docs/DECISIONS.md entry) to re-record.")
             sys.exit(2)
         files = compute(args.root, args.full)
         doc = {"kind": "full" if args.full else "structural", "n_files": len(files), "files": files}
-        FINGERPRINT_PATH.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-        print(f"wrote {doc['kind']} fingerprint of {len(files)} files -> {FINGERPRINT_PATH}")
+        fingerprint.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        print(f"wrote {doc['kind']} fingerprint of {len(files)} files -> {fingerprint}")
         return
 
-    if not FINGERPRINT_PATH.is_file():
-        sys.exit(f"no fingerprint at {FINGERPRINT_PATH}; create it with --write")
-    ref = json.loads(FINGERPRINT_PATH.read_text(encoding="utf-8"))
+    if not fingerprint.is_file():
+        sys.exit(f"no fingerprint at {fingerprint}; create it with --write")
+    ref = json.loads(fingerprint.read_text(encoding="utf-8"))
     if args.full and ref["kind"] != "full":
         print("The recorded fingerprint is structural (no PNG content hashes), so --full cannot be "
               "compared against it.")
@@ -108,6 +137,7 @@ def main():
 
     check = "full content (cryptographic)" if args.full else "structural (paths+sizes; txt/xlsx/docx hashed)"
     print(f"check: {check}; subset: {args.subset}; root: {args.root}")
+    print(f"fingerprint: {fingerprint}")
     print(f"files expected: {len(expected)}  present: {len(current)}")
     for name, items in (("missing", missing), ("added", added),
                         ("size changed", size_changed), ("content changed", hash_changed)):

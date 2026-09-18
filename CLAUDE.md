@@ -13,6 +13,8 @@ version and never blocks progress. Must-haves beat optional features.
 ## 2. Hard rules
 1. `data/raw/**` is read-only. Never rename, move, delete, edit or re-save anything there; never
    write outputs or caches inside it. Scripts that write must refuse output paths inside the raw root.
+   Sole recorded exception: the user-approved D-011 removal of two redundant ZIP archives
+   (2026-09-18). Any further exception needs explicit user approval and its own DECISIONS.md entry.
 2. `data/yolo/*/images/**` may be hardlinks/symlinks to raw files: never open them for writing, never
    run in-place image tools on them. Image processing writes to a new directory. Non-PNG sources
    must be built with `--link-mode copy` (Ultralytics rewrites corrupt JPEGs in place).
@@ -53,6 +55,8 @@ raw → `run_audit.py` → `run_split.py` → `build_image_manifest.py` (all `--
 - Raw check: `scripts/check_raw_unchanged.py` must pass after any data-touching change. By default it
   is a structural/completeness check (paths + sizes, content hashes of txt/xlsx/docx only);
   `--full` also hashes PNG contents. Describe results accordingly.
+  Default fingerprint: `raw_fingerprint_d011_post_cleanup.json`. `raw_fingerprint.json` is the
+  historical v1 (pre-cleanup) record: never overwritten, and against it the two removed ZIPs show as missing.
 
 ## 5. Experiments
 - Every training run = committed config `configs/experiments/E###_<slug>.yaml` naming its parent
