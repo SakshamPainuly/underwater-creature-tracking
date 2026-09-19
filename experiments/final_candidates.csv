@@ -1,1 +1,2 @@
 experiment_id,declared_utc,decision,reason
+E001,2026-09-19T19:50:42Z,candidate,"E001 baseline selected for held-out final evaluation after completed validation run"
