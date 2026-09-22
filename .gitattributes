@@ -1,3 +1,8 @@
 # Frozen dataset artifacts are hash-registered in data/processed/FROZEN.json: store their
 # bytes exactly (no line-ending conversion), or checkouts on Colab/Linux fail verification.
 data/processed/** -text
+
+# Archived run records (D-013) are referenced by size and sha256 in the decision log and in
+# experiments/registry.csv: store and check them out byte-for-byte, or the recorded hashes stop
+# matching on machines with core.autocrlf=true.
+experiments/records/** -text
