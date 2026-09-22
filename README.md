@@ -10,8 +10,13 @@ Decisions: `docs/DECISIONS.md`. Experiments: `docs/EXPERIMENTS.md`.
 ## Status
 
 Phases 1–2 (dataset audit, session-level split, negative-image audit, YOLO dataset view)
-and P3 (versioning, provenance, tests) are implemented. P4 (Colab training setup, experiment
-configs, run records; docs/COLAB.md) is in progress on `p4/colab-baseline`. **No model has been trained.**
+and P3 (versioning, provenance, tests) are implemented. P4 (Colab training, experiment configs,
+run records; docs/COLAB.md) is complete on `p4/colab-baseline`: **E001, the first baseline lobster
+detector, was trained on Colab (100 epochs, val mAP50 0.8527) and evaluated once on the held-out
+test split (mAP50 0.8974)**. Every result must be reported with the v1 limitations in
+docs/DATASET.md — the test split measures generalization to new *sessions*, not new *sites*.
+E002 (imgsz 1280) is configured but not run. No tracking or video work has started: the delivery
+contains no video (docs/DATASET.md).
 `data/raw/biology/` is read-only and never written to by any script.
 
 ## Project layout
@@ -28,6 +33,7 @@ src/yolo_prep/         YOLO dataset view builder (stdlib only); verify.py (Ultra
 src/training/          experiment configs + run records (stdlib); train.py (GPU only)
 configs/experiments/   E###_<slug>.yaml experiment configs
 experiments/           registry.csv (registered full runs), final_candidates.csv (declared test candidates)
+  records/<E###>/      committed run metadata: run_record.json, results.csv, final_test_record.json (D-013)
 notebooks/             Colab notebook (calls scripts only)
 scripts/               CLI entry points
 tests/                 CPU unit tests (stdlib unittest)

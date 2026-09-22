@@ -1,0 +1,237 @@
+{
+  "schema": "uwct.final_test_record/1",
+  "created_utc": "2026-09-19T20:05:36+00:00",
+  "label": "FINAL TEST EVALUATION",
+  "split": "test",
+  "experiment_id": "E001",
+  "run_name": "E001",
+  "declaration": {
+    "experiment_id": "E001",
+    "declared_utc": "2026-09-19T19:50:42Z",
+    "decision": "candidate",
+    "reason": "E001 baseline selected for held-out final evaluation after completed validation run"
+  },
+  "training_git_commit": "388da36f856599f09820feb1a27355f238b07c24",
+  "evaluation_git": {
+    "commit": "25e0de2cecdd724b7baefdb6b5e8a9453c40fd5a",
+    "branch": "HEAD",
+    "dirty": false
+  },
+  "run_record_best_sha256": "5a8c5947704e2a1f1f89eff2dd7675eea20928d125d8abff0e463dccb4edd2f5",
+  "dataset": {
+    "version": "v1",
+    "status": "frozen",
+    "frozen_registry_verified": true,
+    "fingerprint": "9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810",
+    "image_manifest_sha256": "368bdfa0d127480d119c81047fb155ed80e39da392d15b92edc169b1c7ab9e0d",
+    "split_manifest_sha256": "fccb4050e4fcdc25d5647d7b6fc7e59662b75e41000f525769a3eb95fac6aa71",
+    "dataset_dir": "/content/uwct/data/yolo/lobster_v1",
+    "splits_used_for_training": [
+      "train",
+      "val"
+    ],
+    "counts": {
+      "train": {
+        "images": 1433,
+        "positive": 1274,
+        "negative": 159,
+        "instances": 4000
+      },
+      "val": {
+        "images": 324,
+        "positive": 269,
+        "negative": 55,
+        "instances": 1010
+      }
+    },
+    "test_counts": {
+      "images": 348,
+      "positive": 321,
+      "instances": 1512,
+      "negative": 27
+    }
+  },
+  "operating_conf": {
+    "value": 0.2982982982982983,
+    "chosen_on": "val",
+    "rule": "max mean F1 on val"
+  },
+  "metrics": {
+    "ultralytics_reported": {
+      "precision": 0.8309148878394604,
+      "recall": 0.8207671957671958,
+      "map50": 0.8973679108590374,
+      "map50_95": 0.6832483996423127,
+      "results_dict": {
+        "metrics/precision(B)": 0.8309148878394604,
+        "metrics/recall(B)": 0.8207671957671958,
+        "metrics/mAP50(B)": 0.8973679108590374,
+        "metrics/mAP50-95(B)": 0.6832483996423127,
+        "fitness": 0.6832483996423127
+      }
+    },
+    "at_val_conf": {
+      "conf": 0.2982982982982983,
+      "precision": 0.8446518331802135,
+      "recall": 0.812696301918178,
+      "f1": 0.8283659983039319
+    },
+    "confusion_matrix": {
+      "matrix": [
+        [
+          1261.0,
+          263.0
+        ],
+        [
+          251.0,
+          0.0
+        ]
+      ],
+      "axes": "rows = predicted, cols = true; classes + background (Ultralytics)"
+    },
+    "speed_ms_per_image": {
+      "preprocess": 1.662439359194948,
+      "inference": 6.100008893679779,
+      "loss": 0.0008948764365539257,
+      "postprocess": 2.2351301954024336
+    },
+    "val_for_threshold": {
+      "precision": 0.7998285106755493,
+      "recall": 0.7900990099009901,
+      "map50": 0.8527495288528795,
+      "map50_95": 0.6114874203967688,
+      "results_dict": {
+        "metrics/precision(B)": 0.7998285106755493,
+        "metrics/recall(B)": 0.7900990099009901,
+        "metrics/mAP50(B)": 0.8527495288528795,
+        "metrics/mAP50-95(B)": 0.6114874203967688,
+        "fitness": 0.6114874203967688
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/predictions/06_HERR_04_CW_20200902_GP089565_12601.jpg",
+      "size": 305357,
+      "sha256": "82401928208e22629cbeeb00e3ceb4a187483c9fa51df3bad9af7d09ceeffa17"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/predictions/06_HERR_08_CW_20200903_GP120003_12151.jpg",
+      "size": 394320,
+      "sha256": "cd2599c02a590d2df4d90403427e93e0873b8a51a31db63c1fe1bc6043de7c96"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/predictions/06_HERR_11_CW_20200905_GP100004_16173.jpg",
+      "size": 445799,
+      "sha256": "21b2f4bc6f8e0f31a1dbb256d367a0f868bec19eeebbd239299187922fbbe3bc"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/predictions/13_SHRI_12_BW_20210811_GP050066_00000.jpg",
+      "size": 519595,
+      "sha256": "4141233e1f1dfb935440a12d02af5895d1095b73b23d35e362c3221301aa2adb"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/predictions/21_MACK_09_BW_20220815_GP051706_16173.jpg",
+      "size": 314264,
+      "sha256": "edb6c096dbdd3f1f051d53ddbc5fbab1273f9b89bbd493d7a32a627dd5692597"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/predictions/21_SUB6_03_BW_20220810_GP111645_16173.jpg",
+      "size": 331939,
+      "sha256": "6b5ab4e4563cca627bb9656f6197633cb55fd203ddfe1650bfe72cb68f344fd3"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/BoxF1_curve.png",
+      "size": 109236,
+      "sha256": "982ead0141c485e183414f558e40382d76693fc586e82919cdb313daea84fb17"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/BoxPR_curve.png",
+      "size": 91652,
+      "sha256": "8b4c3e09998d3f58ef2d06f2e9db1f9bac2408f2234f1d12eebf2c15c6532127"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/BoxP_curve.png",
+      "size": 97437,
+      "sha256": "e1885d7d0ada46ceb25b6240561dc34787b521cd89e242d634d48ee4bf106d7c"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/BoxR_curve.png",
+      "size": 106887,
+      "sha256": "94e50d41ecd45aba49e0b209207a04dd87792e47af5849834b3d5503990b5cc2"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/confusion_matrix.png",
+      "size": 102643,
+      "sha256": "44f42f602a9f3ab10c27ffb060efd66422841b9da1aa93622bfa0dc69a3e1776"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/confusion_matrix_normalized.png",
+      "size": 98790,
+      "sha256": "554e2d5beb2caabd0b0525fd35b3c3df5929c42081d3bf8048c2c4adb2e28cd1"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/val_batch0_labels.jpg",
+      "size": 359933,
+      "sha256": "259828cc43edbc36cf82b1d58ff9fdc3d17b8f5f13967f3fab759066d371afd9"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/val_batch0_pred.jpg",
+      "size": 380519,
+      "sha256": "fdc6cc6f0c988e98606d885d185fab32cb1c077e91b98dc00fa0d437ad768dec"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/val_batch1_labels.jpg",
+      "size": 359838,
+      "sha256": "560ba1a81e3976e044d90b1f3bba480f00603b143bb9247ef38ddbe547c8e550"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/val_batch1_pred.jpg",
+      "size": 404591,
+      "sha256": "805fce11102d656db9b04a79d4679f9e234634cd38b46badae1d37647b41fcf5"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/val_batch2_labels.jpg",
+      "size": 273365,
+      "sha256": "40a3b880cb75dbfd5786e8f31f3a8b99124695d03a7b8954567439dc786fc8e4"
+    },
+    {
+      "path": "/content/drive/MyDrive/uwct/runs/E001/final_test/test/val_batch2_pred.jpg",
+      "size": 306900,
+      "sha256": "323864a724d75b58d00d68fddda84ac7d795d83141b5173b0467f313192e784c"
+    }
+  ],
+  "attempts_including_this_one": 1,
+  "environment": {
+    "timestamp_utc": "2026-09-19T20:05:36+00:00",
+    "os": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "python": "3.13.15",
+    "cpu_count": 2,
+    "torch": "2.11.0+cu128",
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "cudnn_version": 91900,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      }
+    ],
+    "ultralytics": "8.4.155",
+    "nvidia_smi": [
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.82.07"
+      }
+    ]
+  },
+  "limitations": [
+    "v1 test sessions share sites (mostly also dates) with train sessions: this measures generalization to new sessions, not new sites (D-007).",
+    "Test boxes are concentrated: 13_SHRI_12 + 21_SUB6_03 hold 1,135 of 1,512 (D-008).",
+    "Substrate/visibility metadata is mostly missing; zExtra is excluded.",
+    "ultralytics_reported precision/recall are at the confidence that maximizes F1 on the TEST split itself (Ultralytics convention); the operating point is at_val_conf, chosen on val."
+  ],
+  "log_to": "docs/EXPERIMENTS.md -> Test-evaluation log"
+}

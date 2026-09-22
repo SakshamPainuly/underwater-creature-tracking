@@ -52,6 +52,24 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 |---|---|---|---|---|---:|---:|---|
 | E001 | 2026-09-19 | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | v1 | 0.8527 | 0.6115 | 100 epochs completed; best.pt recorded; final candidate |
 
+### E001 training observations
+
+Registered in `experiments/registry.csv`; metadata archived in `experiments/records/E001/` (D-013).
+From `results.csv` (OBSERVED, 2026-09-21):
+
+- The best epoch is **61**, on both val mAP50 (0.8529) and val mAP50-95 (0.6110). Because epoch 61
+  maximizes both metrics, it maximizes any weighted combination of them, so it is the fitness peak
+  whichever weights 8.4.155 uses — D-012 records those weights as UNKNOWN. The registered
+  val mAP50 0.8527 is the post-training validation of `best.pt`, against 0.8529 measured in-training.
+- Training ran all **100 epochs, 39 of them after the peak**, although `E001_yolo_baseline.yaml`
+  sets `patience: 30`. Early stopping should have triggered near epoch 91.
+  INFERRED: patience is either counted differently in 8.4.155 than the config implies, or was not
+  applied. UNKNOWN — requires confirmation from the Colab training log.
+- No effect on any reported metric: `best.pt` is the epoch-61 checkpoint and every val and test
+  figure above comes from it. The cost was GPU time only.
+- LIMITATION for E002: at imgsz 1280 on a Tesla T4, budget for a full 100 epochs rather than
+  relying on an early stop.
+
 ## Test-evaluation log
 
 | Date | Experiment | Reason | Result |

@@ -170,3 +170,28 @@ Short, dated records of project decisions. New dataset versions must reference a
     (docs/EXPERIMENTS.md).
 - **Consequence:** no dataset version, split or frozen file changes. The run records and registry
   implement CLAUDE.md §5. Runbook: docs/COLAB.md.
+
+## D-013 — Run records are archived in the repository (2026-09-21, accepted)
+- **Context:** CLAUDE.md §5 keeps run folders off-repo (Drive/lab storage), referenced by path and
+  sha256. E001's run folder lives at `/content/drive/MyDrive/uwct/runs/E001`. Two of the three
+  collaborators have no access to that Drive, so at commit `f83c8f3` the repository recorded E001's
+  metrics in docs/EXPERIMENTS.md with no in-repo artifact behind them, and
+  `experiments/registry.csv` held only its header.
+- **Decision (user-approved):** the small metadata artifacts of a finished run are committed under
+  `experiments/records/<experiment_id>/`:
+  - `run_record.json` — the record `scripts/register_run.py` consumes (CLAUDE.md §5 fields);
+  - `results.csv` — Ultralytics' per-epoch training curve;
+  - `final_test_record.json` — present only for a declared final test evaluation.
+
+  Everything else stays off-repo exactly as before: weights (`best.pt`, `last.pt`), plots,
+  prediction images and the run folder itself, referenced by path + sha256. The folder name
+  `records` is deliberate: `.gitignore` line 37 (`runs/`) matches at any depth, so
+  `experiments/runs/` would be silently ignored.
+- **Scope:** this narrows, and does not reverse, CLAUDE.md §5. Bulk artifacts are still off-repo;
+  only metadata under ~50 KB per run is tracked. A run's records are committed once, after
+  registration, and are never edited afterwards.
+- **Consequence (OBSERVED, 2026-09-21):** E001 registered in `experiments/registry.csv` from
+  `experiments/records/E001/run_record.json`; the per-run archive is
+  `run_record.json` (9,634 B, sha256 `f8b1ac9a…`), `results.csv` (12,096 B, sha256 `cf3378a7…`),
+  `final_test_record.json` (8,391 B, sha256 `a39189f0…`). E002's full run is no longer blocked
+  (D-012). No dataset version, split, frozen file or raw file is affected.
