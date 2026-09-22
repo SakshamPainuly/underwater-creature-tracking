@@ -287,8 +287,13 @@ class NotebookTest(unittest.TestCase):
         text = "\n".join(code)
         for secret in ("ghp_", "github_pat_", "gho_"):
             self.assertNotIn(secret, text)
-        subset = text.split("SUBSET = [", 1)[1].split("]", 1)[0]
-        self.assertNotIn("zExtra", subset)
+        # Raw data is reconstructed from the shared ZIP and includes zExtra Photos (D-014).
+        # What must hold is that the raw check covers the training sources and that zExtra never
+        # reaches the dataset view, training or the final test evaluation.
+        self.assertIn('"--subset", "training"', text)
+        for src in code:
+            if any(s in src for s in ("prepare_yolo_dataset.py", "train_yolo.py", "final_test_eval.py")):
+                self.assertNotIn("zExtra", src)
         for flag in ("RUN_SMOKE = False", "RUN_FULL = False", "RESUME = False"):
             self.assertIn(flag, text)
 

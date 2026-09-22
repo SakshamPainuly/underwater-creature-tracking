@@ -13,17 +13,24 @@ Rules: CLAUDE.md (hard rules 1–4 and 7, section 6). Decision: D-012.
 
    In Colab, open **Secrets** (key icon), add `UWCT_GITHUB_TOKEN`, and allow notebook access.
    See "GitHub authentication" below for how the notebook uses it.
-2. **Raw training subset on Drive.** Upload these three folders to `MyDrive/uwct/raw/biology/`,
-   keeping the same relative paths. Do not upload `zExtra Photos/`.
+2. **Raw data as a shared ZIP (D-014).** The delivery is kept as one ZIP on Drive, shared by
+   link, and the notebook downloads it with `gdown` using the file ID hard-coded in the
+   reconstruction cell. Nothing is uploaded, and nothing is ever written back to Drive.
+
+   The ZIP contains the delivery as received, under a top-level `AI Lobster Training Dataset/`:
 
    ```
-   MyDrive/uwct/raw/biology/Set 100/                                              (all files)
-   MyDrive/uwct/raw/biology/Set 2000/batch_2 (2k - imgOnly)/batch_2 (2k - imgOnly)/
-   MyDrive/uwct/raw/biology/Set 2000/batch_2_2k_labels/batch_2_2k_labels/
+   AI Lobster Training Dataset/Set 100/                       (folder, copied as-is)
+   AI Lobster Training Dataset/Set 2000/batch_2 (2k - imgOnly).zip   (extracted by the notebook)
+   AI Lobster Training Dataset/Set 2000/batch_2_2k_labels.zip        (extracted by the notebook)
+   AI Lobster Training Dataset/zExtra Photos/                 (folder, copied as-is)
+   AI Lobster Training Dataset/*.docx, *.xlsx                 (project documents)
    ```
 
-   Treat this copy as read-only. The notebook copies it to local disk and checks it against the raw
-   fingerprint.
+   The notebook rebuilds `/content/raw/biology/` from this into the layout the scripts expect, so
+   the two `Set 2000` folder names match `src/dataset_audit/config.py`. This replaces the earlier
+   procedure of uploading three folders to `MyDrive/uwct/raw/biology/` (D-012); see D-014 for why,
+   and for what it means that `zExtra Photos/` is now present in the Colab copy.
 3. **Runs folder:** `MyDrive/uwct/runs/` (created by the notebook). It holds all run folders,
    checkpoints and run records, outside Git.
 4. **Code:** commit and push the code to run on `p4/colab-baseline`, then note the 40-character sha
@@ -39,10 +46,32 @@ Rules: CLAUDE.md (hard rules 1–4 and 7, section 6). Decision: D-012.
 | 4 | Checkout `COMMIT` with the read-only token | `working tree: clean` |
 | 5 | `pip install -r requirements-gpu.txt` | `ultralytics 8.4.155` |
 | 6 | `scripts/env_report.py` | GPU, CUDA, torch |
-| 7 | Copy Set 100 + Set 2000 to `/content/raw/biology`, set `UWCT_RAW_ROOT` | no zExtra |
+| 7 | Download + unpack the shared ZIP into `/content/raw/biology`, set `UWCT_RAW_ROOT` | `Set 100`, `Set 2000`, `zExtra Photos` |
 | 8 | `check_raw_unchanged.py --root /content/raw/biology --subset training` | `RAW DATA MATCHES FINGERPRINT` |
 | 9 | `prepare_yolo_dataset.py --version v1` | frozen v1 verified, build summary |
 | 10 | `verify_yolo_dataset.py` | `VERIFIED` |
+
+## Raw data on Colab (cell 7) — what is and is not verified
+
+The reconstruction cell copies the **whole** delivery, `zExtra Photos/` included. This differs
+from D-012, which said zExtra is never copied; D-014 records the change. Three points matter:
+
+- **zExtra never reaches training.** `prepare_yolo_dataset.py` builds the v1 view from the frozen
+  image manifest, which excludes every zExtra session, and `train_yolo.py` refuses to start if the
+  built view contains any zExtra image. Its presence on the Colab disk changes nothing downstream.
+- **zExtra is not verified either.** Cell 8 runs `check_raw_unchanged.py --subset training`, which
+  covers Set 100 and Set 2000 only. The cell comment in the notebook says zExtra is kept "for
+  fingerprint verification" — that is **not** what currently happens. LIMITATION: the zExtra files
+  on Colab are neither checked against a fingerprint nor used. Running the check without
+  `--subset training` would close this gap and is a reasonable future change.
+- **The ZIP's contents are not byte-compared with the local raw data.** The two inner archives are
+  the same ones removed locally under D-011, where PNG bytes were never compared either. The
+  training sources are nevertheless covered: cell 8 matches paths and sizes against the recorded
+  fingerprint, and cell 9 verifies the frozen v1 hashes before the view is built.
+
+`gdown` is installed by the cell itself at run time and is **not pinned** in
+`requirements-gpu.txt` (LIMITATION: unlike `ultralytics==8.4.155`, its version is whatever PyPI
+serves that day; it is used only to download the ZIP, never in training).
 
 ## GitHub authentication (cell 4)
 

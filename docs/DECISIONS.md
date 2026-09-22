@@ -195,3 +195,40 @@ Short, dated records of project decisions. New dataset versions must reference a
   `run_record.json` (9,634 B, sha256 `f8b1ac9a…`), `results.csv` (12,096 B, sha256 `cf3378a7…`),
   `final_test_record.json` (8,391 B, sha256 `a39189f0…`). E002's full run is no longer blocked
   (D-012). No dataset version, split, frozen file or raw file is affected.
+
+## D-014 — Colab raw data comes from the shared ZIP; zExtra is copied but unused (2026-09-21, accepted)
+- **Context:** D-012 specified that only the v1 training sources (Set 100, Set 2000 images and
+  labels) are uploaded to `MyDrive/uwct/raw/biology/` and copied to Colab local disk, and that
+  `zExtra Photos/` is never copied. In practice the delivery is kept as a single ZIP on Drive and
+  fetched with `gdown`, because uploading the loose folders (~5.5 GB) is impractical to repeat.
+  Commit `f83c8f3` replaced the copy cell accordingly but did not update D-012, docs/COLAB.md or
+  the notebook guard test, which searched for the removed `SUBSET` list and errored.
+- **Decision (user-approved):** the documents follow the notebook. The shared ZIP is the supported
+  way to provision raw data on Colab:
+  - the notebook downloads one ZIP by hard-coded Drive file ID, extracts the two inner `Set 2000`
+    archives and copies `Set 100`, `zExtra Photos` and the project documents into
+    `/content/raw/biology/`, then sets `UWCT_RAW_ROOT`;
+  - nothing is ever written back to Drive, and the raw data on the local PC is untouched;
+  - `zExtra Photos/` is present in the Colab copy. This supersedes D-012's "zExtra is never
+    copied" **for the Colab provisioning step only**.
+- **What is unchanged:** CLAUDE.md hard rule 6 still holds — zExtra is excluded from every dataset
+  version, the YOLO view and all training and evaluation. `prepare_yolo_dataset.py` builds from the
+  frozen v1 image manifest, which contains no zExtra image, and `train_yolo.py` refuses to start if
+  the built view contains one. Dataset v1, its splits, `FROZEN.json` and the raw fingerprints are
+  unaffected.
+- **Limitations (OBSERVED, 2026-09-21):**
+  - The notebook's comment says zExtra is kept "for fingerprint verification", but cell 8 runs
+    `check_raw_unchanged.py --subset training`, so the zExtra files on Colab are neither verified
+    nor used. Dropping `--subset training` would close this gap; not done here.
+  - The ZIP's inner archives are the ones removed locally under D-011, where PNG contents were
+    never byte-compared. Training sources are still covered by the structural raw check (paths and
+    sizes) and by the frozen v1 hash verification before the view is built.
+  - `gdown` is installed inside the cell and is not pinned in `requirements-gpu.txt`.
+  - The Drive file ID is committed in the notebook, so anyone who can read the repository can fetch
+    the dataset if the link's sharing scope allows it. The scope is UNKNOWN — requires confirmation.
+- **Consequence:** docs/COLAB.md rewritten (setup step 2, the cell-7 row, a new section on what is
+  and is not verified); the notebook guard in `tests/test_training_config.py` now asserts what
+  still matters — the raw check runs on the training subset, and no cell that invokes
+  `prepare_yolo_dataset.py`, `train_yolo.py` or `final_test_eval.py` mentions zExtra. E001's
+  results are unaffected: its run record shows the frozen v1 registry verified and Ultralytics
+  seeing exactly 1,433 train / 324 val images.
