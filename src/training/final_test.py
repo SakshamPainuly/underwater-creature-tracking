@@ -197,7 +197,7 @@ def _append_attempt(out_dir: Path, event: dict) -> int:
 
 
 def run_final_test(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path | None = None) -> dict:
-    from training.train import require_gpu_environment  # training never imports this module
+    from training.train import model_class, require_gpu_environment  # training never imports this module
     from yolo_prep.verify import counts_match, ultralytics_split_counts
 
     ultralytics = require_gpu_environment()
@@ -225,7 +225,7 @@ def run_final_test(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path 
     if data["names"] != dict(enumerate(X.CLASS_NAMES)) or not counts_match(expected_test, seen[TEST_SPLIT]):
         raise FinalTestError(f"Ultralytics reads the test split differently: {seen[TEST_SPLIT]} vs {expected_test}")
 
-    from ultralytics import YOLO
+    Model = model_class(cfg["model"])  # RTDETR or YOLO: same family as training
 
     out_dir = run_dir / FINAL_DIR
     out_dir.mkdir(exist_ok=True)
@@ -236,7 +236,7 @@ def run_final_test(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path 
     # a. operating confidence from VAL, with the run's train/val-only data file
     trainval = run_dir / "data_trainval.yaml"
     X.assert_trainval_only(trainval)
-    val_result = YOLO(best).val(data=str(trainval), split=X.VAL_SPLIT, imgsz=imgsz, batch=batch,
+    val_result = Model(best).val(data=str(trainval), split=X.VAL_SPLIT, imgsz=imgsz, batch=batch,
                                 project=str(out_dir), name="val_threshold", exist_ok=True, plots=False)
     val_curves = _curves(val_result)
     if val_curves is None:
@@ -246,7 +246,7 @@ def run_final_test(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path 
     # b. FINAL TEST EVALUATION
     attempts = _append_attempt(out_dir, {"event": "start", "git_commit": git["commit"], "conf_from_val": conf})
     print("=" * 72 + f"\nFINAL TEST EVALUATION -- {exp_id} -- split={TEST_SPLIT!r} -- attempt {attempts}\n" + "=" * 72)
-    test_result = YOLO(best).val(data=str(full_yaml), split=TEST_SPLIT, imgsz=imgsz, batch=batch,
+    test_result = Model(best).val(data=str(full_yaml), split=TEST_SPLIT, imgsz=imgsz, batch=batch,
                                  project=str(out_dir), name="test", exist_ok=True, plots=True)
     test_curves = _curves(test_result)
     cm = getattr(test_result, "confusion_matrix", None)
@@ -255,7 +255,7 @@ def run_final_test(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path 
     with open(dataset_dir / "build_manifest.csv", newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     examples = select_prediction_examples(rows)
-    YOLO(best).predict(source=[str(dataset_dir / "images" / TEST_SPLIT / f) for f in examples], conf=conf,
+    Model(best).predict(source=[str(dataset_dir / "images" / TEST_SPLIT / f) for f in examples], conf=conf,
                        imgsz=imgsz, save=True, project=str(out_dir), name="predictions", exist_ok=True)
     _append_attempt(out_dir, {"event": "end"})
 

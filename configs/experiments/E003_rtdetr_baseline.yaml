@@ -1,0 +1,20 @@
+# E003 -- RT-DETR baseline for the YOLO vs RT-DETR comparison (D-015). PLANNED, not run.
+# Single variable changed vs E001: the detector architecture (yolo26s.pt -> rtdetr-l.pt). Same
+# dataset view and fingerprint, imgsz, epochs, patience, batch, seed and ultralytics version.
+# If batch 16 does not fit in GPU memory, or the smoke test shows NaN losses (Ultralytics notes AMP
+# can cause them for RT-DETR), stop and record a new decision before changing batch or amp.
+id: E003
+slug: rtdetr_baseline
+parent: E001
+changed: "model yolo26s.pt -> rtdetr-l.pt"
+dataset_version: v1
+dataset_fingerprint: "9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810"
+model: rtdetr-l.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 640
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true

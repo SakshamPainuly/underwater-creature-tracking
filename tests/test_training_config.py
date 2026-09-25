@@ -16,6 +16,7 @@ from yolo_prep import build as B
 CONFIG_DIR = ROOT / "configs" / "experiments"
 E001 = CONFIG_DIR / "E001_yolo_baseline.yaml"
 E002 = CONFIG_DIR / "E002_yolo_imgsz1280.yaml"
+E003 = CONFIG_DIR / "E003_rtdetr_baseline.yaml"
 
 
 def valid_cfg(**overrides):
@@ -62,6 +63,21 @@ class CommittedConfigsTest(unittest.TestCase):
         changed_args = {k for k in e1["train_args"] if e1["train_args"][k] != e2["train_args"][k]}
         self.assertEqual(changed_args, {"imgsz"})
         self.assertEqual(e2["train_args"]["imgsz"], 1280)
+
+    def test_e003_changes_only_the_model(self):
+        e1, e3 = X.load_and_validate(E001), X.load_and_validate(E003)
+        self.assertEqual(e3["parent"], "E001")
+        diff = {k for k in e1 if k in ("id", "slug", "parent", "changed") or e1[k] != e3[k]}
+        self.assertEqual(diff, {"id", "slug", "parent", "changed", "model"})
+        self.assertEqual(e3["model"], "rtdetr-l.pt")
+        self.assertEqual(X.model_family(e3["model"]), "rtdetr")
+        self.assertEqual(X.model_family(e1["model"]), "yolo")
+
+    def test_model_family_is_required(self):
+        cfg = X.load_and_validate(E003)
+        for name in ("detr-l.pt", "fasterrcnn.pt", "rtdetr.pt"):
+            with self.subTest(name=name), self.assertRaises(X.ConfigError):
+                X.validate_config({**cfg, "model": name})
 
     def test_requirements_pin_matches_config(self):
         pin = (ROOT / "requirements-gpu.txt").read_text(encoding="utf-8")
