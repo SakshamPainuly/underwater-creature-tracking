@@ -132,6 +132,14 @@ Training receives `data_trainval.yaml`, written into the run folder. It has only
 `train`, `val` and `names`: **the test split does not exist for the training process**. Early
 stopping and `best.pt` selection use val. After training, `best.pt` is validated on `split="val"`.
 
+### Other experiments (e.g. E003, RT-DETR)
+
+The notebook defaults to E001. E003 has its own copy, `my_model/colab_train_rtdetr.ipynb`
+(branch `anu/model-development`, `EXPERIMENT_ID = "E003"`, plus cell 12b, which stops on non-finite
+smoke-test losses). For any other experiment, set `EXPERIMENT_CONFIG` in cell 1 and the run id in
+cell 15. Nothing else changes: `train_yolo.py` picks `RTDETR` or `YOLO` from the config's checkpoint name (D-015), and
+the final-test cell takes the experiment id in `FINAL_TEST_EXPERIMENT`.
+
 ## Run folder (`MyDrive/uwct/runs/<run>/`)
 
 | File | Content |

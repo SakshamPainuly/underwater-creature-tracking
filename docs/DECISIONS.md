@@ -232,3 +232,44 @@ Short, dated records of project decisions. New dataset versions must reference a
   `prepare_yolo_dataset.py`, `train_yolo.py` or `final_test_eval.py` mentions zExtra. E001's
   results are unaffected: its run record shows the frozen v1 registry verified and Ultralytics
   seeing exactly 1,433 train / 324 val images.
+
+## D-015 — RT-DETR baseline E003 for a YOLO vs RT-DETR comparison (2026-09-24, accepted)
+- **Context:** a second detector family is trained independently on the same data so it can be
+  compared fairly with the YOLO baseline E001. Inspection (OBSERVED, 2026-09-24): the v1 labels are
+  YOLO txt, one class `0: lobster`, and the splits come from the frozen v1 manifests. Ultralytics
+  8.4.155 (the pinned version) ships `RTDETR` with its own trainer, NMS-free validator and
+  predictor, lists `rtdetr-l.pt` / `rtdetr-x.pt` as official assets, and reads the same YOLO-format
+  `data.yaml`, empty negative label files included.
+- **Decision (user-approved):**
+  - Use Ultralytics RT-DETR on the existing v1 YOLO dataset view. **No annotation conversion**, no
+    new dataset version, and no change to `prepare_yolo_dataset.py`; COCO JSON would only be needed
+    for a non-Ultralytics RT-DETR implementation, whose metrics would not be directly comparable.
+  - **E003** (`configs/experiments/E003_rtdetr_baseline.yaml`): parent E001, single variable changed
+    is the model `yolo26s.pt -> rtdetr-l.pt`. Dataset v1 (same fingerprint), imgsz 640, ≤100
+    epochs, patience 30, batch 16, seed 0, `deterministic=True`, ultralytics 8.4.155 are all as in
+    E001. `rtdetr-l.pt` is the smaller of the two official RT-DETR checkpoints.
+  - The runner picks the Ultralytics model class from the checkpoint name
+    (`experiment.model_family`: `rtdetr-*` -> `RTDETR`, `yolo*` -> `YOLO`, anything else is refused).
+    Every load goes through it: the pretrained checkpoint, val of `best.pt`, resume, and the final
+    test stage. The run record's `model` block gains a `family` field.
+  - **Comparison rule:** the same run-record, registry and final-test machinery as E001. Model
+    choice (if any) is made on **val mAP50** (docs/EXPERIMENTS.md); secondary metrics as declared
+    there. Parameter count, GFLOPs and inference speed on the same GPU type are reported alongside,
+    because `rtdetr-l` is a considerably larger model than `yolo26s`.
+  - **Test split:** E003 is evaluated on test only after its full run is registered and reviewed and
+    it is declared in `experiments/final_candidates.csv` (CLAUDE.md rule 7). E001 and E003 test
+    numbers are then reported side by side and are never used to choose between them.
+- **Risks to check in the smoke test (UNKNOWN until run on Colab):**
+  - batch 16 at imgsz 640 may not fit on a Tesla T4 with RT-DETR-L;
+  - Ultralytics notes that AMP can produce NaN losses for RT-DETR;
+  - `F.grid_sample` has no deterministic implementation; Ultralytics sets deterministic mode with
+    `warn_only=True` (OBSERVED in 8.4.155 source), so it warns, and E003 is less reproducible than
+    E001.
+
+  If batch or AMP has to change, stop and record a new decision (a second changed variable).
+- **Known wording gap:** the val-metrics note in `run_record.json` says "conf=0.001, iou=0.7" for
+  every family; RT-DETR's validator does not apply NMS, so the IoU part does not apply to E003.
+- **Consequence:** no dataset version, split, frozen file or raw file changes. The shared YOLO
+  notebook is unchanged. E003 runs from `my_model/colab_train_rtdetr.ipynb` (user-requested
+  location): a copy of it for branch `anu/model-development` and E003, with an added smoke-test
+  cell that stops on non-finite losses (docs/COLAB.md). `scripts/train_yolo.py` keeps its name and trains either family.

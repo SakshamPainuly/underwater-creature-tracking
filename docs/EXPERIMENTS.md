@@ -32,9 +32,15 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 |---|---|---|---|---|
 | E001 | `configs/experiments/E001_yolo_baseline.yaml` | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | completed; 100 epochs; final candidate evaluated on test |
 | E002 | `configs/experiments/E002_yolo_imgsz1280.yaml` | E001 | imgsz 640 → 1280 only | planned; not run |
+| E003 | `configs/experiments/E003_rtdetr_baseline.yaml` | E001 | model yolo26s.pt → rtdetr-l.pt only (D-015) | planned; not run |
 
-Both use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`)
+All use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`)
 and ultralytics 8.4.155. Colab procedure: docs/COLAB.md.
+
+**YOLO vs RT-DETR (D-015):** E001 and E003 are compared on val mAP50, then on the secondary
+metrics above, with parameter count, GFLOPs and inference speed on the same GPU type reported
+alongside. E003 is evaluated on test only after it is registered, reviewed and declared in
+`experiments/final_candidates.csv`; test numbers are reported, never used to choose.
 
 ## Run record requirements
 

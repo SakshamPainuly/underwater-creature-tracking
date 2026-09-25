@@ -1,4 +1,4 @@
-"""YOLO training runner -- Colab / lab GPU only (CLAUDE.md rule 3, section 6).
+"""Ultralytics training runner (YOLO and RT-DETR) -- Colab / lab GPU only (CLAUDE.md rule 3, section 6).
 
 torch, ultralytics and yaml are imported inside functions; importing this module locally is
 harmless, but every entry point refuses to run on Windows or without a CUDA GPU.
@@ -77,10 +77,18 @@ def load_config_checked(path: Path) -> tuple:
     return ours, sha256_file(path)
 
 
+def model_class(model_name: str):
+    """Ultralytics class for the config's checkpoint family (RTDETR or YOLO); every load goes through it."""
+    from ultralytics import RTDETR, YOLO
+
+    family = X.model_family(model_name)
+    if family is None:
+        raise TrainError(f"{model_name}: not a supported model family ({X.MODEL_FAMILY_PREFIXES})")
+    return RTDETR if family == "rtdetr" else YOLO
+
+
 def load_pretrained(name: str, weights_dir: Path, ultralytics_version: str) -> tuple:
     """Load the exact official checkpoint `name`; never substitute another model."""
-    from ultralytics import YOLO
-
     try:
         from ultralytics.utils.downloads import GITHUB_ASSETS_NAMES
         listed = name in GITHUB_ASSETS_NAMES
@@ -89,15 +97,15 @@ def load_pretrained(name: str, weights_dir: Path, ultralytics_version: str) -> t
     weights_dir.mkdir(parents=True, exist_ok=True)
     os.chdir(weights_dir)  # Ultralytics downloads checkpoints (incl. its AMP-check model) into the cwd
     try:
-        model = YOLO(name)
+        model = model_class(name)(name)
     except Exception as e:  # noqa: BLE001 -- any failure means the checkpoint is unavailable
         raise TrainError(f"could not load {name} with ultralytics {ultralytics_version}: {e}\n"
                          "STOP: report this; no other model is substituted.")
     ckpt = Path(getattr(model, "ckpt_path", None) or weights_dir / name).resolve()
     if ckpt.name != name or not ckpt.is_file():
         raise TrainError(f"loaded checkpoint {ckpt} is not {name}; STOP, no substitution")
-    info = {"name": name, "checkpoint_path": str(ckpt), "checkpoint_sha256": sha256_file(ckpt),
-            "in_ultralytics_asset_list": listed}
+    info = {"name": name, "family": X.model_family(name), "checkpoint_path": str(ckpt),
+            "checkpoint_sha256": sha256_file(ckpt), "in_ultralytics_asset_list": listed}
     return model, info
 
 
@@ -121,15 +129,13 @@ def _epochs_completed(train_dir: Path) -> int | None:
     return max(len(lines) - 1, 0)
 
 
-def validate_best(run_dir: Path, trainval_yaml: Path, train_args: dict) -> dict:
+def validate_best(run_dir: Path, trainval_yaml: Path, train_args: dict, model_name: str) -> dict:
     """Validate best.pt on the val split -- the only split used here (CLAUDE.md rule 7)."""
-    from ultralytics import YOLO
-
     X.assert_trainval_only(trainval_yaml)
     best = run_dir / TRAIN_SUBDIR / "weights" / "best.pt"
     if not best.is_file():
         raise TrainError(f"{best} not found; training did not finish an epoch")
-    metrics = YOLO(str(best)).val(
+    metrics = model_class(model_name)(str(best)).val(
         data=str(trainval_yaml), split=X.VAL_SPLIT, imgsz=train_args["imgsz"],
         batch=train_args.get("batch", 16), project=str(run_dir), name=VAL_SUBDIR, exist_ok=True,
     )
@@ -151,7 +157,7 @@ def finalize(run_dir: Path, preflight: dict, env_collect) -> dict:
 
     trainval = run_dir / TRAINVAL_FILE
     train_dir = run_dir / TRAIN_SUBDIR
-    val = validate_best(run_dir, trainval, preflight["train_args"])
+    val = validate_best(run_dir, trainval, preflight["train_args"], preflight["model"]["name"])
     args_yaml = train_dir / "args.yaml"
     outputs = {
         "best": R.file_entry(train_dir / "weights" / "best.pt"),
@@ -214,11 +220,9 @@ def run(config_path: Path, runs_root: Path, weights_dir: Path, mode: str, env_co
         last = run_dir / TRAIN_SUBDIR / "weights" / "last.pt"
         if not last.is_file():
             raise TrainError(f"{last} not found; nothing to resume")
-        from ultralytics import YOLO
-
         os.chdir(weights_dir)
         _append_launch(run_dir, {"event": "start", "mode": "resume", "git_commit": git["commit"]})
-        YOLO(str(last)).train(resume=True)
+        model_class(cfg["model"])(str(last)).train(resume=True)
         _append_launch(run_dir, {"event": "end", "mode": "resume"})
         return finalize(run_dir, preflight, env_collect)
 

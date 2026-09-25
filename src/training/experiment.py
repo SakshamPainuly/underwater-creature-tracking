@@ -43,6 +43,9 @@ RUNNER_KEYS = frozenset({"data", "split", "project", "name", "exist_ok", "resume
 _ID_RE = re.compile(r"^E\d{3}$")
 _SLUG_RE = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 _MODEL_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*\.pt$")  # an official checkpoint name, never a path
+# Checkpoint name prefix -> Ultralytics model family. RT-DETR needs its own model class (trainer,
+# NMS-free validator, predictor); loading an RT-DETR checkpoint with YOLO() would use the YOLO ones.
+MODEL_FAMILY_PREFIXES = (("rtdetr-", "rtdetr"), ("yolo", "yolo"))
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _TEST_RE = re.compile(r"(^|[\\/])test([\\/.]|$)", re.IGNORECASE)
 
@@ -142,6 +145,14 @@ def _test_problems(mapping: dict, prefix: str = "") -> list:
     return problems
 
 
+def model_family(model_name: str) -> str | None:
+    """'yolo' or 'rtdetr' from the checkpoint name; None for a name of no supported family."""
+    for prefix, family in MODEL_FAMILY_PREFIXES:
+        if model_name.startswith(prefix):
+            return family
+    return None
+
+
 def validate_config(cfg: dict, config_file: str | None = None, processed_root: Path = PROCESSED_ROOT,
                     experiments_dir: Path = EXPERIMENTS_CONFIG_DIR) -> dict:
     """Raise ConfigError listing every problem; return cfg unchanged when it is valid."""
@@ -165,7 +176,8 @@ def validate_config(cfg: dict, config_file: str | None = None, processed_root: P
     check("parent", lambda v: is_str(v) and (v == "none" or _ID_RE.match(v)), "'none' or an experiment id")
     check("changed", lambda v: is_str(v) and v.strip(), "describe the single variable changed")
     check("dataset_fingerprint", lambda v: is_str(v) and _SHA256_RE.match(v), "64 lowercase hex characters")
-    check("model", lambda v: is_str(v) and _MODEL_RE.match(v), "an official checkpoint name like yolo26s.pt")
+    check("model", lambda v: is_str(v) and _MODEL_RE.match(v) and model_family(v) is not None,
+          "an official checkpoint name like yolo26s.pt or rtdetr-l.pt")
     check("ultralytics_version", lambda v: v == TARGET_ULTRALYTICS_VERSION,
           f"must equal the pinned version {TARGET_ULTRALYTICS_VERSION!r}")
     check("seed", lambda v: isinstance(v, int) and not isinstance(v, bool) and v >= 0, "a non-negative integer")
