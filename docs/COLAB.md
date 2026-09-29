@@ -134,11 +134,20 @@ stopping and `best.pt` selection use val. After training, `best.pt` is validated
 
 ### Other experiments (e.g. E003, RT-DETR)
 
-The notebook defaults to E001. E003 has its own copy, `my_model/colab_train_rtdetr.ipynb`
+The notebook defaults to E001. E003 has its own copy, `notebooks/colab_train_rtdetr.ipynb`
 (branch `anu/model-development`, `EXPERIMENT_ID = "E003"`, plus cell 12b, which stops on non-finite
-smoke-test losses). For any other experiment, set `EXPERIMENT_CONFIG` in cell 1 and the run id in
+smoke-test losses; location: D-016). For any other experiment, set `EXPERIMENT_CONFIG` in cell 1 and the run id in
 cell 15. Nothing else changes: `train_yolo.py` picks `RTDETR` or `YOLO` from the config's checkpoint name (D-015), and
 the final-test cell takes the experiment id in `FINAL_TEST_EXPERIMENT`.
+
+E003 specifics (the steps are otherwise the same as above):
+- Cell 11 (preflight) stops if `rtdetr-l.pt` cannot be loaded with the pinned Ultralytics; report it,
+  do not change the model.
+- After the smoke test (cell 12), run cell 12b: losses must be finite. If batch 16 runs out of GPU
+  memory or losses are NaN, stop and record a decision before changing batch or AMP (D-015).
+- Runs go to `MyDrive/uwct/runs/E003*/`; register `run_record.json` locally with
+  `scripts/register_run.py` (D-013). Compare with E001 on **val mAP50**; test (cells 16–17) only
+  after E003 is declared in `experiments/final_candidates.csv`.
 
 ## Run folder (`MyDrive/uwct/runs/<run>/`)
 

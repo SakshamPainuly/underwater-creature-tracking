@@ -34,7 +34,8 @@ src/training/          experiment configs + run records (stdlib); train.py (GPU 
 configs/experiments/   E###_<slug>.yaml experiment configs
 experiments/           registry.csv (registered full runs), final_candidates.csv (declared test candidates)
   records/<E###>/      committed run metadata: run_record.json, results.csv, final_test_record.json (D-013)
-notebooks/             Colab notebook (calls scripts only)
+notebooks/             Colab notebooks (call scripts only): colab_train_baseline (E001/E002),
+                       colab_train_rtdetr (E003)
 scripts/               CLI entry points
 tests/                 CPU unit tests (stdlib unittest)
 docs/                  data card, decision log, experiment log

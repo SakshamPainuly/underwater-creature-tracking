@@ -273,3 +273,19 @@ Short, dated records of project decisions. New dataset versions must reference a
   notebook is unchanged. E003 runs from `my_model/colab_train_rtdetr.ipynb` (user-requested
   location): a copy of it for branch `anu/model-development` and E003, with an added smoke-test
   cell that stops on non-finite losses (docs/COLAB.md). `scripts/train_yolo.py` keeps its name and trains either family.
+
+## D-016 — Repository layout: all Colab notebooks live in `notebooks/` (2026-09-29, accepted)
+- **Context:** D-015 placed the E003 notebook and a README in a new top-level `my_model/` folder.
+  The documented layout (README.md) keeps notebooks in `notebooks/`, experiment configs in
+  `configs/experiments/` and runbooks in `docs/`. A per-person model folder would split the
+  shared pipeline by author instead of by stage.
+- **Decision (user-requested):** `my_model/colab_train_rtdetr.ipynb` moves to
+  `notebooks/colab_train_rtdetr.ipynb` (content unchanged except the Colab badge path).
+  `my_model/README.md` is removed; its runbook steps are in docs/COLAB.md ("Other experiments") and
+  its file table duplicated README.md. `my_model/` no longer exists. This supersedes the notebook
+  location stated in D-015; nothing else in D-015 changes.
+- **Rule going forward:** new models are added as experiment configs plus code in `src/`, never
+  as a per-person or per-model top-level folder. Notebooks go in `notebooks/`, docs in `docs/`.
+- **Consequence:** no code, config, dataset, split, frozen or raw file changes. The Colab badge
+  points at `notebooks/` on branch `anu/model-development`, so it works once that branch includes
+  this commit. `COMMIT` in cell 1 stays empty on this branch (it is set per run).
