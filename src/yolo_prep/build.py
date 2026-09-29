@@ -15,6 +15,13 @@ Layout produced:
                                                confirmed negative: empty file
     <out>/data.yaml, <out>/build_manifest.csv, <out>/build_summary.json
 
+Image sources (D-017): labels always come from the Biology sources; images come from the
+version's image source. "biology" (v1) links the raw images, and its build_manifest.csv is
+unchanged, so v1 fingerprints stay valid. Any other source (e.g. enhanced images) is found by
+filename under its own read-only root; each image must be a PNG with the same width and height
+as its raw original, and its sha256 is recorded in build_manifest.csv, so the fingerprint
+identifies the image content, not only the labels.
+
 zExtra ("negative_pending") images are never included. Linked images share their bytes with
 the raw files, so they must never be written to; non-PNG sources are only built with copies
 (Ultralytics 8.4.155 re-saves corrupt JPEGs in place, ultralytics/data/utils.py check_image).
@@ -29,7 +36,7 @@ import subprocess
 from collections import Counter
 from pathlib import Path
 
-from dataset_audit.config import BIOLOGY_ROOT, DATASET_SOURCES, PROJECT_ROOT
+from dataset_audit.config import BIOLOGY_ROOT, DATASET_SOURCES, DEFAULT_IMAGE_SOURCE, IMAGE_SOURCES, PROJECT_ROOT
 from dataset_audit.versioning import sha256_file
 
 DATASET_BASENAME = "lobster"  # built dataset name = f"{DATASET_BASENAME}_{version}"
@@ -38,6 +45,7 @@ SPLITS = ("train", "val", "test")
 INCLUDED_STATUSES = ("positive", "negative_confirmed")
 TARGET_ULTRALYTICS_VERSION = "8.4.155"
 MARKER_FILE = ".uwct_generated"
+PNG_SIGNATURE = bytes([137, 80, 78, 71, 13, 10, 26, 10])
 
 
 class BuildError(RuntimeError):
@@ -91,9 +99,33 @@ def _resolve_link_mode(requested: str, probe_src: Path, probe_dir: Path) -> str:
     )
 
 
+def png_size(path: Path) -> tuple:
+    """(width, height) from a PNG header; BuildError if the file is not a PNG."""
+    with open(path, "rb") as f:
+        head = f.read(24)
+    if head[:8] != PNG_SIGNATURE or head[12:16] != b"IHDR":
+        raise BuildError(f"{path}: not a PNG file")
+    return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+
+
+def index_image_source(root: Path) -> dict:
+    """filename -> path for every PNG under an image source root. Duplicate names are an error."""
+    if not root.is_dir():
+        raise BuildError(f"image source root not found: {root}")
+    index, dupes = {}, []
+    for p in sorted(root.rglob("*.png")):
+        if p.name in index:
+            dupes.append(p.name)
+        index[p.name] = p
+    if dupes:
+        raise BuildError(f"{len(dupes)} filenames occur more than once under {root} (e.g. {dupes[0]})")
+    return index
+
+
 def _prepare_output_dir(out_dir: Path) -> None:
-    if _is_within(out_dir, BIOLOGY_ROOT):
-        raise BuildError(f"Refusing to write inside the raw data folder: {out_dir}")
+    for root in (BIOLOGY_ROOT, *IMAGE_SOURCES.values()):
+        if _is_within(out_dir, root):
+            raise BuildError(f"Refusing to write inside the raw data folder: {out_dir}")
     if out_dir.exists():
         if not (out_dir / MARKER_FILE).is_file():
             raise BuildError(
@@ -148,7 +180,9 @@ def _write_data_yaml(out_dir: Path) -> Path:
 
 
 def build_yolo_dataset(image_manifest: Path, split_manifest: Path, out_dir: Path, link_mode: str,
-                       version: str, version_status: str) -> dict:
+                       version: str, version_status: str, image_source: str = DEFAULT_IMAGE_SOURCE) -> dict:
+    if image_source not in IMAGE_SOURCES:
+        raise BuildError(f"unknown image source {image_source!r}; known: {sorted(IMAGE_SOURCES)}")
     image_rows = _read_csv(image_manifest)
     session_split = {r["session_id"]: r["split"] for r in _read_csv(split_manifest)}
     source_dirs = {name: (Path(img), Path(lbl) if lbl else None) for name, img, lbl in DATASET_SOURCES}
@@ -176,19 +210,30 @@ def build_yolo_dataset(image_manifest: Path, split_manifest: Path, out_dir: Path
             "place, which through a hardlink/symlink would modify the raw file. Re-run with --link-mode copy."
         )
 
+    source_root = None
+    if image_source != DEFAULT_IMAGE_SOURCE:
+        source_root = Path(IMAGE_SOURCES[image_source])
+        source_index = index_image_source(source_root)
+        missing = [r["filename"] for r in selected if r["filename"] not in source_index]
+        if missing:
+            raise BuildError(f"{len(missing)} images missing from image source {image_source} "
+                             f"({source_root}), e.g. {missing[0]}")
+
     _prepare_output_dir(out_dir)
     for split in SPLITS:
         (out_dir / "images" / split).mkdir(parents=True)
         (out_dir / "labels" / split).mkdir(parents=True)
 
-    first_src = source_dirs[selected[0]["source_set"]][0] / selected[0]["filename"]
+    first_src = (source_index[selected[0]["filename"]] if source_root else
+                 source_dirs[selected[0]["source_set"]][0] / selected[0]["filename"])
     mode = _resolve_link_mode(link_mode, first_src, out_dir / "images" / "train")
 
     counts = {s: Counter() for s in SPLITS}
     build_rows = []
     for r in selected:
         image_dir, label_dir = source_dirs[r["source_set"]]
-        src_img = image_dir / r["filename"]
+        raw_img = image_dir / r["filename"]
+        src_img = source_index[r["filename"]] if source_root else raw_img
         stem = Path(r["filename"]).stem
         src_lbl = label_dir / f"{stem}.txt" if label_dir else None
         dst_img = out_dir / "images" / r["split"] / r["filename"]
@@ -196,6 +241,9 @@ def build_yolo_dataset(image_manifest: Path, split_manifest: Path, out_dir: Path
 
         if not src_img.is_file():
             raise BuildError(f"raw image missing: {src_img}")
+        if source_root and png_size(src_img) != png_size(raw_img):
+            raise BuildError(f"{src_img}: size {png_size(src_img)} differs from the raw image "
+                             f"{png_size(raw_img)}; the raw labels would not fit it")
         _link_image(src_img, dst_img, mode)
 
         expected = int(r["n_instances"])
@@ -213,16 +261,17 @@ def build_yolo_dataset(image_manifest: Path, split_manifest: Path, out_dir: Path
         c["images"] += 1
         c["positive" if r["label_status"] == "positive" else "negative"] += 1
         c["instances"] += expected
-        build_rows.append(
-            {
-                "split": r["split"],
-                "filename": r["filename"],
-                "session_id": r["session_id"],
-                "label_status": r["label_status"],
-                "n_instances": expected,
-                "raw_image": src_img.resolve().relative_to(BIOLOGY_ROOT.resolve()).as_posix(),
-            }
-        )
+        row = {
+            "split": r["split"],
+            "filename": r["filename"],
+            "session_id": r["session_id"],
+            "label_status": r["label_status"],
+            "n_instances": expected,
+            "raw_image": src_img.resolve().relative_to((source_root or BIOLOGY_ROOT).resolve()).as_posix(),
+        }
+        if source_root:  # v1 rows stay exactly as before (its fingerprint must not change)
+            row.update(image_source=image_source, image_sha256=sha256_file(src_img))
+        build_rows.append(row)
 
     with open(out_dir / "build_manifest.csv", "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=list(build_rows[0].keys()))
@@ -236,6 +285,7 @@ def build_yolo_dataset(image_manifest: Path, split_manifest: Path, out_dir: Path
         "dataset_version": version,
         "version_status": version_status,
         "dataset_fingerprint": dataset_fingerprint(out_dir),
+        "image_source": image_source,
         "inputs": {
             "image_manifest_sha256": sha256_file(image_manifest),
             "split_manifest_sha256": sha256_file(split_manifest),

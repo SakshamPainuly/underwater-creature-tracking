@@ -167,6 +167,9 @@ class TrainArgsTest(unittest.TestCase):
         for bad in (ROOT / "runs", ROOT, raw / "x", Path("relative/runs")):
             with self.subTest(bad=bad), self.assertRaises(X.ConfigError):
                 X.check_output_location(bad, ROOT, raw)
+        enhanced = self.tmp / "enhanced"  # every image source is a read-only raw root (D-017)
+        with self.assertRaises(X.ConfigError):
+            X.check_output_location(enhanced / "runs", ROOT, (raw, enhanced))
 
 
 def _write_csv(path, rows):
@@ -176,8 +179,16 @@ def _write_csv(path, rows):
         w.writerows(rows)
 
 
+def _png(name):
+    """PNG signature + IHDR (640x480) + the name, so every fake image has distinct bytes."""
+    ihdr = (13).to_bytes(4, "big") + b"IHDR" + (640).to_bytes(4, "big") + (480).to_bytes(4, "big")
+    return B.PNG_SIGNATURE + ihdr + bytes(5) + name.encode()
+
+
 class BuiltDatasetTest(unittest.TestCase):
     """A tiny frozen version 'v7' in a temporary processed root, built with the real builder."""
+
+    IMAGE_SOURCE = "biology"  # EnhancedBuiltDatasetTest reruns every check on an image source (D-017)
 
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
@@ -187,17 +198,24 @@ class BuiltDatasetTest(unittest.TestCase):
         for d in (imgs, lbls, extra):
             d.mkdir(parents=True)
         for name in ("pos.png", "neg.png", "vpos.png", "tpos.png"):
-            (imgs / name).write_bytes(b"png-" + name.encode())
+            (imgs / name).write_bytes(_png(name))
         for name in ("pos", "vpos", "tpos"):
             (lbls / f"{name}.txt").write_text("0 0.5 0.5 0.1 0.1\n")
         (extra / "pending.png").write_bytes(b"png-pending")
-        self._saved = (B.DATASET_SOURCES, B.BIOLOGY_ROOT)
+        enh = t / "enhanced" / "images" / "delivered_folder"
+        enh.mkdir(parents=True)
+        for name in ("pos.png", "neg.png", "vpos.png", "tpos.png"):
+            (enh / name).write_bytes(_png("enhanced-" + name))
+        self._saved = (B.DATASET_SOURCES, B.BIOLOGY_ROOT, B.IMAGE_SOURCES)
         B.DATASET_SOURCES = [("Set2000", imgs, lbls), ("zExtra", extra, None)]
         B.BIOLOGY_ROOT = raw
+        B.IMAGE_SOURCES = {"biology": raw, "enhanced_2026-09": t / "enhanced"}
 
         self.processed = t / "processed"
         vdir = self.processed / "v7"
         vdir.mkdir(parents=True)
+        if self.IMAGE_SOURCE != "biology":
+            (vdir / "VERSION.json").write_text(json.dumps({"name": "v7", "image_source": self.IMAGE_SOURCE}))
         _write_csv(vdir / "split_manifest.csv", [{"session_id": s, "split": sp} for s, sp in
                                                 (("S1", "train"), ("S2", "val"), ("S3", "test"), ("S9", "excluded"))])
         row = lambda f, src, s, sp, st, n: {"filename": f, "source_set": src, "session_id": s, "split": sp,
@@ -213,12 +231,12 @@ class BuiltDatasetTest(unittest.TestCase):
         (self.processed / "FROZEN.json").write_text(json.dumps({"versions": {"v7": {"dir": "v7", "files": files}}}))
         self.ds = t / "yolo" / "lobster_v7"
         summary = B.build_yolo_dataset(vdir / "image_manifest.csv", vdir / "split_manifest.csv", self.ds, "copy",
-                                       version="v7", version_status="frozen")
+                                       version="v7", version_status="frozen", image_source=self.IMAGE_SOURCE)
         self.cfg = {"dataset_version": "v7", "dataset_fingerprint": summary["dataset_fingerprint"],
                     "ultralytics_version": B.TARGET_ULTRALYTICS_VERSION}
 
     def tearDown(self):
-        B.DATASET_SOURCES, B.BIOLOGY_ROOT = self._saved
+        B.DATASET_SOURCES, B.BIOLOGY_ROOT, B.IMAGE_SOURCES = self._saved
         self._tmp.cleanup()
 
     def verify(self):
@@ -264,6 +282,26 @@ class BuiltDatasetTest(unittest.TestCase):
         summary["version_status"] = "draft"
         (self.ds / "build_summary.json").write_text(json.dumps(summary))
         self.assertRefused("frozen versions only")
+
+    def test_reports_image_source(self):
+        self.assertEqual(self.verify()["image_source"], self.IMAGE_SOURCE)
+
+
+class EnhancedBuiltDatasetTest(BuiltDatasetTest):
+    """Every BuiltDatasetTest check again, on a view whose images come from an image source."""
+
+    IMAGE_SOURCE = "enhanced_2026-09"
+
+    def test_changed_image_content_is_detected(self):
+        img = self.ds / "images" / "train" / "pos.png"
+        img.write_bytes(_png("something else"))
+        self.assertRefused("image content differs")
+
+    def test_view_from_another_image_source_is_refused(self):
+        summary = json.loads((self.ds / "build_summary.json").read_text())
+        summary["image_source"] = "biology"
+        (self.ds / "build_summary.json").write_text(json.dumps(summary))
+        self.assertRefused("image source")
 
 
 @unittest.skipUnless((ROOT / "data" / "yolo" / "lobster_v1" / "build_summary.json").is_file(),

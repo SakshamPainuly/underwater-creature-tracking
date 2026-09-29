@@ -28,7 +28,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from dataset_audit.config import BIOLOGY_ROOT, PROJECT_ROOT
+from dataset_audit.config import PROJECT_ROOT, RAW_ROOTS
 from dataset_audit.versioning import sha256_file
 from training import experiment as X
 from training import run_record as R
@@ -189,8 +189,8 @@ def run(config_path: Path, runs_root: Path, weights_dir: Path, mode: str, env_co
     if ultralytics.__version__ != cfg["ultralytics_version"]:
         raise TrainError(f"ultralytics {ultralytics.__version__} installed, config pins "
                          f"{cfg['ultralytics_version']}: pip install -r requirements-gpu.txt")
-    runs_root = X.check_output_location(runs_root, PROJECT_ROOT, BIOLOGY_ROOT)
-    weights_dir = X.check_output_location(weights_dir, PROJECT_ROOT, BIOLOGY_ROOT)
+    runs_root = X.check_output_location(runs_root, PROJECT_ROOT, RAW_ROOTS)
+    weights_dir = X.check_output_location(weights_dir, PROJECT_ROOT, RAW_ROOTS)
 
     git = R.git_state(PROJECT_ROOT)
     if not git["commit"]:
