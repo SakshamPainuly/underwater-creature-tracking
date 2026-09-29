@@ -33,14 +33,33 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E001 | `configs/experiments/E001_yolo_baseline.yaml` | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | completed; 100 epochs; final candidate evaluated on test |
 | E002 | `configs/experiments/E002_yolo_imgsz1280.yaml` | E001 | imgsz 640 → 1280 only | planned; not run |
 | E003 | `configs/experiments/E003_rtdetr_baseline.yaml` | E001 | model yolo26s.pt → rtdetr-l.pt only (D-015) | planned; not run |
+| E004 | `configs/experiments/E004_yolo_enhanced.yaml` | E001 | images raw → enhanced only: dataset v1 → v2 (D-017) | planned; not run |
 
-All use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`)
-and ultralytics 8.4.155. Colab procedure: docs/COLAB.md.
+E001–E003 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
+E004 uses dataset v2 (fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e`):
+v1's sessions, split and labels byte for byte, with Harsh's enhanced images. All use ultralytics
+8.4.155. Colab procedure: docs/COLAB.md.
 
 **YOLO vs RT-DETR (D-015):** E001 and E003 are compared on val mAP50, then on the secondary
 metrics above, with parameter count, GFLOPs and inference speed on the same GPU type reported
 alongside. E003 is evaluated on test only after it is registered, reviewed and declared in
 `experiments/final_candidates.csv`; test numbers are reported, never used to choose.
+
+**Raw vs enhanced images (D-017), declared before any E004 result:**
+- The question is whether Harsh's enhancement changes detection quality for the E001 detector.
+  E004 is E001 with only the images changed, so both use the same sessions, split, labels,
+  model, settings and seed.
+- **Comparison:** E001 and E004 are compared on val mAP50, then on the secondary metrics above.
+  Both are measured on the same 324 val frames and boxes, each seen through its own image
+  version (raw vs enhanced).
+- **Operating point:** E004's confidence is chosen on E004's own val, never copied from E001.
+- **Test:** E004 is evaluated on test (the same 348 v1 test frames, enhanced) only after it is
+  registered, reviewed and declared in `experiments/final_candidates.csv`. E001's and E004's test
+  numbers are reported side by side and are never used to choose between them.
+- **LIMITATION:** one run per arm with seed 0, so a small difference may be run-to-run noise.
+  No claim of "better" beyond what val shows consistently across the declared metrics.
+- **zExtra** (raw or enhanced) gives qualitative observations only: it has no labels.
+- **Reporting:** E004 results are not reported before Harsh's answers are recorded in D-017.
 
 ## Run record requirements
 

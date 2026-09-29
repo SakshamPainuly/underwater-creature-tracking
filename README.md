@@ -17,7 +17,7 @@ test split (mAP50 0.8974)**. Every result must be reported with the v1 limitatio
 docs/DATASET.md — the test split measures generalization to new *sessions*, not new *sites*.
 E002 (imgsz 1280) is configured but not run. No tracking or video work has started: the delivery
 contains no video (docs/DATASET.md).
-`data/raw/biology/` is read-only and never written to by any script.
+`data/raw/biology/` and `data/raw/enhanced_2026-09/` (D-017) are read-only and never written to by any script.
 
 ## Project layout
 
@@ -63,6 +63,15 @@ python scripts/freeze_dataset_version.py v1.1      # only with explicit approval
 
 A draft must keep every parent session's split and every parent image's label status
 (unless listed in its `VERSION.json` as approved changes) before it can be frozen.
+
+When only the images change (a delivered, processed copy of the same frames), the draft is an
+exact copy of its parent plus an image source (D-017), e.g. **v2** = v1 with Harsh's enhanced images:
+
+```
+python scripts/create_dataset_version.py --version v2 --from-version v1 --decision D-017 \
+    --image-source enhanced_2026-09
+python scripts/prepare_yolo_dataset.py --version v2    # images: data/raw/enhanced_2026-09/ (UWCT_ENHANCED_ROOT)
+```
 
 ## Building the YOLO dataset view (seconds, no training)
 

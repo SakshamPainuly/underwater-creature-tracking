@@ -140,6 +140,24 @@ smoke-test losses; location: D-016). For any other experiment, set `EXPERIMENT_C
 cell 15. Nothing else changes: `train_yolo.py` picks `RTDETR` or `YOLO` from the config's checkpoint name (D-015), and
 the final-test cell takes the experiment id in `FINAL_TEST_EXPERIMENT`.
 
+### E004 — the baseline on Harsh's enhanced images (D-017)
+
+Uses `notebooks/colab_train_baseline.ipynb`, the same notebook, code and procedure as E001.
+1. **Once:** put Harsh's ZIP on Drive as `MyDrive/uwct/raw/enhanced_2026-09.zip`, as received
+   (macOS files inside are fine).
+2. **Cell 1:** set `EXPERIMENT_CONFIG = "configs/experiments/E004_yolo_enhanced.yaml"`,
+   `EXPERIMENT_ID = "E004"`, and `COMMIT` as usual.
+3. **Cell 7b** reads the config (dataset v2, image source `enhanced_2026-09`), copies the ZIP to
+   local disk and unpacks only `images/<folder>/<name>.png` into `/content/raw/enhanced_2026-09`
+   (`scripts/unpack_image_source.py`). Cell 7 still restores the raw data, because the labels
+   and the size check come from it.
+4. **Cell 8** also checks every enhanced PNG against its recorded content hash (`--full`); it
+   must MATCH.
+5. **Cells 9–10** build and verify `data/yolo/lobster_v2`. Preflight and the final test re-hash
+   the images in the view (about 6.4 GB, adds a minute or two).
+6. **Cells 11–17** run as for E001; runs go to `MyDrive/uwct/runs/E004*/`. Test only after E004 is
+   declared in `experiments/final_candidates.csv` (docs/EXPERIMENTS.md).
+
 E003 specifics (the steps are otherwise the same as above):
 - Cell 11 (preflight) stops if `rtdetr-l.pt` cannot be loaded with the pinned Ultralytics; report it,
   do not change the model.

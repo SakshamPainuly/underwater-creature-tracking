@@ -9,7 +9,7 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from dataset_audit.versioning import sha256_file
+from dataset_audit.versioning import image_source_of, sha256_file, version_dir
 from training import experiment as X
 from yolo_prep import build as B
 
@@ -17,6 +17,7 @@ CONFIG_DIR = ROOT / "configs" / "experiments"
 E001 = CONFIG_DIR / "E001_yolo_baseline.yaml"
 E002 = CONFIG_DIR / "E002_yolo_imgsz1280.yaml"
 E003 = CONFIG_DIR / "E003_rtdetr_baseline.yaml"
+E004 = CONFIG_DIR / "E004_yolo_enhanced.yaml"
 
 
 def valid_cfg(**overrides):
@@ -72,6 +73,17 @@ class CommittedConfigsTest(unittest.TestCase):
         self.assertEqual(e3["model"], "rtdetr-l.pt")
         self.assertEqual(X.model_family(e3["model"]), "rtdetr")
         self.assertEqual(X.model_family(e1["model"]), "yolo")
+
+    def test_e004_changes_only_the_images(self):
+        e1, e4 = X.load_and_validate(E001), X.load_and_validate(E004)
+        self.assertEqual(e4["parent"], "E001")
+        diff = {k for k in e1 if k in ("id", "slug", "parent", "changed") or e1[k] != e4[k]}
+        self.assertEqual(diff, {"id", "slug", "parent", "changed", "dataset_version", "dataset_fingerprint"})
+        self.assertEqual(image_source_of(e4["dataset_version"]), "enhanced_2026-09")
+        self.assertEqual(image_source_of(e1["dataset_version"]), "biology")
+        v1, v2 = version_dir("v1"), version_dir("v2")  # same sessions, split and labels as E001's data
+        for name in ("split_manifest.csv", "image_manifest.csv"):
+            self.assertEqual((v1 / name).read_bytes(), (v2 / name).read_bytes(), name)
 
     def test_model_family_is_required(self):
         cfg = X.load_and_validate(E003)
