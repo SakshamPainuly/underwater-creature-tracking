@@ -1,0 +1,10 @@
+{
+  "name": "v2",
+  "parent": "v1",
+  "decision": "D-017",
+  "status": "frozen",
+  "created": "2026-09-29",
+  "approved_split_changes": [],
+  "approved_label_changes": [],
+  "image_source": "enhanced_2026-09"
+}

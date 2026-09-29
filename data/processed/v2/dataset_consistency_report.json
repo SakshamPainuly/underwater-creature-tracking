@@ -1,0 +1,8 @@
+{
+  "total_images_scanned": 2541,
+  "malformed_or_invalid_label_images": [],
+  "images_with_session_not_in_split_manifest": [],
+  "duplicate_filenames_across_sources": [],
+  "orphan_label_files_no_matching_image": [],
+  "sessions_assigned_to_more_than_one_split": []
+}

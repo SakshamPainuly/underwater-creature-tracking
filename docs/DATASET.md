@@ -80,6 +80,23 @@ The split unit is the session (the deployment code without the GoPro file ID); s
   `GP309683`). Grouping comes from filenames, so this has no effect.
 - 16 deployments listed in the spreadsheet as "in progress" (625 images) are not in this delivery.
 
+## Version v2: enhanced images (D-017, draft until frozen with user approval)
+- **What:** v1's manifests byte for byte (same sessions, split, labels and label policies; zExtra
+  excluded). Images come from image source `enhanced_2026-09` (`data/processed/v2/VERSION.json`).
+- **Source:** Harsh's preprocessed copies of the 2,105 v1 train/val/test images, stored read-only
+  at `data/raw/enhanced_2026-09/images/{train,val,test}/`, as delivered minus macOS metadata.
+  Full content fingerprint: `data/processed/raw_fingerprint_enhanced_2026-09.json` (2,105 files).
+- **Delivered folders are not the split** (OBSERVED: 234 delivered `test/` images are v1 train,
+  and 221 delivered `train/` images are v1 test). Images are matched to v1 by filename.
+- **Checks (OBSERVED, 2026-09-29):**
+  - every image has the same width × height as its raw original, so the raw labels are reused;
+  - the built labels are identical to v1's;
+  - v2 fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e` (it
+    includes every image's sha256).
+- **UNKNOWN — requires confirmation:** the method, whether anything was tuned on the images,
+  and whether any geometric change was applied (D-017).
+- Every v1 limitation above applies unchanged.
+
 ## Raw-data fingerprint semantics
 - Default check (`scripts/check_raw_unchanged.py`): **structural/completeness** — every file's path
   and size, plus sha256 of `.txt`/`.xlsx`/`.docx`. PNG contents are covered by path and size only,

@@ -273,3 +273,71 @@ Short, dated records of project decisions. New dataset versions must reference a
   notebook is unchanged. E003 runs from `my_model/colab_train_rtdetr.ipynb` (user-requested
   location): a copy of it for branch `anu/model-development` and E003, with an added smoke-test
   cell that stops on non-finite losses (docs/COLAB.md). `scripts/train_yolo.py` keeps its name and trains either family.
+
+## D-016 — Repository layout: all Colab notebooks live in `notebooks/` (2026-09-29, accepted)
+- **Context:** D-015 placed the E003 notebook and a README in a new top-level `my_model/` folder.
+  The documented layout (README.md) keeps notebooks in `notebooks/`, experiment configs in
+  `configs/experiments/` and runbooks in `docs/`. A per-person model folder would split the
+  shared pipeline by author instead of by stage.
+- **Decision (user-requested):** `my_model/colab_train_rtdetr.ipynb` moves to
+  `notebooks/colab_train_rtdetr.ipynb` (content unchanged except the Colab badge path).
+  `my_model/README.md` is removed; its runbook steps are in docs/COLAB.md ("Other experiments") and
+  its file table duplicated README.md. `my_model/` no longer exists. This supersedes the notebook
+  location stated in D-015; nothing else in D-015 changes.
+- **Rule going forward:** new models are added as experiment configs plus code in `src/`, never
+  as a per-person or per-model top-level folder. Notebooks go in `notebooks/`, docs in `docs/`.
+- **Consequence:** no code, config, dataset, split, frozen or raw file changes. The Colab badge
+  points at `notebooks/` on branch `anu/model-development`, so it works once that branch includes
+  this commit. `COMMIT` in cell 1 stays empty on this branch (it is set per run).
+
+## D-017 — Enhanced images (Harsh, 2026-09) as image source; dataset v2 and experiment E004 (2026-09-29, accepted)
+- **Context:** a teammate (Harsh) delivered preprocessed ("enhanced") copies of the Set 100 +
+  Set 2000 images. The goal is to train and test the E001 baseline on them, the same way as E001,
+  for a fair raw vs enhanced comparison. Inspection of the delivery (OBSERVED, 2026-09-29):
+  - 2,105 PNGs in `images/{train,val,test}/` plus macOS metadata (`__MACOSX/`, `.DS_Store`).
+  - Every filename is in the v1 image manifest. They are exactly the v1 train + val + test
+    images; no zExtra.
+  - Every image has the same width × height as its raw original, and 0 of 40 sampled images
+    are byte-identical to the raw file.
+  - The delivered folders are **not the v1 split**. They are session-grouped, but assigned
+    differently: 234 of the delivered `test/` images are v1 train, and 221 of the delivered
+    `train/` images are v1 test.
+- **Problem found in the pipeline:** the dataset fingerprint covers `build_manifest.csv` + label
+  files, not image bytes. Swapping in other images would have given E001's fingerprint, so the
+  records could not tell raw and enhanced runs apart.
+- **Decision (user-requested):**
+  - **Raw source:** the delivery is stored as a new read-only raw root,
+    `data/raw/enhanced_2026-09/images/{train,val,test}/`, as delivered minus the macOS files.
+    Content fingerprint (`--full`): `data/processed/raw_fingerprint_enhanced_2026-09.json`.
+    Colab root: `UWCT_ENHANCED_ROOT`.
+  - **Images found by filename:** the delivered folders, and the split they imply, are never used.
+  - **Image sources:** `config.IMAGE_SOURCES` names each image root (`biology` = raw,
+    `enhanced_2026-09`). A version's `VERSION.json` may name its `image_source` (default `biology`).
+    Labels always come from the raw data.
+  - **Builder rules** for a non-raw source:
+    - every image must be a PNG with the same size as its raw original;
+    - `build_manifest.csv` gains `image_source` and `image_sha256`, so the fingerprint identifies
+      the image content;
+    - `verify_built_dataset` (preflight, final test) re-hashes the images and checks the image
+      source.
+    - v1's build is byte-identical to before: rebuilt with this code, its fingerprint is still
+      `9f2bf857…ef810` (OBSERVED).
+  - **Dataset v2** = draft from v1 (`scripts/create_dataset_version.py`): the v1 manifests byte
+    for byte (same sessions, split, labels, label policies; zExtra excluded) plus
+    `image_source: enhanced_2026-09`. Freezing it needs the user's explicit approval (rule 4).
+  - **E004** (`configs/experiments/E004_yolo_enhanced.yaml`): parent E001. The single variable
+    changed is the images (raw → enhanced). `dataset_version`/`dataset_fingerprint` change only
+    because they identify those images. Everything else is as in E001.
+  - **Procedure:** same code path, notebook and machinery as E001 (preflight → smoke → full →
+    register → declare → final test). The operating confidence is chosen on E004's own val.
+- **Comparison rule:** declared in docs/EXPERIMENTS.md before any E004 result exists.
+- **zExtra:** still excluded and unlabelled (D-014). Enhanced zExtra images, when delivered, are a
+  separate raw root and are for qualitative inspection only. No metric is possible without labels.
+- **UNKNOWN — requires confirmation (Harsh):**
+  1. the method and its parameters, and whether they were identical for every image;
+  2. whether anything was tuned, fitted or chosen while looking at images (in particular any
+     v1 val/test image);
+  3. whether any geometric change (crop, shift, warp, rotation) was applied. The sizes match,
+     but that does not rule out a shift.
+
+  Results are not reported before these are answered and recorded here.

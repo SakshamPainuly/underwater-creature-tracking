@@ -18,7 +18,7 @@ import shutil
 from datetime import date
 from pathlib import Path
 
-from .config import PROJECT_ROOT
+from .config import DEFAULT_IMAGE_SOURCE, IMAGE_SOURCES, PROJECT_ROOT
 
 PROCESSED_ROOT = PROJECT_ROOT / "data" / "processed"
 DECISIONS_PATH = PROJECT_ROOT / "docs" / "DECISIONS.md"
@@ -108,9 +108,20 @@ def read_version_meta(name: str, root: Path = PROCESSED_ROOT) -> dict | None:
     return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
 
 
+def image_source_of(name: str, root: Path = PROCESSED_ROOT) -> str:
+    """The image source a version's images come from (D-017); versions without one use raw images."""
+    meta = read_version_meta(name, root) or {}
+    return meta.get("image_source", DEFAULT_IMAGE_SOURCE)
+
+
 def open_draft(name: str, parent: str | None, decision: str | None,
-               root: Path = PROCESSED_ROOT, decisions_path: Path = DECISIONS_PATH) -> Path:
-    """Return the directory of draft version `name`, creating it from `parent` if needed."""
+               root: Path = PROCESSED_ROOT, decisions_path: Path = DECISIONS_PATH,
+               image_source: str | None = None) -> Path:
+    """Return the directory of draft version `name`, creating it from `parent` if needed.
+
+    `image_source` (D-017) names where the new version's images come from; by default it is the
+    parent's. Labels, splits and manifests are always the parent's until changed deliberately.
+    """
     if is_frozen(name, root):
         raise VersionError(
             f"dataset version {name} is frozen and immutable ({REGISTRY_NAME}); there is no override. "
@@ -120,9 +131,11 @@ def open_draft(name: str, parent: str | None, decision: str | None,
     d = version_dir(name, root)
     meta = read_version_meta(name, root)
     if meta is not None:
-        if (parent and parent != meta["parent"]) or (decision and decision != meta["decision"]):
+        existing_source = meta.get("image_source", DEFAULT_IMAGE_SOURCE)
+        if ((parent and parent != meta["parent"]) or (decision and decision != meta["decision"])
+                or (image_source and image_source != existing_source)):
             raise VersionError(f"draft {name} already exists with parent={meta['parent']}, "
-                               f"decision={meta['decision']}")
+                               f"decision={meta['decision']}, image_source={existing_source}")
         return d
 
     if not parent or not decision:
@@ -134,6 +147,9 @@ def open_draft(name: str, parent: str | None, decision: str | None,
         raise VersionError(f"decision {decision} not found in {decisions_path}; record it first")
     if d.exists():
         raise VersionError(f"{d} exists but has no {VERSION_FILE}; refusing to reuse it")
+    image_source = image_source or image_source_of(parent, root)
+    if image_source not in IMAGE_SOURCES:
+        raise VersionError(f"unknown image source {image_source!r}; known: {sorted(IMAGE_SOURCES)}")
 
     d.mkdir(parents=True)
     parent_entry = load_registry(root)["versions"][parent]
@@ -145,6 +161,8 @@ def open_draft(name: str, parent: str | None, decision: str | None,
         "approved_split_changes": [],   # session_ids whose split may differ from the parent
         "approved_label_changes": [],   # filenames whose label_status may differ from the parent
     }
+    if image_source != DEFAULT_IMAGE_SOURCE:  # drafts on raw images keep the VERSION.json shape
+        meta["image_source"] = image_source
     (d / VERSION_FILE).write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
     return d
 

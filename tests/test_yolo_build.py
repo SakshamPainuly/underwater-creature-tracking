@@ -115,5 +115,106 @@ class YoloBuildTest(unittest.TestCase):
             self.build()
 
 
+def fake_png(width, height, payload=b""):
+    """A PNG signature + IHDR header (all the builder reads) followed by arbitrary bytes."""
+    ihdr = (13).to_bytes(4, "big") + b"IHDR" + width.to_bytes(4, "big") + height.to_bytes(4, "big")
+    return B.PNG_SIGNATURE + ihdr + b"\x08\x02\x00\x00\x00" + payload
+
+
+class ImageSourceBuildTest(unittest.TestCase):
+    """D-017: images from a delivered image source, labels and split from the raw data + manifests."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        t = Path(self._tmp.name)
+        self.raw = t / "raw"
+        imgs, lbls = self.raw / "imgs", self.raw / "lbls"
+        for d in (imgs, lbls):
+            d.mkdir(parents=True)
+        (imgs / "pos.png").write_bytes(fake_png(1920, 1080, b"raw-pos"))
+        (imgs / "neg.png").write_bytes(fake_png(1920, 1088, b"raw-neg"))
+        (lbls / "pos.txt").write_text("0 0.5 0.5 0.1 0.1\n")
+        # delivered in the sender's own folders, which disagree with our split (both are train here)
+        self.enh = t / "enhanced"
+        (self.enh / "images" / "test").mkdir(parents=True)
+        (self.enh / "images" / "val").mkdir(parents=True)
+        (self.enh / "images" / "test" / "pos.png").write_bytes(fake_png(1920, 1080, b"enh-pos"))
+        (self.enh / "images" / "val" / "neg.png").write_bytes(fake_png(1920, 1088, b"enh-neg"))
+
+        self._saved = (B.DATASET_SOURCES, B.BIOLOGY_ROOT, B.IMAGE_SOURCES)
+        B.DATASET_SOURCES = [("Set2000", imgs, lbls)]
+        B.BIOLOGY_ROOT = self.raw
+        B.IMAGE_SOURCES = {"biology": self.raw, "enh": self.enh}
+
+        self.split = t / "split_manifest.csv"
+        _write_csv(self.split, [{"session_id": "S1", "split": "train"}])
+        self.manifest = t / "image_manifest.csv"
+        _write_csv(self.manifest, [
+            {"filename": "pos.png", "source_set": "Set2000", "session_id": "S1", "split": "train",
+             "label_status": "positive", "n_instances": 1, "issues": ""},
+            {"filename": "neg.png", "source_set": "Set2000", "session_id": "S1", "split": "train",
+             "label_status": "negative_confirmed", "n_instances": 0, "issues": ""},
+        ])
+        self.out = t / "yolo" / "lobster_test"
+
+    def tearDown(self):
+        B.DATASET_SOURCES, B.BIOLOGY_ROOT, B.IMAGE_SOURCES = self._saved
+        self._tmp.cleanup()
+
+    def build(self, image_source="enh", out=None):
+        return B.build_yolo_dataset(self.manifest, self.split, out or self.out, "copy",
+                                    version="vtest", version_status="frozen", image_source=image_source)
+
+    def manifest_rows(self):
+        with open(self.out / "build_manifest.csv", newline="", encoding="utf-8") as f:
+            return list(csv.DictReader(f))
+
+    def test_images_from_source_split_and_labels_from_manifests(self):
+        summary = self.build()
+        train = self.out / "images" / "train"
+        self.assertTrue((train / "pos.png").read_bytes().endswith(b"enh-pos"))  # the sender's test/ folder is ignored
+        self.assertTrue((train / "neg.png").read_bytes().endswith(b"enh-neg"))
+        self.assertEqual((self.out / "labels" / "train" / "pos.txt").read_text(), "0 0.5 0.5 0.1 0.1\n")
+        self.assertEqual(summary["image_source"], "enh")
+        rows = {r["filename"]: r for r in self.manifest_rows()}
+        self.assertEqual(rows["pos.png"]["image_source"], "enh")
+        self.assertEqual(rows["pos.png"]["raw_image"], "images/test/pos.png")
+        self.assertEqual(rows["pos.png"]["image_sha256"], B.sha256_file(self.enh / "images" / "test" / "pos.png"))
+
+    def test_fingerprint_identifies_the_images(self):
+        enhanced = self.build()["dataset_fingerprint"]
+        raw = self.build(image_source="biology")["dataset_fingerprint"]
+        self.assertNotEqual(enhanced, raw)
+        (self.enh / "images" / "test" / "pos.png").write_bytes(fake_png(1920, 1080, b"enh-pos-v2"))
+        self.assertNotEqual(self.build()["dataset_fingerprint"], enhanced)
+
+    def test_raw_source_build_manifest_is_unchanged(self):
+        summary = self.build(image_source="biology")
+        self.assertEqual(list(self.manifest_rows()[0]),
+                         ["split", "filename", "session_id", "label_status", "n_instances", "raw_image"])
+        self.assertEqual(summary["image_source"], "biology")
+
+    def test_size_change_is_refused(self):
+        (self.enh / "images" / "test" / "pos.png").write_bytes(fake_png(1280, 720))
+        with self.assertRaisesRegex(B.BuildError, "differs from the raw image"):
+            self.build()
+
+    def test_missing_duplicate_and_unknown_sources_are_refused(self):
+        with self.assertRaisesRegex(B.BuildError, "unknown image source"):
+            self.build(image_source="nope")
+        (self.enh / "images" / "val" / "pos.png").write_bytes(fake_png(1920, 1080))
+        with self.assertRaisesRegex(B.BuildError, "more than once"):
+            self.build()
+        (self.enh / "images" / "val" / "pos.png").unlink()
+        (self.enh / "images" / "val" / "neg.png").unlink()
+        with self.assertRaisesRegex(B.BuildError, "missing from image source"):
+            self.build()
+        self.assertFalse(self.out.exists())  # refused before anything was written
+
+    def test_refuses_output_inside_image_source(self):
+        with self.assertRaisesRegex(B.BuildError, "inside the raw data folder"):
+            self.build(out=self.enh / "yolo")
+
+
 if __name__ == "__main__":
     unittest.main()
