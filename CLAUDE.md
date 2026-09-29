@@ -96,3 +96,20 @@ checkpoints on persistent storage and a resume path.
 Inspect repo, manifests and configs → plan → smallest change → test → report exactly what changed
 (files created/modified, checks run, raw-data status). When uncertain, inspect or ask; never guess.
 Stop at the task's stop condition and wait for approval before starting the next phase.
+
+## 10. Team workflow
+- Owners: Saksham, `p4/colab-baseline` (integration branch, YOLO E001/E002); Anu,
+  `anu/model-development` (RT-DETR E003, D-015); Harsh, image preprocessing (delivers data, not code).
+- `p4/colab-baseline` is protected: changes land only by PR, 1 approving review, squash merge. Never
+  bypass it. Before starting work, `git fetch` and merge `origin/p4/colab-baseline` into your branch.
+  Every PR is reviewed against this file before approval.
+- Layout (D-016): notebooks in `notebooks/`, configs in `configs/experiments/`, code in `src/<package>/`,
+  CLIs in `scripts/`, docs in `docs/`. No per-person or per-model top-level folders. Ask before adding
+  a new top-level folder.
+- Decision/experiment IDs: take the next free ID from `origin/p4/colab-baseline`, then re-check just
+  before opening the PR and renumber if there is a collision. Write "user-approved" only for text that
+  person approved. Never edit an accepted decision; add one that supersedes it.
+- Delivered data (e.g. preprocessed images) is new data (§4): a new raw source and a new dataset version
+  on the parent's session split. Never use a split shipped with the data.
+- A PR states what and why, the files changed, the test result, the raw check if data code changed, and
+  any GPU runs (run ids). It contains only what it is about.
