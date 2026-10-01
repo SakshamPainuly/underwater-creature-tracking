@@ -396,3 +396,22 @@ Short, dated records of project decisions. New dataset versions must reference a
 - **Open:** obtain `previously_reviewed_images.json` from Harsh and check it. Optional: ask Harsh to
   run the updated notebook on a few v1 raw images, and compare the result with the delivered images
   pixel for pixel, to replace the INFERRED provenance above with an OBSERVED one.
+
+## D-019 — Owner override: Saksham may merge his own PRs without a review (2026-10-01, accepted)
+- **Context:** CLAUDE.md §10 required 1 approving review for every change to the protected
+  `p4/colab-baseline` and said never to bypass it. GitHub does not let an author approve their own
+  PR, so the owner's PRs waited on a teammate. PR #5 (E004 records, D-018) was merged by the owner
+  on 2026-10-01 as `0446faa` with no review, through the repository admin's bypass.
+- **Decision (user-approved, 2026-10-01; option chosen: "process rules only"):**
+  - Saksham, the repository owner, may merge his own PRs into `p4/colab-baseline` without an
+    approving review. Each such PR says "Owner merge, no review", so the history shows it. PR #5
+    is the first such merge (recorded here after the fact).
+  - Teammates' PRs still need Saksham's approving review. No one else bypasses the protection.
+  - Everything else is unchanged: PR + squash merge, the commit-plan approval in §8, and every PR
+    is still checked against CLAUDE.md before merging.
+  - The override covers **merge review only**. The §2 hard rules (raw data, frozen versions,
+    splits, test split, no fabrication) keep their existing exception routes, which need
+    explicit user approval and their own DECISIONS.md entry. Never fabricating data, metrics,
+    files or results has no exception.
+- **Consequence:** CLAUDE.md §10 is updated to match. The GitHub branch protection stays as it is;
+  the owner's admin bypass is how an owner merge is done.

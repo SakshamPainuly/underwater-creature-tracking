@@ -100,9 +100,11 @@ Stop at the task's stop condition and wait for approval before starting the next
 ## 10. Team workflow
 - Owners: Saksham, `p4/colab-baseline` (integration branch, YOLO E001/E002); Anu,
   `anu/model-development` (RT-DETR E003, D-015); Harsh, image preprocessing (delivers data, not code).
-- `p4/colab-baseline` is protected: changes land only by PR, 1 approving review, squash merge. Never
-  bypass it. Before starting work, `git fetch` and merge `origin/p4/colab-baseline` into your branch.
-  Every PR is reviewed against this file before approval.
+- `p4/colab-baseline` is protected: changes land only by PR and squash merge, with 1 approving review.
+  Owner override (D-019): Saksham may merge his own PRs without a review; such a PR says "Owner merge,
+  no review". Teammates' PRs still need his approving review, and no one else bypasses the protection.
+  The override covers merge review only, not the §2 hard rules. Before starting work, `git fetch` and
+  merge `origin/p4/colab-baseline` into your branch. Every PR is checked against this file before merging.
 - Layout (D-016): notebooks in `notebooks/`, configs in `configs/experiments/`, code in `src/<package>/`,
   CLIs in `scripts/`, docs in `docs/`. No per-person or per-model top-level folders. Ask before adding
   a new top-level folder.
