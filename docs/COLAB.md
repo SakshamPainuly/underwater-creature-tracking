@@ -143,6 +143,10 @@ the final-test cell takes the experiment id in `FINAL_TEST_EXPERIMENT`.
 ### E004 — the baseline on Harsh's enhanced images (D-017)
 
 Uses `notebooks/colab_train_baseline.ipynb`, the same notebook, code and procedure as E001.
+E004 was actually trained (2026-09-30) with `notebooks/colab_train_E004_enhanced.ipynb`. It runs
+the same scripts and commands with E004's settings filled in. It also keeps the output short
+(script output goes to log files, and training prints one line per epoch) and has a resume cell.
+Cell numbers below refer to the baseline notebook.
 1. **Once:** put Harsh's ZIP on Drive as `MyDrive/uwct/raw/enhanced_2026-09.zip`, as received
    (macOS files inside are fine).
 2. **Cell 1:** set `EXPERIMENT_CONFIG = "configs/experiments/E004_yolo_enhanced.yaml"`,
@@ -260,6 +264,11 @@ missing, rather than failing.
 
 Colab's local disk (`/content`) is wiped, but the run folder on Drive keeps `last.pt`, which is
 saved every epoch.
+
+First make sure the machine was really lost. "Connecting…" in the browser can mean only the page
+lost its connection while training goes on (OBSERVED during E004). If
+`MyDrive/uwct/runs/<run>/train/results.csv` still gains a row every epoch, do nothing and wait.
+Re-running the setup cells on a machine that is still training deletes the data under it.
 1. Rerun cells 1–10 with the **same** `COMMIT`. This recreates `/content/uwct/data/yolo/lobster_v1`
    at the same path, and `data_trainval.yaml` points there.
 2. Run cell 14 (`--resume`). It refuses to resume if the commit, config sha256, dataset fingerprint
