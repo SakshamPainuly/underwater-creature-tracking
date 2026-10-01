@@ -1,0 +1,335 @@
+{
+  "schema": "uwct.run_record/1",
+  "created_utc": "2026-10-01T01:24:56+00:00",
+  "kind": "full",
+  "experiment": {
+    "id": "E004",
+    "slug": "yolo_enhanced",
+    "parent": "E001",
+    "changed": "images raw -> enhanced (dataset v1 -> v2, D-017)",
+    "config_path": "configs/experiments/E004_yolo_enhanced.yaml",
+    "config_sha256": "99a7cf599aaa003d5baaa3214f329588a12085a2074286dcc0ca8c1c2af28454",
+    "config": {
+      "id": "E004",
+      "slug": "yolo_enhanced",
+      "parent": "E001",
+      "changed": "images raw -> enhanced (dataset v1 -> v2, D-017)",
+      "dataset_version": "v2",
+      "dataset_fingerprint": "8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e",
+      "model": "yolo26s.pt",
+      "ultralytics_version": "8.4.155",
+      "seed": 0,
+      "train_args": {
+        "imgsz": 640,
+        "epochs": 100,
+        "patience": 30,
+        "batch": 16,
+        "deterministic": true
+      }
+    }
+  },
+  "run_name": "E004",
+  "run_dir": "/content/drive/MyDrive/uwct/runs/E004",
+  "git": {
+    "commit": "97ac710a2da5096e3a4a377ad2c809d7565637ad",
+    "branch": "HEAD",
+    "dirty": false,
+    "allow_dirty": false
+  },
+  "dataset": {
+    "version": "v2",
+    "status": "frozen",
+    "frozen_registry_verified": true,
+    "fingerprint": "8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e",
+    "image_source": "enhanced_2026-09",
+    "image_manifest_sha256": "368bdfa0d127480d119c81047fb155ed80e39da392d15b92edc169b1c7ab9e0d",
+    "split_manifest_sha256": "fccb4050e4fcdc25d5647d7b6fc7e59662b75e41000f525769a3eb95fac6aa71",
+    "dataset_dir": "/content/uwct/data/yolo/lobster_v2",
+    "splits_used_for_training": [
+      "train",
+      "val"
+    ],
+    "counts": {
+      "train": {
+        "images": 1433,
+        "positive": 1274,
+        "negative": 159,
+        "instances": 4000
+      },
+      "val": {
+        "images": 324,
+        "positive": 269,
+        "negative": 55,
+        "instances": 1010
+      }
+    },
+    "ultralytics_verification": {
+      "train": {
+        "seen": {
+          "images": 1433,
+          "negative": 159,
+          "instances": 4000
+        },
+        "match": true
+      },
+      "val": {
+        "seen": {
+          "images": 324,
+          "negative": 55,
+          "instances": 1010
+        },
+        "match": true
+      }
+    }
+  },
+  "model": {
+    "name": "yolo26s.pt",
+    "family": "yolo",
+    "checkpoint_path": "/content/weights/yolo26s.pt",
+    "checkpoint_sha256": "646f8bc3fe0a656803d95c294f7852321748cb29d13466a1af8862e2db384a1b",
+    "in_ultralytics_asset_list": true
+  },
+  "ultralytics_version": "8.4.155",
+  "seed": 0,
+  "train_args": {
+    "imgsz": 640,
+    "epochs": 100,
+    "patience": 30,
+    "batch": 16,
+    "deterministic": true,
+    "data": "/content/drive/MyDrive/uwct/runs/E004/data_trainval.yaml",
+    "project": "/content/drive/MyDrive/uwct/runs/E004",
+    "name": "train",
+    "seed": 0,
+    "exist_ok": false,
+    "val": true,
+    "save": true
+  },
+  "ultralytics_args": {
+    "task": "detect",
+    "mode": "train",
+    "model": "yolo26s.pt",
+    "data": "/content/drive/MyDrive/uwct/runs/E004/data_trainval.yaml",
+    "epochs": 100,
+    "time": null,
+    "patience": 30,
+    "batch": 16,
+    "imgsz": 640,
+    "save": true,
+    "save_period": -1,
+    "cache": false,
+    "device": "",
+    "workers": 8,
+    "project": "/content/drive/MyDrive/uwct/runs/E004",
+    "name": "train",
+    "exist_ok": false,
+    "pretrained": true,
+    "cls_remap": true,
+    "optimizer": "auto",
+    "verbose": true,
+    "seed": 0,
+    "deterministic": true,
+    "single_cls": false,
+    "rect": false,
+    "cos_lr": false,
+    "close_mosaic": 10,
+    "resume": false,
+    "amp": true,
+    "fraction": 1.0,
+    "profile": false,
+    "freeze": null,
+    "multi_scale": 0.0,
+    "compile": false,
+    "channels_last": null,
+    "overlap_mask": true,
+    "mask_ratio": 4,
+    "dropout": 0.0,
+    "val": true,
+    "split": "val",
+    "save_json": false,
+    "conf": null,
+    "iou": 0.7,
+    "max_det": 300,
+    "quantize": null,
+    "dnn": false,
+    "plots": true,
+    "nms": null,
+    "source": null,
+    "vid_stride": 1,
+    "stream_buffer": false,
+    "visualize": false,
+    "augment": false,
+    "agnostic_nms": false,
+    "classes": null,
+    "retina_masks": false,
+    "embed": null,
+    "show": false,
+    "save_frames": false,
+    "save_txt": false,
+    "save_conf": false,
+    "save_crop": false,
+    "show_labels": true,
+    "show_conf": true,
+    "show_boxes": true,
+    "line_width": null,
+    "format": "torchscript",
+    "keras": false,
+    "optimize": false,
+    "dynamic": false,
+    "simplify": true,
+    "opset": null,
+    "workspace": null,
+    "lr0": 0.01,
+    "lrf": 0.01,
+    "momentum": 0.937,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 3.0,
+    "warmup_momentum": 0.8,
+    "warmup_bias_lr": 0.1,
+    "distill_model": null,
+    "dis": 6.0,
+    "box": 7.5,
+    "cls": 0.5,
+    "cls_pw": 0.0,
+    "dfl": 1.5,
+    "pose": 12.0,
+    "kobj": 1.0,
+    "rle": 1.0,
+    "angle": 1.0,
+    "dlog": 1.0,
+    "dgrad": 0.5,
+    "dlam": 1.0,
+    "nbs": 64,
+    "hsv_h": 0.015,
+    "hsv_s": 0.7,
+    "hsv_v": 0.4,
+    "degrees": 0.0,
+    "translate": 0.1,
+    "scale": 0.5,
+    "shear": 0.0,
+    "perspective": 0.0,
+    "flipud": 0.0,
+    "fliplr": 0.5,
+    "bgr": 0.0,
+    "mosaic": 1.0,
+    "mixup": 0.0,
+    "cutmix": 0.0,
+    "copy_paste": 0.0,
+    "copy_paste_mode": "flip",
+    "auto_augment": "randaugment",
+    "erasing": 0.4,
+    "cfg": null,
+    "tracker": "tracktrack.yaml",
+    "save_dir": "/content/drive/MyDrive/uwct/runs/E004/train"
+  },
+  "environment": {
+    "timestamp_utc": "2026-09-30T22:45:02+00:00",
+    "os": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "python": "3.13.15",
+    "cpu_count": 2,
+    "torch": "2.11.0+cu128",
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "cudnn_version": 91900,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      }
+    ],
+    "ultralytics": "8.4.155",
+    "nvidia_smi": [
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.82.07"
+      }
+    ]
+  },
+  "duration": {
+    "launches": [
+      {
+        "mode": "full",
+        "started_utc": "2026-09-30T22:45:02+00:00",
+        "git_commit": "97ac710a2da5096e3a4a377ad2c809d7565637ad",
+        "ended_utc": "2026-10-01T01:24:28+00:00",
+        "seconds": 9566.0,
+        "outcome": "completed"
+      }
+    ],
+    "train_seconds_recorded": 9566.0,
+    "note": "Interrupted launches have no end time; their duration is not included."
+  },
+  "epochs_completed": 81,
+  "outputs": {
+    "best": {
+      "path": "/content/drive/MyDrive/uwct/runs/E004/train/weights/best.pt",
+      "size": 20292485,
+      "sha256": "0f5470c621196ea0a614fe77c1521a3e4bf0689d5de31b16448f8251ea726da4"
+    },
+    "last": {
+      "path": "/content/drive/MyDrive/uwct/runs/E004/train/weights/last.pt",
+      "size": 20292485,
+      "sha256": "0f793333ca00832aac82e0f8ac07f71af484ed3d69a71f2b416ba6a94d026269"
+    },
+    "results_csv": {
+      "path": "/content/drive/MyDrive/uwct/runs/E004/train/results.csv",
+      "size": 9840,
+      "sha256": "eaaa929be3f27543ed989cbe10c28309ff0c9d85895d3c6145c5ada95e33d932"
+    },
+    "ultralytics_args_yaml": {
+      "path": "/content/drive/MyDrive/uwct/runs/E004/train/args.yaml",
+      "size": 1738,
+      "sha256": "ca5d963b2946edca3220ee4a1e8ae3666649b94e51646dd9de4b2ec12f46fdb3"
+    }
+  },
+  "val_metrics": {
+    "split": "val",
+    "weights": "best.pt",
+    "precision": 0.8055587339400405,
+    "recall": 0.7465498180007701,
+    "map50": 0.8385413980908019,
+    "map50_95": 0.5864115398403847,
+    "ultralytics_results_dict": {
+      "metrics/precision(B)": 0.8055587339400405,
+      "metrics/recall(B)": 0.7465498180007701,
+      "metrics/mAP50(B)": 0.8385413980908019,
+      "metrics/mAP50-95(B)": 0.5864115398403847,
+      "fitness": 0.5864115398403847
+    },
+    "note": "Ultralytics val defaults (conf=0.001, iou=0.7); operating threshold not chosen yet."
+  },
+  "test_metrics": null,
+  "limitations": [
+    "v1 val/test sessions share sites (mostly also dates) with train sessions: results measure generalization to new sessions, not new sites (docs/DATASET.md, D-007).",
+    "Substrate/visibility metadata is mostly missing; zExtra is excluded.",
+    "Val is concentrated: 21_MACK_10 holds 465 of 1,010 val boxes (D-008).",
+    "This record holds overall val metrics only; per-condition results and false positives on negative images come from the evaluation step."
+  ],
+  "environment_at_finalize": {
+    "timestamp_utc": "2026-10-01T01:24:56+00:00",
+    "os": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "python": "3.13.15",
+    "cpu_count": 2,
+    "torch": "2.11.0+cu128",
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "cudnn_version": 91900,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      }
+    ],
+    "ultralytics": "8.4.155",
+    "nvidia_smi": [
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.82.07"
+      }
+    ]
+  }
+}
