@@ -341,3 +341,58 @@ Short, dated records of project decisions. New dataset versions must reference a
      but that does not rule out a shift.
 
   Results are not reported before these are answered and recorded here.
+
+## D-018 — Harsh's answers on the enhanced images; E004 val results reported, test after a review-list check (2026-10-01, accepted)
+- **Context:** D-017 left three questions about the enhanced images UNKNOWN and held back E004
+  results until they were answered. E004 trained on 2026-09-30 (commit `97ac710`, one launch,
+  81 epochs) and is registered; its records are in `experiments/records/E004/` (D-013). Harsh
+  answered in writing on 2026-10-01. The points below are his statements, summarized; we have not
+  verified them unless marked OBSERVED.
+- **Answers:**
+  1. **Method:** profile `fusion_mild`, a classical pipeline with no learned model and no physical
+     dehazing model:
+     - red/blue compensation from green (strength 0.5);
+     - channel balancing (maximum gain 4.0, common 99.5th-percentile highlight normalization);
+     - LAB luminance stretch (1st–99th percentiles, blend 0.5, if normalized range > 0.03);
+     - CLAHE on luminance (clip 1.5, 8×8 tiles, blend 0.3);
+     - gamma branch (0.85) and sharpening branch (Gaussian σ 1, unsharp 0.2);
+     - multiscale fusion (≤ 5 pyramid levels; contrast, saturation and well-exposedness
+       weights); final blend 1.0; denoising off; near-black border threshold 8/255.
+  2. **Same for every image:** one configuration for all images. Nothing depends on split, folder,
+     video or annotations. Per-image statistics (channel means, percentiles, CLAHE histograms,
+     border mask, fusion weights) are computed from each image, so the correction is adaptive
+     while the settings are fixed. No random operations.
+  3. **Tuning:** no training and no learned checkpoint. The settings were not re-tuned for this
+     delivery. However, the profile was originally chosen by **visually reviewing lobster images**
+     under several profiles; seven review images are documented in Harsh's
+     `previously_reviewed_images.json` (not in this repository). That review excluded Harsh's own
+     test split, which is not v1's: D-017 OBSERVED that 221 of his `train/` images are v1 test.
+  4. **Geometry:** no crop, rotation, flip, translation, warp or resize; the original coordinate
+     grid and dimensions are kept, so labels need no transformation (consistent with the matching
+     sizes OBSERVED in D-017). Caveats: pyramid fusion resamples internally and filters mix
+     neighbouring pixels, so edges can look sharper or softer; edge-connected near-black pixels
+     can be set to black.
+  5. **Output:** 8-bit, three-channel PNGs. The zExtra export uses the same definitions and
+     settings.
+- **Provenance caveat:** the answers describe Harsh's *updated* notebook, which was not run on our
+  images. He verified that it reproduces the original definitions pixel for pixel on three inputs.
+  INFERRED: the answers also describe the delivered images.
+- **Decision (user-approved, 2026-10-01; option chosen: "val now, test later"):**
+  - The D-017 reporting hold is lifted for **val**. E004 val results and the declared E001 vs E004
+    val comparison (docs/EXPERIMENTS.md) may be reported, each with the limitations below.
+  - The E004 **test** evaluation (declaring E004 in `experiments/final_candidates.csv`) waits
+    until Harsh's review list has been checked against the v1 val and test filenames and the
+    result is recorded in a new decision. If a reviewed image is in v1 val or test, that decision
+    states how E004's results are qualified.
+  - D-017 is not edited. This decision replaces only its last line ("Results are not reported
+    before these are answered and recorded here").
+- **Limitations every E004 result carries:**
+  - UNKNOWN — requires confirmation: whether any v1 val/test image was among the images reviewed
+    while the profile was chosen.
+  - The enhancement adapts to each image's statistics; it is not a fixed per-pixel mapping.
+  - One run per arm (seed 0); E001 trained 100 epochs, E004 stopped early at 81.
+  - The v1 limitations (new sessions, not new sites; concentrated val/test sessions; sparse
+    metadata; zExtra excluded).
+- **Open:** obtain `previously_reviewed_images.json` from Harsh and check it. Optional: ask Harsh to
+  run the updated notebook on a few v1 raw images, and compare the result with the delivered images
+  pixel for pixel, to replace the INFERRED provenance above with an OBSERVED one.
