@@ -124,9 +124,24 @@ class ValOnlyTest(unittest.TestCase):
     def test_only_val_image_paths_pass(self):
         with tempfile.TemporaryDirectory() as d:
             V.assert_val_path(Path(d) / "images" / "val" / "v.png", Path(d))
-            for bad in (Path(d) / "images" / "test" / "x.png", Path(d) / "images" / "val" / "sub" / "v.png"):
+            for bad in (Path(d) / "images" / "test" / "x.png", Path(d) / "images" / "val" / "sub" / "v.png",
+                        Path(d) / "images" / "val" / ".." / "test" / "x.png"):
                 with self.assertRaises(V.ValEvalError):
                     V.assert_val_path(bad, Path(d))
+
+    def test_symlinked_val_image_passes(self):
+        # The YOLO view links images to the raw files (link_mode symlink on Colab).
+        with tempfile.TemporaryDirectory() as d:
+            raw = Path(d) / "raw" / "r.png"
+            raw.parent.mkdir()
+            raw.write_bytes(b"")
+            link = Path(d) / "images" / "val" / "r.png"
+            link.parent.mkdir(parents=True)
+            try:
+                link.symlink_to(raw)
+            except OSError:
+                self.skipTest("symlinks not permitted on this machine")
+            V.assert_val_path(link, Path(d))
 
     def test_check_run_refuses_missing_record(self):
         with tempfile.TemporaryDirectory() as d:

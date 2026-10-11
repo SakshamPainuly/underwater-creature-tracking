@@ -227,8 +227,9 @@ def val_rows(build_rows: list, split_rows: list) -> list:
 
 
 def assert_val_path(path: Path, dataset_dir: Path) -> None:
+    # Resolve the folder, not the file: view images are symlinks/hardlinks to the raw files.
     val_dir = (Path(dataset_dir) / "images" / VAL_SPLIT).resolve()
-    if Path(path).resolve().parent != val_dir:
+    if Path(path).parent.resolve() != val_dir:
         raise ValEvalError(f"{path} is not in {val_dir}; val_eval reads val images only")
 
 
