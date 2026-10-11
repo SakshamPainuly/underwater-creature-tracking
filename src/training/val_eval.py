@@ -47,7 +47,7 @@ SPEED_WARMUP = 1          # first prediction(s) excluded from the speed medians 
 GRID = [i / 100 for i in range(101)]  # confidence and recall grids: 0.00 .. 1.00
 NEGATIVE_STATUS = "negative_confirmed"
 VAL_EVAL_LIMITATIONS = (
-    "Val only. Val chose E001's checkpoint (best epoch) and every operating confidence, so these "
+    "Val only. Val chose each run's checkpoint (best epoch) and every operating confidence, so these "
     "numbers are optimistic for unseen data; they compare runs, they do not estimate deployment quality.",
     "One run per arm (seed 0): small differences may be run-to-run noise.",
     "Val sessions share sites with train sessions: new sessions, not new sites (D-007).",

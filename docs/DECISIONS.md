@@ -438,6 +438,13 @@ Short, dated records of project decisions. New dataset versions must reference a
     Speeds are compared only between runs measured on the same GPU type.
   - `val_eval_record.json` (schema `uwct.val_eval_record/1`) joins the D-013 archive in
     `experiments/records/<experiment_id>/`. Predictions, per-image CSV and plots stay off-repo.
-- **Limitations (stated with every result):** val chose E001's checkpoint and every operating
-  confidence, so these are not unbiased estimates; one seed per run; E001 trained 81 epochs, E004
-  100; red-light val is 2 sessions / 31 boxes; `21_MACK_10` holds 465 of 1,010 val boxes.
+- **Limitations (stated with every result):** val chose each run's checkpoint and every operating
+  confidence, so these are not unbiased estimates; one seed per run; E001 trained 100 epochs, E004
+  81 (early stop); red-light val is 2 sessions / 31 boxes; `21_MACK_10` holds 465 of 1,010 val boxes.
+- **Run (2026-10-11):** E001 and E004 evaluated on Colab in one Tesla T4 session at commit `d84a664`.
+  Two GPU-only defects were fixed on the way: `c45b341` (the val path check followed the view's
+  symlinks to the raw files) and `d84a664` (`model.info(verbose=False)` returns None). E001
+  reproduced the operating confidence 0.2983 of its `final_test_record.json`. Records archived in
+  `experiments/records/E001/` and `E004/`; the side-by-side tables are in
+  `experiments/comparisons/E001_vs_E004_val.md` (`scripts/compare_val_eval.py`). The two records
+  carry the earlier limitation wording "Val chose E001's checkpoint"; it means each run's checkpoint.
