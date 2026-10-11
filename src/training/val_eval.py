@@ -432,7 +432,8 @@ def run_val_eval(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path | 
         "ultralytics_val": {**_box_metrics(val_result), "at_operating_conf": {
             k: value_at(curves["px"], curves[k], conf) for k in ("p", "r", "f1")}},
         **summary,
-        "complexity": complexity(Model(best).model.info(verbose=False, imgsz=imgsz), imgsz),  # unfused
+        # unfused; verbose=True because Ultralytics' model_info returns None when verbose is False
+        "complexity": complexity(Model(best).model.info(verbose=True, imgsz=imgsz), imgsz),
         "speed": {"batch1_predict": speed_summary(speeds),
                   "ultralytics_val_ms_per_image": {k: float(v) for k, v in val_result.speed.items()},
                   "ultralytics_val_batch": batch,
