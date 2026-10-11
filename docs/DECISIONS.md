@@ -432,6 +432,10 @@ Short, dated records of project decisions. New dataset versions must reference a
   - Reported at the operating confidence: TP/FP/FN, P, R, F1; false positives on the confirmed-negative
     val images (images with ≥ 1 detection, total detections); the same per session and per
     `lighting_flag` (from the version's `split_manifest.csv`), with AP50 per group (101-point).
+  - Cost, for the comparisons that declare it (D-015): parameters and GFLOPs of the unfused model
+    at the training imgsz, and speed as the median ms per image over the batch-1 val predictions
+    (first image dropped as warm-up) plus Ultralytics' batched val speed, with the GPU name.
+    Speeds are compared only between runs measured on the same GPU type.
   - `val_eval_record.json` (schema `uwct.val_eval_record/1`) joins the D-013 archive in
     `experiments/records/<experiment_id>/`. Predictions, per-image CSV and plots stay off-repo.
 - **Limitations (stated with every result):** val chose E001's checkpoint and every operating

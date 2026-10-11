@@ -152,11 +152,39 @@ class SummaryTest(unittest.TestCase):
         self.assertEqual([(r["tp"], r["fp"], r["fn"]) for r in per_image], [(1, 0, 0), (0, 1, 0)])
 
         rec = {"experiment_id": "E001", "dataset": {"version": "v1"}, "limitations": ["L."],
+               "complexity": V.complexity((225, 3_011_043, 0, 8.2), 640),
+               "speed": {"batch1_predict": V.speed_summary([{"inference": 9.0}, {"inference": 2.0}]),
+                         "gpu": ["Tesla T4"]},
                "ultralytics_val": {"precision": 0.8, "recall": 0.7, "map50": 0.85, "map50_95": 0.6}, **s}
         md = V.compare_markdown([rec, {**rec, "experiment_id": "E004"}])
         self.assertIn("| metric | E001 | E004 |", md)
         self.assertIn("1 of 1", md)
         self.assertIn("S2 (0)", md)
+        self.assertIn("| parameters (M) | 3.01 | 3.01 |", md)
+        self.assertIn("| inference ms/img, batch 1 (median) | 2.0 | 2.0 |", md)
+        self.assertIn("Tesla T4", md)
+
+
+class CostTest(unittest.TestCase):
+    def test_speed_summary_drops_warmup_and_takes_medians(self):
+        s = V.speed_summary([{"preprocess": 50, "inference": 900, "postprocess": 5},
+                             {"preprocess": 1, "inference": 10, "postprocess": 1},
+                             {"preprocess": 3, "inference": 12, "postprocess": 1},
+                             {"preprocess": 2, "inference": 30, "postprocess": 2}])
+        self.assertEqual(s["images_timed"], 3)
+        self.assertEqual(s["median_ms"], {"inference": 12, "postprocess": 1, "preprocess": 2})
+        self.assertEqual(s["median_ms_total"], 15)
+
+    def test_speed_summary_needs_timed_images(self):
+        with self.assertRaises(V.ValEvalError):
+            V.speed_summary([{"inference": 5.0}])
+
+    def test_complexity(self):
+        c = V.complexity((225, 3_011_043, 3_011_027, 8.19), 640)
+        self.assertEqual(c, {"layers": 225, "parameters": 3_011_043, "gflops": 8.19, "gflops_imgsz": 640})
+        self.assertIsNone(V.complexity((1, 2, 3, 0.0), 640)["gflops"])
+        with self.assertRaises(V.ValEvalError):
+            V.complexity(None, 640)
 
 
 if __name__ == "__main__":

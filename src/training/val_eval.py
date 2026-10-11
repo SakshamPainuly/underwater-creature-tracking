@@ -14,7 +14,10 @@ Measures, for one run's best.pt on its own val split:
   - the same counts per session and per lighting condition (lighting_flag in the version's
     split_manifest.csv: red-light/night keywords in the deployment notes, or not flagged), plus
     AP50 per group (101-point interpolation, own matcher);
-  - P/R/F1 vs confidence and the precision-recall curve (101 points each) for plots.
+  - P/R/F1 vs confidence and the precision-recall curve (101 points each) for plots;
+  - model complexity (parameters, GFLOPs at the training imgsz) and speed: median ms per image
+    over the batch-1 val predictions (first image dropped as warm-up) plus Ultralytics' batched val
+    speed, on the GPU named in the record's environment. Speeds compare only on the same GPU type.
 
 Outputs (Drive, outside Git): <run>/val_eval/{ultralytics_val/, predictions_val.jsonl,
 per_image_val.csv, val_eval_record.json, confusion_matrix.png, curves.png}. The record (< 50 KB) is archived in
@@ -23,6 +26,7 @@ experiments/records/<id>/ (D-013, D-020).
 
 import csv
 import json
+import statistics
 from pathlib import Path
 
 from dataset_audit.config import PROJECT_ROOT, RAW_ROOTS
@@ -39,6 +43,7 @@ EVAL_SCHEMA = "uwct.val_eval_record/1"
 MATCH_IOU = 0.5          # D-020: fixed before any result
 PREDICT_CONF = 0.001     # predictions kept for the sweeps (Ultralytics val default)
 PREDICT_NMS_IOU = 0.7    # Ultralytics val default
+SPEED_WARMUP = 1          # first prediction(s) excluded from the speed medians (CUDA warm-up)
 GRID = [i / 100 for i in range(101)]  # confidence and recall grids: 0.00 .. 1.00
 NEGATIVE_STATUS = "negative_confirmed"
 VAL_EVAL_LIMITATIONS = (
@@ -241,6 +246,26 @@ def evaluate(rows: list, gts: dict, preds: dict) -> list:
     return images
 
 
+def speed_summary(speeds: list, warmup: int = SPEED_WARMUP) -> dict:
+    """Median ms per image for each Ultralytics speed stage over per-image results, warm-up dropped."""
+    kept = speeds[warmup:]
+    if not kept:
+        raise ValEvalError(f"need more than {warmup} timed predictions for a speed summary")
+    stages = sorted(set().union(*kept))
+    med = {k: statistics.median(s[k] for s in kept if k in s) for k in stages}
+    return {"images_timed": len(kept), "warmup_dropped": warmup, "median_ms": med,
+            "median_ms_total": sum(med.values())}
+
+
+def complexity(info, imgsz: int) -> dict:
+    """Parameters and GFLOPs from Ultralytics' model info tuple (layers, params, gradients, GFLOPs)."""
+    if not isinstance(info, (tuple, list)) or len(info) < 4:
+        raise ValEvalError(f"unexpected Ultralytics model info {info!r}")
+    layers, params, _, gflops = info[:4]
+    return {"layers": int(layers), "parameters": int(params),
+            "gflops": float(gflops) if gflops else None, "gflops_imgsz": imgsz}
+
+
 def summarize(images: list, conf: float) -> dict:
     overall = counts_at(images, conf)
     return {
@@ -366,7 +391,7 @@ def run_val_eval(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path | 
     sources = [dataset_dir / "images" / VAL_SPLIT / r["filename"] for r in rows]
     for p in sources:
         assert_val_path(p, dataset_dir)
-    model, preds = Model(best), {}
+    model, preds, speeds = Model(best), {}, []
     with open(out_dir / PREDICTIONS_FILE, "w", encoding="utf-8") as f:
         for path in sources:
             res = model.predict(source=str(path), conf=PREDICT_CONF, iou=PREDICT_NMS_IOU, imgsz=imgsz,
@@ -374,6 +399,7 @@ def run_val_eval(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path | 
             boxes = [(float(c), xywh_to_xyxy([float(v) for v in b]))
                      for c, b in zip(res.boxes.conf.tolist(), res.boxes.xywhn.tolist())]
             preds[path.name] = boxes
+            speeds.append(dict(res.speed))
             f.write(json.dumps({"filename": path.name, "boxes": [[round(c, 5), *[round(v, 6) for v in b]]
                                                                  for c, b in boxes]}) + "\n")
     gts = {r["filename"]: read_yolo_labels(dataset_dir / "labels" / VAL_SPLIT / (Path(r["filename"]).stem + ".txt"))
@@ -386,6 +412,7 @@ def run_val_eval(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path | 
         writer.writeheader()
         writer.writerows(per_image)
     plot_files = _plots(summary, exp_id, out_dir)
+    env = env_collect()
 
     record = {
         "schema": EVAL_SCHEMA,
@@ -404,8 +431,13 @@ def run_val_eval(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path | 
         "ultralytics_val": {**_box_metrics(val_result), "at_operating_conf": {
             k: value_at(curves["px"], curves[k], conf) for k in ("p", "r", "f1")}},
         **summary,
+        "complexity": complexity(Model(best).model.info(verbose=False, imgsz=imgsz), imgsz),  # unfused
+        "speed": {"batch1_predict": speed_summary(speeds),
+                  "ultralytics_val_ms_per_image": {k: float(v) for k, v in val_result.speed.items()},
+                  "ultralytics_val_batch": batch,
+                  "gpu": [g["name"] for g in env.get("gpus", [])]},
         "artifacts": [R.file_entry(p) for p in [out_dir / PREDICTIONS_FILE, out_dir / PER_IMAGE_FILE, *plot_files]],
-        "environment": env_collect(),
+        "environment": env,
         "limitations": list(VAL_EVAL_LIMITATIONS),
     }
     (out_dir / EVAL_RECORD).write_text(json.dumps(record, indent=1) + "\n", encoding="utf-8")
@@ -435,6 +467,13 @@ def compare_markdown(records: list) -> str:
         ("negative images with a detection", lambda r: "{negative_images_with_detection} of {negative_images}"
          .format(**r["overall"])),
         ("detections on negative images", lambda r: str(r["overall"]["detections_on_negative_images"])),
+        ("parameters (M)", lambda r: f"{r['complexity']['parameters'] / 1e6:.2f}"),
+        ("GFLOPs (at imgsz)", lambda r: "n/a" if r["complexity"]["gflops"] is None
+         else f"{r['complexity']['gflops']:.1f} ({r['complexity']['gflops_imgsz']})"),
+        ("inference ms/img, batch 1 (median)",
+         lambda r: f"{r['speed']['batch1_predict']['median_ms'].get('inference', float('nan')):.1f}"),
+        ("total ms/img, batch 1 (median)", lambda r: f"{r['speed']['batch1_predict']['median_ms_total']:.1f}"),
+        ("GPU", lambda r: ", ".join(r["speed"]["gpu"]) or "n/a"),
     ]
     lines += [f"| {name} | " + " | ".join(fn(r) for r in records) + " |\n" for name, fn in rows]
     for title, key in (("Per lighting", "per_lighting"), ("Per session", "per_session")):
