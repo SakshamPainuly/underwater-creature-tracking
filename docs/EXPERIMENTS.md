@@ -121,9 +121,44 @@ matching the record). From these files (OBSERVED, 2026-10-01):
   0.8527 (−0.014); mAP50-95 0.5864 vs 0.6115 (−0.025); precision 0.8056 vs 0.7998; recall
   0.7465 vs 0.7901 (all at Ultralytics val defaults). One run per arm, so these gaps may include
   run-to-run noise. The secondary metrics (recall at a val-chosen confidence, false positives on
-  negative images, per-condition results) are not computed yet. LIMITATION: E004 trained 81
+  negative images, per-condition results) are not computed yet (computed on 2026-10-11, see the
+  next section). LIMITATION: E004 trained 81
   epochs and E001 trained 100. It is UNKNOWN whether E004 would have improved after epoch 81;
   E001 did not improve after its epoch-61 peak.
+
+### Val secondary metrics: E001 vs E004 (D-020)
+
+Val only; test not used. Both runs evaluated on 2026-10-11 in one Colab Tesla T4 session at commit
+`d84a664` (`scripts/val_eval.py`). Records: `experiments/records/E001/val_eval_record.json`
+(16,107 B, sha256 `3db3ecb4…`) and `experiments/records/E004/val_eval_record.json` (16,203 B,
+sha256 `9e68b2c8…`). Full tables, per session included: `experiments/comparisons/E001_vs_E004_val.md`.
+Matching: IoU ≥ 0.5, each run at its own val-chosen operating confidence (OBSERVED):
+
+| metric | E001 (v1) | E004 (v2) |
+|---|---:|---:|
+| operating conf | 0.298 | 0.276 |
+| TP / FP / FN | 809 / 208 / 201 | 780 / 215 / 230 |
+| precision / recall / F1 | 0.795 / 0.801 / 0.798 | 0.784 / 0.772 / 0.778 |
+| AP50 (own matcher) | 0.848 | 0.836 |
+| negative val images with a detection (of 55) | 16 (22 detections) | 14 (19 detections) |
+| red-light/night, 31 boxes: AP50 / P / R | 0.741 / 0.706 / 0.774 | 0.713 / 0.759 / 0.710 |
+| not flagged, 979 boxes: AP50 / P / R | 0.851 / 0.799 / 0.802 | 0.841 / 0.785 / 0.774 |
+| parameters / GFLOPs (640) | 9.95 M / 22.7 | 9.95 M / 22.7 |
+| inference, batch 1, median (T4) | 16.3 ms | 16.3 ms |
+
+- OBSERVED: E001's operating confidence 0.2983 equals the one in its `final_test_record.json`,
+  which checks the new code against `final_test.py`.
+- OBSERVED: E004 is lower than E001 on AP50, recall and F1 overall and in the not-flagged
+  condition; it has slightly fewer false positives on negative images (14 vs 16 images).
+- OBSERVED: under red light E004 has higher precision and lower recall and AP50; the recall gap is
+  2 of 31 boxes. Per session the results are mixed (E004 lower on `18_ALRA_08`, AP50 0.814 vs
+  0.644, and more false positives on `21_SUB6_07`, 55 vs 29; slightly higher on `21_SUB6_10`).
+- INFERRED: on this val set the enhanced images did not improve detection. HYPOTHESIS, not
+  tested: the gap is run-to-run noise or the shorter E004 training (81 vs 100 epochs).
+- LIMITATION: val also chose each run's checkpoint and operating confidence, so the numbers are
+  optimistic; one seed per run; red-light val is 2 sessions / 31 boxes; `21_MACK_10` holds 465 of
+  1,010 val boxes; the enhancement step's own cost is not timed. The two records carry the earlier
+  limitation wording "Val chose E001's checkpoint", which means each run's checkpoint.
 
 ## Test-evaluation log
 

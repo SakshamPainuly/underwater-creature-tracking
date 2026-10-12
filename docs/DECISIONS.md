@@ -415,3 +415,36 @@ Short, dated records of project decisions. New dataset versions must reference a
     files or results has no exception.
 - **Consequence:** CLAUDE.md §10 is updated to match. The GitHub branch protection stays as it is;
   the owner's admin bypass is how an owner merge is done.
+
+## D-020 — Val-only secondary-metrics evaluation; IoU 0.5 matching fixed before results (2026-10-10, accepted 2026-10-12)
+- **Context:** the selection metric and secondary metrics are declared in docs/EXPERIMENTS.md, but
+  the repository had no val evaluation of the secondary metrics. `src/training/final_test.py`
+  chooses the operating confidence on val (max mean F1) and then evaluates on test. Comparing E001
+  (v1) with E004 (v2, D-017/D-018) needs these numbers on val, without touching test (rule 7).
+- **Decision (user-approved; plan approved on 2026-10-01, this text approved on 2026-10-12):**
+  - New stage `src/training/val_eval.py` with CLIs `scripts/val_eval.py` (GPU env) and
+    `scripts/compare_val_eval.py` (local, standard library). It reads only the run's train/val data
+    file and manifest rows whose split is `val`, and refuses any image path outside `images/val/`.
+  - Operating confidence: the same rule as `final_test.py` (max mean F1 on Ultralytics' val curves);
+    E001 must reproduce 0.298 as a check of the code.
+  - Matching rule, **fixed here before any result exists**: greedy by confidence, one ground-truth
+    box per prediction, IoU ≥ 0.5 (`MATCH_IOU`). It is not tuned afterwards.
+  - Reported at the operating confidence: TP/FP/FN, P, R, F1; false positives on the confirmed-negative
+    val images (images with ≥ 1 detection, total detections); the same per session and per
+    `lighting_flag` (from the version's `split_manifest.csv`), with AP50 per group (101-point).
+  - Cost, for the comparisons that declare it (D-015): parameters and GFLOPs of the unfused model
+    at the training imgsz, and speed as the median ms per image over the batch-1 val predictions
+    (first image dropped as warm-up) plus Ultralytics' batched val speed, with the GPU name.
+    Speeds are compared only between runs measured on the same GPU type.
+  - `val_eval_record.json` (schema `uwct.val_eval_record/1`) joins the D-013 archive in
+    `experiments/records/<experiment_id>/`. Predictions, per-image CSV and plots stay off-repo.
+- **Limitations (stated with every result):** val chose each run's checkpoint and every operating
+  confidence, so these are not unbiased estimates; one seed per run; E001 trained 100 epochs, E004
+  81 (early stop); red-light val is 2 sessions / 31 boxes; `21_MACK_10` holds 465 of 1,010 val boxes.
+- **Run (2026-10-11):** E001 and E004 evaluated on Colab in one Tesla T4 session at commit `d84a664`.
+  Two GPU-only defects were fixed on the way: `c45b341` (the val path check followed the view's
+  symlinks to the raw files) and `d84a664` (`model.info(verbose=False)` returns None). E001
+  reproduced the operating confidence 0.2983 of its `final_test_record.json`. Records archived in
+  `experiments/records/E001/` and `E004/`; the side-by-side tables are in
+  `experiments/comparisons/E001_vs_E004_val.md` (`scripts/compare_val_eval.py`). The two records
+  carry the earlier limitation wording "Val chose E001's checkpoint"; it means each run's checkpoint.
