@@ -7,9 +7,16 @@ Rules: CLAUDE.md (hard rules 1–4 and 7, section 6). Decision: D-012.
 ## One-time setup
 
 1. **GitHub token (private repo).** Create a *fine-grained* personal access token:
+   - Created by the repo owner (`SakshamPainuly`), with **Resource owner: SakshamPainuly**.
    - Repository access: only `SakshamPainuly/underwater-creature-tracking`.
    - Permissions: **Contents: Read-only**; nothing else.
    - Do not reuse the GitHub CLI credential or a classic token.
+
+   A fine-grained token can only reach repositories owned by its resource owner. The repo
+   belongs to a personal account, so a collaborator's own fine-grained token cannot read it, even
+   with collaborator access. Cell 4 then fails with `remote: Write access to repository not
+   granted.` / `error: 403`. Fix: the owner creates the token as above and shares it with the
+   collaborator privately, never in the repo or the notebook.
 
    In Colab, open **Secrets** (key icon), add `UWCT_GITHUB_TOKEN`, and allow notebook access.
    See "GitHub authentication" below for how the notebook uses it.
