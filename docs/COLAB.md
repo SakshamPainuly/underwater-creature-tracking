@@ -6,10 +6,19 @@ Rules: CLAUDE.md (hard rules 1–4 and 7, section 6). Decision: D-012.
 
 ## One-time setup
 
-1. **GitHub token (private repo).** Create a *fine-grained* personal access token:
-   - Repository access: only `SakshamPainuly/underwater-creature-tracking`.
-   - Permissions: **Contents: Read-only**; nothing else.
-   - Do not reuse the GitHub CLI credential or a classic token.
+1. **GitHub token (private repo).** Which token depends on who you are (D-021):
+   - **Repository owner (Saksham):** a *fine-grained* personal access token.
+     - Repository access: only `SakshamPainuly/underwater-creature-tracking`.
+     - Permissions: **Contents: Read-only**; nothing else.
+   - **Collaborators (Anu, Harsh):** GitHub's fine-grained tokens do not work on a repository
+     where you are only a collaborator; the clone fails with `403 Write access to repository not
+     granted`. Create a *classic* token instead (Developer settings → Personal access tokens →
+     Tokens (classic)):
+     - Scope: `repo` only. Classic tokens have no read-only scope for private repositories, so
+       this token can write to every repository you can access. Treat it accordingly.
+     - Expiration: 30 days or less. Revoke it when you no longer need Colab access.
+     - Keep it only in Colab Secrets; never paste it into a notebook cell, chat or file.
+   - Do not reuse the GitHub CLI credential.
 
    In Colab, open **Secrets** (key icon), add `UWCT_GITHUB_TOKEN`, and allow notebook access.
    See "GitHub authentication" below for how the notebook uses it.
@@ -101,7 +110,9 @@ Why the token is not exposed in process arguments:
 
 Limitation: the Colab VM runs everything as root, so code running in the same runtime could read
 a git process's environment during a clone or fetch. The same code could read Colab Secrets
-directly. The token is read-only and limited to this repository; revoke it on GitHub if in doubt.
+directly. The owner's token is read-only and limited to this repository. A collaborator's classic
+token is not (D-021): it can write to all of that person's repositories, which is why it expires
+within 30 days. The notebook itself only clones and fetches. Revoke a token on GitHub if in doubt.
 
 ## Training (cells 11–14)
 
