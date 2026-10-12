@@ -448,3 +448,26 @@ Short, dated records of project decisions. New dataset versions must reference a
   `experiments/records/E001/` and `E004/`; the side-by-side tables are in
   `experiments/comparisons/E001_vs_E004_val.md` (`scripts/compare_val_eval.py`). The two records
   carry the earlier limitation wording "Val chose E001's checkpoint"; it means each run's checkpoint.
+
+## D-021 — Collaborators use a short-lived classic token on Colab (2026-10-11, accepted 2026-10-12)
+- **Context:** D-012 has the Colab notebook clone the private repo with a fine-grained token
+  (this repository only, Contents read-only). On 2026-10-11 Anu's clone in cell 4 failed with
+  `403 Write access to repository not granted`, using a fine-grained read-only token stored as
+  `UWCT_GITHUB_TOKEN`. OBSERVED: `anusidhu9` is a collaborator with write permission and no pending
+  invite. OBSERVED (GitHub docs, checked 2026-10-11): fine-grained tokens do not support access to
+  repositories where the user is a collaborator. The repo belongs to a personal account, so only
+  the owner can use the D-012 token. The same applies to Harsh.
+- **Decision (user-approved; option "classic token now" chosen on 2026-10-11, this text approved on 2026-10-12):**
+  - The owner keeps the D-012 fine-grained, read-only token.
+  - Collaborators use a classic token with scope `repo` and an expiration of 30 days or less,
+    stored only in Colab Secrets as `UWCT_GITHUB_TOKEN`. This supersedes the token rule of D-012 for
+    collaborators only. The notebook code (GIT_ASKPASS, no credential storage, clone/fetch only)
+    is unchanged.
+  - LIMITATION: a classic `repo` token can write to every repository its holder can access,
+    including this one (collaborators already have write access). Branch protection on
+    `p4/colab-baseline` still applies. A leaked token is revoked on GitHub at once.
+- **Rejected for now:** moving the repo to an organization with Anu and Harsh as members, so
+  everyone can use fine-grained read-only tokens. It changes the repo URL, the notebooks' `REPO`,
+  every remote and the branch protection. It can be revisited in its own decision.
+- **Consequence:** docs/COLAB.md (one-time setup, authentication limitation) is updated. No code,
+  data, dataset version or experiment changes.
