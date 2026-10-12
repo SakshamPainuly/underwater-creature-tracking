@@ -33,7 +33,7 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E001 | `configs/experiments/E001_yolo_baseline.yaml` | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | completed; 100 epochs; final candidate evaluated on test |
 | E002 | `configs/experiments/E002_yolo_imgsz1280.yaml` | E001 | imgsz 640 → 1280 only | planned; not run |
 | E003 | `configs/experiments/E003_rtdetr_baseline.yaml` | E001 | model yolo26s.pt → rtdetr-l.pt only (D-015) | planned; not run |
-| E004 | `configs/experiments/E004_yolo_enhanced.yaml` | E001 | images raw → enhanced only: dataset v1 → v2 (D-017) | completed; 81 epochs (early stop); registered; test evaluation on hold (D-018) |
+| E004 | `configs/experiments/E004_yolo_enhanced.yaml` | E001 | images raw → enhanced only: dataset v1 → v2 (D-017) | completed; 81 epochs (early stop); registered; declared final candidate, test not yet run (D-022) |
 
 E001–E003 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
 E004 uses dataset v2 (fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e`):
@@ -63,6 +63,11 @@ alongside. E003 is evaluated on test only after it is registered, reviewed and d
   Updated by D-018 (2026-10-01): the answers are recorded. Val results and this val comparison
   may now be reported with D-018's limitations. The E004 test evaluation waits for the
   review-list check in D-018.
+  Updated by D-022 (2026-10-12): the check is done. E004 is declared in
+  `experiments/final_candidates.csv` and may be evaluated on test once. LIMITATION (D-022): one
+  val image (`21_SUB6_10_BW_20220815_GP080026_13777`, 7 boxes) and one test image
+  (`06_HERR_08_CW_20200903_GP120003_00001`, 1 box) were among the images Harsh reviewed while
+  choosing the enhancement profile; whether others were viewed is UNKNOWN.
 
 ## Run record requirements
 

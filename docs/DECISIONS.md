@@ -471,3 +471,35 @@ Short, dated records of project decisions. New dataset versions must reference a
   every remote and the branch protection. It can be revisited in its own decision.
 - **Consequence:** docs/COLAB.md (one-time setup, authentication limitation) is updated. No code,
   data, dataset version or experiment changes.
+
+## D-022 — Harsh's green-enhancement follow-up; E004 declared for test with limitations (2026-10-12, accepted)
+- **Context:** D-018 held E004's test evaluation until Harsh's review list was checked against the
+  v1 val and test filenames. Harsh answered in writing on 2026-10-12. The points below are his
+  statements, summarized; we have not verified them unless marked OBSERVED.
+- **Answers:**
+  1. **Review list:** seven documented green-profile review images, six from Set 2000 and one from
+     Set 100. None is from zExtra.
+  2. **Other images viewed while the profile was chosen:** "not sure". There is no complete
+     viewing or decision log. Later verification runs with fixed settings also processed the
+     listed Set 100 image and one zExtra image.
+  3. **Version that produced the 2,105 delivered images:** UNKNOWN. No execution record links a
+     notebook version, date or environment to the delivery.
+  4. **Five-image pixel check:** the current notebook was re-run on five raw images (Set 100 and
+     Set 2000) with unchanged `fusion_mild` settings. The outputs were not compared with the
+     delivery.
+- **Check (OBSERVED, `data/processed/image_manifest.csv`, 2026-10-12):** of the seven images,
+  five are in v1 train. `21_SUB6_10_BW_20220815_GP080026_13777` is in **val** (7 boxes) and
+  `06_HERR_08_CW_20200903_GP120003_00001` is in **test** (1 box; 348 test images). All five
+  pixel-check filenames are present in `data/raw/enhanced_2026-09/`.
+- **Decision (user-approved, 2026-10-12; option chosen: "declare E004 for test, with limitations"):**
+  - E004 is declared a final candidate by a committed row in `experiments/final_candidates.csv`.
+    Its test evaluation may run once and is logged in docs/EXPERIMENTS.md. E004's test numbers are
+    reported whatever they are and are never used to choose between E001 and E004.
+  - This replaces D-018's test hold. D-018 is not edited.
+- **Limitations every E004 result carries, in addition to D-018's:**
+  - one val image and one test image (above) were among the documented review images;
+  - whether other val or test images were viewed while the profile was chosen is UNKNOWN;
+  - the delivery's provenance stays INFERRED, not OBSERVED.
+- **Open:** Harsh's handoff ZIP (requested 2026-10-12). When it arrives, the five delivered images
+  are compared with his outputs on decoded pixel arrays, and the result is recorded in a new
+  decision. A match would be observed equivalence for those five pairs only.
