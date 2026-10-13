@@ -33,7 +33,7 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E001 | `configs/experiments/E001_yolo_baseline.yaml` | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | completed; 100 epochs; final candidate evaluated on test |
 | E002 | `configs/experiments/E002_yolo_imgsz1280.yaml` | E001 | imgsz 640 → 1280 only | planned; not run |
 | E003 | `configs/experiments/E003_rtdetr_baseline.yaml` | E001 | model yolo26s.pt → rtdetr-l.pt only (D-015) | planned; not run |
-| E004 | `configs/experiments/E004_yolo_enhanced.yaml` | E001 | images raw → enhanced only: dataset v1 → v2 (D-017) | completed; 81 epochs (early stop); registered; declared final candidate, test not yet run (D-022) |
+| E004 | `configs/experiments/E004_yolo_enhanced.yaml` | E001 | images raw → enhanced only: dataset v1 → v2 (D-017) | completed; 81 epochs (early stop); registered; declared final candidate (D-022); evaluated on test once, 2026-10-12 |
 
 E001–E003 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
 E004 uses dataset v2 (fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e`):
@@ -170,6 +170,7 @@ Matching: IoU ≥ 0.5, each run at its own val-chosen operating confidence (OBSE
 | Date | Experiment | Reason | Result |
 |---|---|---|---|
 | 2026-09-19 | E001 | Final held-out test evaluation after completed validation run and candidate declaration | mAP50 0.8974; mAP50-95 0.6832; precision @ val-chosen conf 0.298 = 0.8447; recall = 0.8127; F1 = 0.8284 |
+| 2026-10-12 | E004 | Final held-out test evaluation of the declared candidate (D-022), raw vs enhanced comparison (D-017) | mAP50 0.8734; mAP50-95 0.6555; precision @ val-chosen conf 0.276 = 0.8614; recall = 0.7521; F1 = 0.8031 |
 
 E001 test-evaluation limitations:
 
@@ -177,4 +178,42 @@ E001 test-evaluation limitations:
 - Test boxes are concentrated: 13_SHRI_12 + 21_SUB6_03 hold 1,135 of 1,512 test boxes (D-008).
 - Substrate/visibility metadata is mostly missing; zExtra is excluded.
 - Ultralytics-reported precision/recall use the confidence that maximizes F1 on the test split; the reported operating point uses confidence 0.298 selected on val.
+- Test results were not used for training, threshold selection, or model choice.
+
+E004 test evaluation (2026-10-12): Colab Tesla T4, evaluation commit `cbeb99a` (training commit
+`97ac710`), dataset v2 fingerprint `8a0d4194…` (verified equal to training), `best.pt` sha256
+`0f5470c6…` (equal to `run_record.json`), attempt 1. Record:
+`experiments/records/E004/final_test_record.json` (8,450 B, sha256 `8d157e00…`); plots and
+prediction examples stay on Drive in `runs/E004/final_test/`.
+
+| test metric | E001 (v1, raw) | E004 (v2, enhanced) |
+|---|---:|---:|
+| mAP50 | 0.8974 | 0.8734 |
+| mAP50-95 | 0.6832 | 0.6555 |
+| operating conf (chosen on val) | 0.298 | 0.276 |
+| precision / recall / F1 @ operating conf | 0.8447 / 0.8127 / 0.8284 | 0.8614 / 0.7521 / 0.8031 |
+| Ultralytics P / R (max-F1 conf on test) | 0.8309 / 0.8208 | 0.8344 / 0.7799 |
+| confusion matrix TP / FP / FN (Ultralytics) | 1261 / 263 / 251 | 1165 / 190 / 347 |
+
+- OBSERVED: on test, E004 is lower than E001 on mAP50, mAP50-95, recall and F1 and higher on
+  precision, with fewer false positives and more missed boxes. Val (D-020) agrees on mAP, recall
+  and F1 but not on precision: at the operating confidence E004's val precision is slightly lower
+  (0.784 vs 0.795, 215 vs 208 false positives), so the precision difference is not consistent
+  across splits.
+- INFERRED: on this data, Harsh's enhancement did not improve detection with the E001 detector.
+  HYPOTHESIS, not tested: run-to-run noise or E004's shorter training (81 vs 100 epochs) explain
+  part of the gap.
+- Declared before the run: these test numbers are reported and are not used to choose between
+  E001 and E004 (D-017, D-022).
+
+E004 test-evaluation limitations (in addition to E001's above, which apply unchanged):
+
+- One run per arm (seed 0); E001 trained 100 epochs, E004 stopped early at 81.
+- One val image and one test image (`06_HERR_08_CW_20200903_GP120003_00001`, 1 box) were among
+  the images Harsh reviewed while choosing the enhancement profile; whether others were viewed is
+  UNKNOWN (D-022). The delivery's provenance is INFERRED; five images re-run near-identically (D-023).
+- The enhancement adapts to each image's statistics; it is not a fixed per-pixel mapping (D-018).
+- Environment differs from training and from E001's test: torch 2.11.0+cu130 / CUDA 13.0
+  (E004's training and E001's test: 2.11.0+cu128 / 12.8); same GPU type, Ultralytics 8.4.155 and
+  Python 3.13.15.
 - Test results were not used for training, threshold selection, or model choice.
