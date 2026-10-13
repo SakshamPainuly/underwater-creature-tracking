@@ -47,10 +47,15 @@ MISSING_LABEL_POLICY = {"Set100": "error", "Set2000": "negative", "zExtra": "pen
 # filename, so the folders it was delivered in (and any split they imply) are never used.
 ENHANCED_2026_09_ROOT = Path(os.environ.get("UWCT_ENHANCED_ROOT",
                                             PROJECT_ROOT / "data" / "raw" / "enhanced_2026-09"))
+# Harsh's enhanced zExtra (D-024): unlabelled, for qualitative inspection only; no dataset version
+# uses it. Layout: images/zExtra/<name>.png, names as in the raw zExtra Photos folder.
+ENHANCED_ZEXTRA_2026_10_ROOT = Path(os.environ.get("UWCT_ENHANCED_ZEXTRA_ROOT",
+                                                   PROJECT_ROOT / "data" / "raw" / "enhanced_zextra_2026-10"))
 DEFAULT_IMAGE_SOURCE = "biology"
 IMAGE_SOURCES = {
     "biology": BIOLOGY_ROOT,                    # the raw images (v1)
     "enhanced_2026-09": ENHANCED_2026_09_ROOT,  # Harsh's enhanced Set 100 + Set 2000 (v2)
+    "enhanced_zextra_2026-10": ENHANCED_ZEXTRA_2026_10_ROOT,  # Harsh's enhanced zExtra (D-024)
 }
 RAW_ROOTS = tuple(IMAGE_SOURCES.values())  # every one is read-only (CLAUDE.md rule 1)
 

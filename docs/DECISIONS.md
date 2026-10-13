@@ -529,3 +529,31 @@ Short, dated records of project decisions. New dataset versions must reference a
 - **Decision (user-approved, 2026-10-12):** recorded as above. D-022's limitations and E004's
   declaration are unchanged; no image, dataset version or experiment changes. The comparison
   script was a one-off outside the repository and is not committed.
+
+## D-024 — Enhanced zExtra (Harsh, 2026-10) as a separate read-only image source, for qualitative inspection only (2026-10-12, accepted)
+- **Context:** D-017 said enhanced zExtra images, when delivered, form a separate raw root for
+  qualitative inspection only. Harsh shared `zExtra_Photos_green_fusion_mild.zip` via Google Drive
+  on 2026-10-12: 1,601,390,788 B, SHA-256
+  `94ef7084332d7c8195dc0c9fff35e8ea989aa7c7784de5f1c673fb00ff87df8b` (computed on receipt; Harsh's
+  own hash was not received).
+- **Inspection (OBSERVED, 2026-10-12, read from the ZIP before extraction):**
+  - 436 entries, all PNG, in one folder `zExtra Photos/`; no unsafe paths, no macOS files;
+  - the filenames are exactly the 436 raw zExtra names: none missing, none extra, no duplicates;
+  - every image has the same width × height as its raw original, and 0 of 436 are byte-identical
+    to it; all RGB.
+- **Decision (user-approved, 2026-10-12):**
+  - **Raw source:** `data/raw/enhanced_zextra_2026-10/images/zExtra/<name>.png`, extracted byte for
+    byte (ZIP CRC verified), registered as image source `enhanced_zextra_2026-10` (env
+    `UWCT_ENHANCED_ZEXTRA_ROOT`). Full content fingerprint:
+    `data/processed/raw_fingerprint_enhanced_zextra_2026-10.json` (436 files, verified MATCH).
+    Read-only like every raw root (CLAUDE.md rule 1). The ZIP's layout (`zExtra Photos/<name>.png`)
+    differs from the first delivery, so the extraction was a one-off outside the repository rather
+    than `scripts/unpack_image_source.py`.
+  - **Use:** qualitative inspection only, e.g. the GUI's raw/enhanced switch showing E004 on
+    enhanced zExtra. zExtra stays unlabelled and excluded from every dataset version (D-003,
+    D-014). No metric is computed on it; no training, tuning or threshold choice uses it.
+- **LIMITATIONS:** the profile (`fusion_mild`, same settings as D-018) is Harsh's statement, from the
+  filename and D-018 answer 5: INFERRED, not verified. No record of the notebook version, runtime or
+  date (the same provenance gap as D-022). D-022 noted that one zExtra image was processed in Harsh's
+  later verification runs; that does not affect qualitative use.
+- **Consequence:** no dataset version, split, label, frozen file or experiment changes.
