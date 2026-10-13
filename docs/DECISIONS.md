@@ -302,3 +302,27 @@ Short, dated records of project decisions. New dataset versions must reference a
 - **Consequence:** no dataset, split, frozen or raw file changes. `my_model/colab_train_rtdetr.ipynb`
   now runs E005 (switches reset to `False`, the E003 outputs cleared; they remain in Git history).
   E003 stays in docs/EXPERIMENTS.md with status "diverged".
+
+## D-026 — E005 trained at batch 8 after an automatic out-of-memory reduction (2026-10-13, accepted)
+- **Context (OBSERVED, Colab 2026-10-13, Tesla T4 15 GB, ultralytics 8.4.155):** the E005 smoke test
+  (`E005_smoke_20261013T163151`, `amp=False`, 10% of train) fitted at batch 16. The E005 full run
+  then printed `CUDA out of memory with batch=16. Reducing to batch=8 and retrying (1/3)` before
+  epoch 1, and trained at batch 8 (180 iterations per epoch instead of 90; ~10.2 GB GPU memory).
+  Ultralytics made this change itself; the config still says `batch: 16`. Losses stayed finite
+  through epoch 21; best val mAP50 so far 0.832 / mAP50-95 0.585 (epoch 15). The session stopped
+  during epoch 22. UNKNOWN — requires confirmation: the cause of the stop (output ended without a
+  visible error; a Colab disconnect is likely).
+- **Decision (user-approved):** keep the E005 run and resume it from `train/weights/last.pt` rather
+  than restarting. E005's effective batch size is **8**. D-025 required a decision before batch
+  changed; this entry records it after the fact.
+- **Consequences:**
+  - Compared with E001, E005 now differs in three ways: model (rtdetr-l.pt), AMP (off) and batch
+    (8 instead of 16). Every E001 vs E005 comparison states all three; the YOLO vs RT-DETR
+    difference cannot be attributed to the model alone.
+  - E005's `run_record.json` and `experiments/registry.csv` row show the configured batch 16
+    (`train_args`, and Ultralytics' `args.yaml` written before the reduction). The effective batch
+    is 8 per this entry; the registry row gets a note when registered.
+  - The validation of `best.pt` after training uses the configured batch 16 (inference only, lower
+    memory); this does not change the val metrics' meaning.
+  - If the resumed run runs out of memory again or shows non-finite losses: stop and record a new
+    decision. A clean rerun would be a new experiment with `batch: 8` in its config.
