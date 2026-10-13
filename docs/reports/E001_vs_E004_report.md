@@ -4,6 +4,22 @@ Underwater Creature Tracking project · first class `0: lobster` · report gener
 committed experiment records by `scripts/make_report.py` (every number and chart below is read
 from `experiments/records/E001/` and `experiments/records/E004/`; nothing is typed by hand).
 
+> **Key findings**
+>
+> - **The enhancement did not help.** On the held-out test split, E004 (enhanced) is below E001
+>   (raw): mAP50 0.873 vs 0.897, recall 0.752 vs 0.813,
+>   F1 0.803 vs 0.828.
+> - **It misses more lobsters:** 347 vs 251 missed boxes on test. It raises fewer
+>   false alarms on test (190 vs 263) but not on validation
+>   (215 vs 208), so that is not a reliable advantage.
+> - **Both models struggle in the same places:** `21_SUB6_07` (AP50 0.70 raw → 0.64 enhanced); `19_SUB2_07` (AP50 0.73 raw → 0.71 enhanced); red-light/night images (AP50 0.74 raw → 0.71 enhanced, only 31 boxes).
+> - **Same cost:** 9.9 M parameters and about 20 ms per image on a
+>   Tesla T4 for both, so the comparison isolates the images.
+> - **Caveat:** one training run per model, and E004 stopped at 81 epochs vs
+>   100. More seeds would confirm the size of the gap.
+> - **Recommendation** (project judgement, not a measured result): keep the raw images (E001) as the
+>   baseline; next compare detector architectures (RT-DETR, E003) and image size (E002).
+
 ## 1. Summary
 
 **Question.** Does a teammate's colour enhancement of the underwater images (Harsh's
