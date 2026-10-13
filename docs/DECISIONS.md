@@ -503,3 +503,29 @@ Short, dated records of project decisions. New dataset versions must reference a
 - **Open:** Harsh's handoff ZIP (requested 2026-10-12). When it arrives, the five delivered images
   are compared with his outputs on decoded pixel arrays, and the result is recorded in a new
   decision. A match would be observed equivalence for those five pairs only.
+
+## D-023 — Five-image pixel check of the enhanced delivery: near-identical, not bit-identical (2026-10-12, accepted)
+- **Context:** D-022 left open a comparison of Harsh's five-image re-run with the delivered
+  enhanced images. Harsh's handoff ZIP arrived on 2026-10-12: `harsh_green_followup_2026-10-12.zip`,
+  15 files, SHA-256 `f7bd3f0c79be9fa5b0f5516a45527097cead87a037887e9dcce8ee635af7f5f6` (computed
+  on receipt; Harsh's own hash was not received, so arrival intact is not confirmed). The ZIP is
+  kept off-repo on the shared Drive. It was extracted outside the repository and read only.
+- **Checks (OBSERVED, 2026-10-12):**
+  - Harsh's seven raw inputs match our `data/raw/biology` files by SHA-256 (7/7). His relative
+    paths differ: our Set 2000 images sit in a nested `batch_2 (2k - imgOnly)/` folder.
+  - His five outputs match the file and decoded-pixel hashes in his `pixel_check_manifest.json` (5/5).
+  - Against the delivered images in `data/raw/enhanced_2026-09/` (decoded RGB arrays, same shapes):
+    not bit-identical. Per image 96–210 pixels differ (0.005–0.010%), maximum absolute difference
+    2–3 of 255, mean absolute difference about 0.00005.
+  - `scripts/check_raw_unchanged.py` (default structural check) afterwards: RAW DATA MATCHES
+    FINGERPRINT.
+- **Interpretation:**
+  - INFERRED: the delivery was produced with the `fusion_mild` method and settings described in
+    D-018. A different formula or setting would change most pixels, not about 0.01% by 1–3 levels.
+  - HYPOTHESIS, not tested: the differences come from the runtime (the re-run used OpenCV 5.0.0;
+    Harsh's earlier recorded review used 4.12.0).
+  - LIMITATION: near-equivalence for five images only. It does not identify the notebook version
+    or date that produced all 2,105 images, and it does not bear on which images were viewed.
+- **Decision (user-approved, 2026-10-12):** recorded as above. D-022's limitations and E004's
+  declaration are unchanged; no image, dataset version or experiment changes. The comparison
+  script was a one-off outside the repository and is not committed.
