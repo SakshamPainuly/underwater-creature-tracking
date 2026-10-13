@@ -442,11 +442,39 @@ def render_markdown(recs, fig_rel: str = "figures") -> str:
     gpu = recs["E001"]["val"]["speed"]["gpu"][0]
     neg = {e: recs[e]["val"]["overall"] for e in EXPERIMENTS}
 
+    # Weakest validation sessions: lowest AP50 averaged over both models.
+    weak = sorted(sessions, key=lambda s: (e1["val"]["per_session"][s]["ap50"]
+                                           + e4["val"]["per_session"][s]["ap50"]) / 2)[:2]
+    weak_txt = "; ".join(
+        f"`{s[:10]}` (AP50 {_fmt(e1['val']['per_session'][s]['ap50'], 2)} raw → "
+        f"{_fmt(e4['val']['per_session'][s]['ap50'], 2)} enhanced)" for s in weak)
+    red = {e: recs[e]["val"]["per_lighting"].get("red_light_or_night") for e in EXPERIMENTS}
+    red_txt = (f"; red-light/night images (AP50 {_fmt(red['E001']['ap50'], 2)} raw → "
+               f"{_fmt(red['E004']['ap50'], 2)} enhanced, only {red['E001']['gt_boxes']} boxes)"
+               if all(red.values()) else "")
+    ct = {e: c[("test", e)] for e in EXPERIMENTS}
+
     md = f"""# Lobster detection: raw vs enhanced images (E001 vs E004)
 
 Underwater Creature Tracking project · first class `0: lobster` · report generated from the
 committed experiment records by `scripts/make_report.py` (every number and chart below is read
 from `experiments/records/E001/` and `experiments/records/E004/`; nothing is typed by hand).
+
+> **Key findings**
+>
+> - **The enhancement did not help.** On the held-out test split, E004 (enhanced) is below E001
+>   (raw): mAP50 {_fmt(t4['mAP50'])} vs {_fmt(t1['mAP50'])}, recall {_fmt(t4['recall'])} vs {_fmt(t1['recall'])},
+>   F1 {_fmt(t4['F1'])} vs {_fmt(t1['F1'])}.
+> - **It misses more lobsters:** {ct['E004']['FN']:,} vs {ct['E001']['FN']:,} missed boxes on test. It raises fewer
+>   false alarms on test ({ct['E004']['FP']:,} vs {ct['E001']['FP']:,}) but not on validation
+>   ({c[('val', 'E004')]['FP']} vs {c[('val', 'E001')]['FP']}), so that is not a reliable advantage.
+> - **Both models struggle in the same places:** {weak_txt}{red_txt}.
+> - **Same cost:** {cx['E001']['parameters'] / 1e6:.1f} M parameters and about {sp['E001']:.0f} ms per image on a
+>   {gpu} for both, so the comparison isolates the images.
+> - **Caveat:** one training run per model, and E004 stopped at {e4['run']['epochs_completed']} epochs vs
+>   {e1['run']['epochs_completed']}. More seeds would confirm the size of the gap.
+> - **Recommendation** (project judgement, not a measured result): keep the raw images (E001) as the
+>   baseline; next compare detector architectures (RT-DETR, E003) and image size (E002).
 
 ## 1. Summary
 
