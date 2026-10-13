@@ -273,3 +273,32 @@ Short, dated records of project decisions. New dataset versions must reference a
   notebook is unchanged. E003 runs from `my_model/colab_train_rtdetr.ipynb` (user-requested
   location): a copy of it for branch `anu/model-development` and E003, with an added smoke-test
   cell that stops on non-finite losses (docs/COLAB.md). `scripts/train_yolo.py` keeps its name and trains either family.
+
+## D-025 — E003 diverged to NaN losses; RT-DETR rerun as E005 with AMP off (2026-10-13, accepted)
+- **Context (OBSERVED, Colab session 2026-10-13, Tesla T4, ultralytics 8.4.155, torch 2.11.0+cu130;
+  notebook outputs saved in commit `f186f4e`):** the E003 smoke test (`E003_smoke_20261013T154708`)
+  finished with finite losses (train giou 1.313, cls 7.450, l1 0.530; val mAP50 0.004 after 1 epoch
+  on 10% of train). The E003 full run trained with `amp=True` (Ultralytics default). When it was
+  resumed, every training loss was `nan` from the first batch of epoch 46, i.e. the checkpoint saved
+  after epoch 45 already produced non-finite losses. UNKNOWN — requires confirmation: the first
+  epoch with non-finite losses (in `RUNS_ROOT/E003/train/results.csv` on Drive, not read here).
+  Ultralytics notes that AMP can produce NaN losses for RT-DETR; D-015 anticipated this and required
+  a decision before changing AMP.
+- **Decision (user-approved):**
+  - **E003 is abandoned as diverged.** Not registered, not a final-test candidate, never compared
+    with E001. Its Drive folder `RUNS_ROOT/E003/` is kept as evidence and not resumed.
+  - **E005** (`configs/experiments/E005_rtdetr_amp_off.yaml`) reruns E003 from the pretrained
+    `rtdetr-l.pt` with `amp: false` (fp32 training); everything else is identical to E003.
+  - **Parent is E001, not E003:** `train.py` requires a registered parent and E003 will not be
+    registered. Relative to E001, E005 therefore changes two variables: the model (as in E003) and
+    AMP. HYPOTHESIS: AMP caused the divergence; E005 tests it. A YOLO vs RT-DETR comparison with
+    E005 must state that E001 trained with AMP on and E005 with AMP off.
+  - Fresh run under a new ID (no resume from any E003 checkpoint). The smoke test and the
+    non-finite-loss check (notebook cell 12b) run first, and notebook cell 15 now reports
+    non-finite losses in the full run.
+- **Risks (UNKNOWN until run):** fp32 needs more GPU memory than AMP and is slower; E003 used
+  ~12.7 GB at batch 16 with AMP on a 15 GB T4, so batch 16 may not fit. If it runs out of memory, or
+  losses are still non-finite, stop and record a new decision before changing batch or lr.
+- **Consequence:** no dataset, split, frozen or raw file changes. `my_model/colab_train_rtdetr.ipynb`
+  now runs E005 (switches reset to `False`, the E003 outputs cleared; they remain in Git history).
+  E003 stays in docs/EXPERIMENTS.md with status "diverged".
