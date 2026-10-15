@@ -1,2 +1,3 @@
 experiment_id,declared_utc,decision,reason
 E001,2026-09-19T19:50:42Z,candidate,"E001 baseline selected for held-out final evaluation after completed validation run"
+E005,2026-10-15T01:35:54Z,candidate,"E005 RT-DETR-L (AMP off, batch 8; D-025, D-026) declared as final candidate while its full run is still training; evaluated on test only after the run is registered and reviewed"
