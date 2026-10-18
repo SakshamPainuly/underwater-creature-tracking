@@ -34,7 +34,7 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E001 | `configs/experiments/E001_yolo_baseline.yaml` | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | completed; 100 epochs; final candidate evaluated on test |
 | E002 | `configs/experiments/E002_yolo_imgsz1280.yaml` | E001 | imgsz 640 → 1280 only | planned; not run |
 | E003 | `configs/experiments/E003_rtdetr_baseline.yaml` | E001 | model yolo26s.pt → rtdetr-l.pt only (D-015) | diverged: NaN losses by epoch 46 with AMP on; not registered (D-025) |
-| E005 | `configs/experiments/E005_rtdetr_amp_off.yaml` | E001 | as E003 (model yolo26s.pt → rtdetr-l.pt) plus amp true → false; replaces the diverged E003 (D-025) | training finished: 100 epochs at commit 292d9ab, run_record.json finalized 2026-10-15 on Drive (OBSERVED in the RT-DETR notebook output); effective batch 8 after automatic OOM reduction (D-026); declared final candidate 2026-10-15; not yet registered |
+| E005 | `configs/experiments/E005_rtdetr_amp_off.yaml` | E001 | as E003 (model yolo26s.pt → rtdetr-l.pt) plus amp true → false; replaces the diverged E003 (D-025) | training finished: 100 epochs at commit 292d9ab, run_record.json finalized 2026-10-15 on Drive (OBSERVED in the RT-DETR notebook output); effective batch 8 after automatic OOM reduction (D-026); declared final candidate 2026-10-15; registered 2026-10-17 |
 
 All use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`)
 and ultralytics 8.4.155. Colab procedure: docs/COLAB.md.
@@ -59,6 +59,13 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | ID | Date | Parent | Changed | Dataset | Val mAP50 | Val mAP50-95 | Notes |
 |---|---|---|---|---|---:|---:|---|
 | E001 | 2026-09-19 | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | v1 | 0.8527 | 0.6115 | 100 epochs completed; best.pt recorded; final candidate |
+| E005 | 2026-10-15 | E001 | rtdetr-l.pt, amp off (D-025); effective batch 8 (D-026) | v1 | 0.8359 | 0.5884 | 100 epochs completed over 5 launches; best.pt recorded; final candidate |
+
+E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
+The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
+downloaded. Its output sha256 values, sizes and val metrics match the notebook outputs in Git, and its
+config sha256 matches `E005_rtdetr_amp_off.yaml`. Byte-identity with the Drive file is checked by
+notebook cell 15a: UNKNOWN until that cell prints MATCH.
 
 ### E001 training observations
 
