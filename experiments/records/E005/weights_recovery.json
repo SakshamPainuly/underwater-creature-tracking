@@ -1,0 +1,18 @@
+{
+  "schema": "uwct.weights_recovery/1",
+  "experiment_id": "E005",
+  "decision": "D-027",
+  "registered_best_sha256": "ae5f235617a36571ff5fe2b75d95e99545cbccc8784a58c106cf07aaa33c0646",
+  "path": "train/weights/best.pt",
+  "size": 263628970,
+  "sha256": "b2fc006aff80a328f15636ea3d5dcd30eb646069465bff71abeb35b36809d04d",
+  "checkpoint_epoch": 40,
+  "results_csv_epoch": 41,
+  "val_tolerance": 0.002,
+  "content": "Ultralytics best.pt as saved at epoch 41 (model + EMA + optimizer state, not stripped); the registered best.pt is the same epoch's EMA weights after strip_optimizer (fp16, optimizer removed)",
+  "lost": {
+    "train/weights/best.pt": "ae5f235617a36571ff5fe2b75d95e99545cbccc8784a58c106cf07aaa33c0646",
+    "train/weights/last.pt": "dfbf2205a98a476c7fa2c8deb7b7cb6b10c1f4d98bfcb29dad99de8225d61706",
+    "train/results.csv": "7e9fbddd84f27562e5071eecb6e74f9e189d1f2e34b5d49087c8e012ddff65cd"
+  }
+}

@@ -326,3 +326,26 @@ Short, dated records of project decisions. New dataset versions must reference a
     memory); this does not change the val metrics' meaning.
   - If the resumed run runs out of memory again or shows non-finite losses: stop and record a new
     decision. A clean rerun would be a new experiment with `batch: 8` in its config.
+
+## D-027 — E005's final test uses the epoch-41 best.pt recovered from Drive (2026-10-18, accepted)
+- **Context (OBSERVED):** the E005 log `runs/E005_logs/20261014T213006Z.log` shows epoch 100/100,
+  `Optimizer stripped ... best.pt, 66.2MB` and the run record (best.pt sha256 `ae5f2356…`, 66,225,149
+  B). Drive never received these final files: `runs/E005` (and the user's download
+  `uwct-20261018T225917Z-1-001`) holds `results.csv` with 98 epochs (11,843 B), unstripped
+  `best.pt` 263,628,970 B sha256 `b2fc006a…`, `last.pt` sha256 `5a52fc26…`, no `run_record.json`.
+  No 66,225,149 B file was found in Drive (incl. Trash and old versions, cell R1d).
+- **Reasoning:** by the results.csv fitness (0.1·mAP50 + 0.9·mAP50-95), epoch 41 is the best of
+  epochs 1–98 (P 0.772, R 0.811, mAP50 0.8358, mAP50-95 0.5889); the log shows epochs 99–100 at val
+  mAP50 0.797 / 0.799, so they did not replace it. Ultralytics writes best.pt only at a new best.
+  INFERRED: the recovered best.pt holds the same epoch-41 EMA weights as the registered file, which
+  differs only by `strip_optimizer` (optimizer removed, fp16, new date) — hence a different sha256.
+- **Decision (user-approved 2026-10-18):** E005's final test evaluates the recovered best.pt,
+  named in `experiments/records/E005/weights_recovery.json`. It is accepted only if (1) its sha256
+  is `b2fc006a…`, (2) its checkpoint epoch is 40 (0-based, = results.csv epoch 41; notebook cell R3),
+  and (3) before the test split is touched, its val metrics reproduce the registered ones within
+  0.002 absolute on P, R, mAP50 and mAP50-95 (`src/training/final_test.py`; the tolerance allows
+  for fp32 vs fp16 weights). Otherwise the test is refused and E005 needs a retrain decision.
+- **Consequences:** the registered run record and registry row are unchanged. The final test record
+  stores both the registered and the evaluated sha256 and the val differences. E005's `last.pt` and
+  100-epoch `results.csv` are lost (only 98 epochs survive); this is a LIMITATION of every E005
+  report. Training code is unchanged.

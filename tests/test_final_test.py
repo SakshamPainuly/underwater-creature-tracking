@@ -90,6 +90,65 @@ class RunReadinessTest(unittest.TestCase):
             F.check_run_for_final_test(self.run)
 
 
+class WeightsRecoveryTest(unittest.TestCase):
+    """D-027: a committed weights_recovery.json may stand in for a lost registered best.pt."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        tmp = Path(self._tmp.name)
+        self.run = tmp / "runs" / "E001"
+        (self.run / "train" / "weights").mkdir(parents=True)
+        self.best = self.run / "train" / "weights" / "best.pt"
+        self.best.write_bytes(b"recovered weights")
+        self.record = make_record()
+        self.record["outputs"]["best"]["sha256"] = "a" * 64  # registered file, lost
+        (self.run / "run_record.json").write_text(json.dumps(self.record), encoding="utf-8")
+        self.records = tmp / "records"
+        (self.records / "E001").mkdir(parents=True)
+        self.recovery = {"experiment_id": "E001", "decision": "D-999", "registered_best_sha256": "a" * 64,
+                         "path": "train/weights/best.pt", "sha256": sha256_file(self.best), "val_tolerance": 0.002}
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def load(self, recovery):
+        (self.records / "E001" / F.RECOVERY_FILE).write_text(json.dumps(recovery), encoding="utf-8")
+        return F.load_weights_recovery("E001", self.records)
+
+    def test_no_recovery_file_means_none(self):
+        self.assertIsNone(F.load_weights_recovery("E001", self.records))
+
+    def test_incomplete_recovery_file_is_refused(self):
+        with self.assertRaises(F.FinalTestError):
+            self.load({**self.recovery, "decision": ""})
+        with self.assertRaises(F.FinalTestError):
+            self.load({**self.recovery, "experiment_id": "E002"})
+
+    def test_lost_weights_refused_without_recovery_accepted_with_it(self):
+        with self.assertRaises(F.FinalTestError):
+            F.check_run_for_final_test(self.run)
+        self.assertEqual(F.check_run_for_final_test(self.run, self.load(self.recovery))["run_name"], "E001")
+
+    def test_recovery_must_match_file_and_record(self):
+        with self.assertRaises(F.FinalTestError):
+            F.check_run_for_final_test(self.run, self.load({**self.recovery, "sha256": "b" * 64}))
+        with self.assertRaises(F.FinalTestError):
+            F.check_run_for_final_test(self.run, self.load({**self.recovery, "registered_best_sha256": "c" * 64}))
+
+    def test_recovered_val_must_reproduce_record(self):
+        rec = {"val_metrics": {"precision": 0.77, "recall": 0.81, "map50": 0.836, "map50_95": 0.588}}
+        close = {"precision": 0.7705, "recall": 0.81, "map50": 0.8355, "map50_95": 0.588}
+        self.assertLessEqual(max(F.check_recovered_val(close, rec, 0.002).values()), 0.002)
+        with self.assertRaises(F.FinalTestError):
+            F.check_recovered_val({**close, "map50_95": 0.58}, rec, 0.002)
+
+    def test_committed_e005_recovery_names_the_registered_best(self):
+        recovery = F.load_weights_recovery("E005")
+        record = json.loads((F.RECORDS_DIR / "E005" / "run_record.json").read_text(encoding="utf-8"))
+        self.assertEqual(recovery["registered_best_sha256"], record["outputs"]["best"]["sha256"])
+        self.assertEqual(recovery["decision"], "D-027")
+
+
 class DataFileTest(unittest.TestCase):
     def test_final_test_needs_full_data_yaml_and_training_refuses_it(self):
         with tempfile.TemporaryDirectory() as t:

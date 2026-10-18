@@ -10,7 +10,9 @@ Preconditions, all enforced before the test split is touched:
   2. The experiment is declared in experiments/final_candidates.csv at the checked-out commit,
      i.e. the declaration was committed before the evaluation ran.
   3. <runs_root>/<id>/run_record.json is a valid record of a finished *full* run, and
-     train/weights/best.pt still has the sha256 recorded there.
+     train/weights/best.pt still has the sha256 recorded there -- or, where a decision replaced lost
+     weights (experiments/records/<id>/weights_recovery.json, D-027), the sha256 named there; such
+     weights must then reproduce the recorded val metrics in step a before the test split is touched.
   4. The dataset view passes the same verification as training, and its fingerprint equals the
      one recorded for the training run; Ultralytics reads the test split with the built counts.
   5. No completed final test exists for this run (one evaluation per run; interrupted attempts are
@@ -42,6 +44,10 @@ ATTEMPTS_FILE = "attempts.jsonl"
 FINAL_SCHEMA = "uwct.final_test_record/1"
 FINAL_CANDIDATES_PATH = PROJECT_ROOT / "experiments" / "final_candidates.csv"
 FINAL_CANDIDATE_FIELDS = ("experiment_id", "declared_utc", "decision", "reason")
+RECORDS_DIR = PROJECT_ROOT / "experiments" / "records"
+RECOVERY_FILE = "weights_recovery.json"
+RECOVERY_FIELDS = ("experiment_id", "decision", "registered_best_sha256", "path", "sha256", "val_tolerance")
+VAL_CHECK_METRICS = ("precision", "recall", "map50", "map50_95")
 FULL_DATA_KEYS = {"path", "train", "val", "test", "names"}
 FINAL_TEST_LIMITATIONS = (
     "v1 test sessions share sites (mostly also dates) with train sessions: this measures "
@@ -81,7 +87,19 @@ def require_declared(exp_id: str, path: Path = FINAL_CANDIDATES_PATH) -> dict:
     return row
 
 
-def check_run_for_final_test(run_dir: Path) -> dict:
+def load_weights_recovery(exp_id: str, records_dir: Path = RECORDS_DIR) -> dict | None:
+    """The committed stand-in for a registered best.pt that was lost (D-027), or None if there is none."""
+    path = Path(records_dir) / exp_id / RECOVERY_FILE
+    if not path.is_file():
+        return None
+    rec = json.loads(path.read_text(encoding="utf-8"))
+    missing = [k for k in RECOVERY_FIELDS if rec.get(k) in (None, "")]
+    if missing or rec["experiment_id"] != exp_id:
+        raise FinalTestError(f"{path}: needs {list(RECOVERY_FIELDS)} for {exp_id} (missing {missing})")
+    return rec
+
+
+def check_run_for_final_test(run_dir: Path, recovery: dict | None = None) -> dict:
     """The finished full run to evaluate; refuses smoke runs, bad records, changed weights, repeats."""
     run_dir = Path(run_dir)
     record_path = run_dir / "run_record.json"
@@ -94,11 +112,27 @@ def check_run_for_final_test(run_dir: Path) -> dict:
     if problems:
         raise FinalTestError("run record not usable: " + "; ".join(problems))
     best = run_dir / "train" / "weights" / "best.pt"
-    if not best.is_file() or sha256_file(best) != record["outputs"]["best"]["sha256"]:
-        raise FinalTestError(f"{best} is missing or differs from the sha256 in run_record.json")
+    sha = sha256_file(best) if best.is_file() else None
+    if recovery is None:
+        if sha != record["outputs"]["best"]["sha256"]:
+            raise FinalTestError(f"{best} is missing or differs from the sha256 in run_record.json")
+    elif recovery["registered_best_sha256"] != record["outputs"]["best"]["sha256"]:
+        raise FinalTestError(f"{RECOVERY_FILE} ({recovery['decision']}) replaces a different best.pt than this record's")
+    elif sha != recovery["sha256"]:
+        raise FinalTestError(f"{best} is missing or differs from the sha256 in {RECOVERY_FILE} ({recovery['decision']})")
     if (run_dir / FINAL_DIR / FINAL_RECORD).is_file():
         raise FinalTestError(f"{run_dir.name} already has a completed final test; it is evaluated once")
     return record
+
+
+def check_recovered_val(val_metrics: dict, run_record: dict, tolerance: float) -> dict:
+    """Recovered weights must reproduce the registered val metrics (D-027); returns |difference| per metric."""
+    diffs = {k: abs(float(val_metrics[k]) - float(run_record["val_metrics"][k])) for k in VAL_CHECK_METRICS}
+    off = {k: d for k, d in diffs.items() if d > tolerance}
+    if off:
+        raise FinalTestError(f"recovered weights do not reproduce the registered val metrics (tolerance "
+                             f"{tolerance}): {off} -- they are not the registered model; test split not evaluated")
+    return diffs
 
 
 def assert_full_data_yaml(data_yaml: Path) -> None:
@@ -138,7 +172,7 @@ def select_prediction_examples(build_rows: list) -> list:
 
 def build_final_record(*, run_record: dict, declaration: dict, git: dict, dataset: dict,
                        test_counts: dict, conf: dict, metrics: dict, artifacts: list,
-                       attempts: int, environment: dict) -> dict:
+                       attempts: int, environment: dict, weights_recovery: dict | None = None) -> dict:
     record = {
         "schema": FINAL_SCHEMA,
         "created_utc": R.utc_now(),
@@ -150,6 +184,8 @@ def build_final_record(*, run_record: dict, declaration: dict, git: dict, datase
         "training_git_commit": run_record["git"]["commit"],
         "evaluation_git": git,
         "run_record_best_sha256": run_record["outputs"]["best"]["sha256"],
+        "evaluated_best_sha256": (weights_recovery or {}).get("sha256", run_record["outputs"]["best"]["sha256"]),
+        "weights_recovery": weights_recovery,
         "dataset": {**dataset, "test_counts": test_counts},
         "operating_conf": conf,
         "metrics": metrics,
@@ -208,7 +244,8 @@ def run_final_test(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path 
     if not git["commit"] or git["dirty"]:
         raise FinalTestError("the final test needs a clean git checkout at a recorded commit")
     declaration = require_declared(exp_id)
-    run_record = check_run_for_final_test(run_dir)
+    recovery = load_weights_recovery(exp_id)
+    run_record = check_run_for_final_test(run_dir, recovery)
     cfg = X.validate_config(run_record["experiment"]["config"])
     if ultralytics.__version__ != run_record["ultralytics_version"]:
         raise FinalTestError(f"ultralytics {ultralytics.__version__} != training {run_record['ultralytics_version']}")
@@ -242,6 +279,10 @@ def run_final_test(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path 
     if val_curves is None:
         raise FinalTestError("Ultralytics did not expose P/R/F1 curves; cannot fix the operating point on val")
     conf = operating_conf(val_curves["px"], val_curves["f1"])
+    if recovery is not None:
+        diffs = check_recovered_val(_box_metrics(val_result), run_record, float(recovery["val_tolerance"]))
+        recovery = {**recovery, "val_check_abs_diff": diffs}
+        print(f"recovered weights ({recovery['decision']}) reproduce the registered val metrics: {diffs}")
 
     # b. FINAL TEST EVALUATION
     attempts = _append_attempt(out_dir, {"event": "start", "git_commit": git["commit"], "conf_from_val": conf})
@@ -279,6 +320,7 @@ def run_final_test(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path 
         run_record=run_record, declaration=declaration, git=git, dataset=dataset, test_counts=expected_test,
         conf={"value": conf, "chosen_on": X.VAL_SPLIT, "rule": "max mean F1 on val"},
         metrics=metrics, artifacts=artifacts, attempts=attempts, environment=env_collect(),
+        weights_recovery=recovery,
     )
     (out_dir / FINAL_RECORD).write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     return record
