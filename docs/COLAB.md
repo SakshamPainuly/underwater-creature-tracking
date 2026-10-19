@@ -6,11 +6,19 @@ Rules: CLAUDE.md (hard rules 1–4 and 7, section 6). Decision: D-012.
 
 ## One-time setup
 
-1. **GitHub token (private repo).** Create a *fine-grained* personal access token:
-   - Created by the repo owner (`SakshamPainuly`), with **Resource owner: SakshamPainuly**.
-   - Repository access: only `SakshamPainuly/underwater-creature-tracking`.
-   - Permissions: **Contents: Read-only**; nothing else.
-   - Do not reuse the GitHub CLI credential or a classic token.
+1. **GitHub token (private repo).** Which token depends on who you are (D-021):
+   - **Repository owner (Saksham):** a *fine-grained* personal access token.
+     - Repository access: only `SakshamPainuly/underwater-creature-tracking`.
+     - Permissions: **Contents: Read-only**; nothing else.
+   - **Collaborators (Anu, Harsh):** GitHub's fine-grained tokens do not work on a repository
+     where you are only a collaborator; the clone fails with `403 Write access to repository not
+     granted`. Create a *classic* token instead (Developer settings → Personal access tokens →
+     Tokens (classic)):
+     - Scope: `repo` only. Classic tokens have no read-only scope for private repositories, so
+       this token can write to every repository you can access. Treat it accordingly.
+     - Expiration: 30 days or less. Revoke it when you no longer need Colab access.
+     - Keep it only in Colab Secrets; never paste it into a notebook cell, chat or file.
+   - Do not reuse the GitHub CLI credential.
 
    A fine-grained token can only reach repositories owned by its resource owner. The repo
    belongs to a personal account, so a collaborator's own fine-grained token cannot read it, even
@@ -108,7 +116,9 @@ Why the token is not exposed in process arguments:
 
 Limitation: the Colab VM runs everything as root, so code running in the same runtime could read
 a git process's environment during a clone or fetch. The same code could read Colab Secrets
-directly. The token is read-only and limited to this repository; revoke it on GitHub if in doubt.
+directly. The owner's token is read-only and limited to this repository. A collaborator's classic
+token is not (D-021): it can write to all of that person's repositories, which is why it expires
+within 30 days. The notebook itself only clones and fetches. Revoke a token on GitHub if in doubt.
 
 ## Training (cells 11–14)
 
@@ -141,11 +151,42 @@ stopping and `best.pt` selection use val. After training, `best.pt` is validated
 
 ### Other experiments (e.g. E005, RT-DETR)
 
-The notebook defaults to E001. RT-DETR has its own copy, `my_model/colab_train_rtdetr.ipynb`
+The notebook defaults to E001. RT-DETR has its own copy, `notebooks/colab_train_rtdetr.ipynb`
 (branch `anu/model-development`, `EXPERIMENT_ID = "E005"`: E003 with AMP off after E003 diverged, D-025; plus cell 12b, which stops on non-finite
-smoke-test losses). For any other experiment, set `EXPERIMENT_CONFIG` in cell 1 and the run id in
+smoke-test losses; location: D-016). For any other experiment, set `EXPERIMENT_CONFIG` in cell 1 and the run id in
 cell 15. Nothing else changes: `train_yolo.py` picks `RTDETR` or `YOLO` from the config's checkpoint name (D-015), and
 the final-test cell takes the experiment id in `FINAL_TEST_EXPERIMENT`.
+
+### E004 — the baseline on Harsh's enhanced images (D-017)
+
+Uses `notebooks/colab_train_baseline.ipynb`, the same notebook, code and procedure as E001.
+E004 was actually trained (2026-09-30) with `notebooks/colab_train_E004_enhanced.ipynb`. It runs
+the same scripts and commands with E004's settings filled in. It also keeps the output short
+(script output goes to log files, and training prints one line per epoch) and has a resume cell.
+Cell numbers below refer to the baseline notebook.
+1. **Once:** put Harsh's ZIP on Drive as `MyDrive/uwct/raw/enhanced_2026-09.zip`, as received
+   (macOS files inside are fine).
+2. **Cell 1:** set `EXPERIMENT_CONFIG = "configs/experiments/E004_yolo_enhanced.yaml"`,
+   `EXPERIMENT_ID = "E004"`, and `COMMIT` as usual.
+3. **Cell 7b** reads the config (dataset v2, image source `enhanced_2026-09`), copies the ZIP to
+   local disk and unpacks only `images/<folder>/<name>.png` into `/content/raw/enhanced_2026-09`
+   (`scripts/unpack_image_source.py`). Cell 7 still restores the raw data, because the labels
+   and the size check come from it.
+4. **Cell 8** also checks every enhanced PNG against its recorded content hash (`--full`); it
+   must MATCH.
+5. **Cells 9–10** build and verify `data/yolo/lobster_v2`. Preflight and the final test re-hash
+   the images in the view (about 6.4 GB, adds a minute or two).
+6. **Cells 11–17** run as for E001; runs go to `MyDrive/uwct/runs/E004*/`. Test only after E004 is
+   declared in `experiments/final_candidates.csv` (docs/EXPERIMENTS.md).
+
+E003 specifics (the steps are otherwise the same as above):
+- Cell 11 (preflight) stops if `rtdetr-l.pt` cannot be loaded with the pinned Ultralytics; report it,
+  do not change the model.
+- After the smoke test (cell 12), run cell 12b: losses must be finite. If batch 16 runs out of GPU
+  memory or losses are NaN, stop and record a decision before changing batch or AMP (D-015).
+- Runs go to `MyDrive/uwct/runs/E003*/`; register `run_record.json` locally with
+  `scripts/register_run.py` (D-013). Compare with E001 on **val mAP50**; test (cells 16–17) only
+  after E003 is declared in `experiments/final_candidates.csv`.
 
 ## Run folder (`MyDrive/uwct/runs/<run>/`)
 
@@ -240,6 +281,11 @@ missing, rather than failing.
 
 Colab's local disk (`/content`) is wiped, but the run folder on Drive keeps `last.pt`, which is
 saved every epoch.
+
+First make sure the machine was really lost. "Connecting…" in the browser can mean only the page
+lost its connection while training goes on (OBSERVED during E004). If
+`MyDrive/uwct/runs/<run>/train/results.csv` still gains a row every epoch, do nothing and wait.
+Re-running the setup cells on a machine that is still training deletes the data under it.
 1. Rerun cells 1–10 with the **same** `COMMIT`. This recreates `/content/uwct/data/yolo/lobster_v1`
    at the same path, and `data_trainval.yaml` points there.
 2. Run cell 14 (`--resume`). It refuses to resume if the commit, config sha256, dataset fingerprint

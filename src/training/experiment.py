@@ -20,8 +20,8 @@ import json
 import re
 from pathlib import Path
 
-from dataset_audit.config import MISSING_LABEL_POLICY, PROJECT_ROOT
-from dataset_audit.versioning import (PROCESSED_ROOT, VersionError, is_frozen, sha256_file,
+from dataset_audit.config import DEFAULT_IMAGE_SOURCE, MISSING_LABEL_POLICY, PROJECT_ROOT
+from dataset_audit.versioning import (PROCESSED_ROOT, VersionError, image_source_of, is_frozen, sha256_file,
                                       verify_frozen, version_dir)
 from yolo_prep.build import CLASS_NAMES, INCLUDED_STATUSES, SPLITS, TARGET_ULTRALYTICS_VERSION, dataset_fingerprint
 
@@ -278,13 +278,17 @@ def build_train_args(cfg: dict, data_yaml: Path, project: Path, name: str, smoke
     return args
 
 
-def check_output_location(path: Path, repo_root: Path, raw_root: Path) -> Path:
-    """Run folders and downloaded weights must live outside the git checkout and the raw data."""
+def check_output_location(path: Path, repo_root: Path, raw_root) -> Path:
+    """Run folders and downloaded weights must live outside the git checkout and the raw data.
+
+    `raw_root` is one read-only root or several (every image source, D-017).
+    """
     p = Path(path)
     if not p.is_absolute():
         raise ConfigError(f"{path}: use an absolute path (e.g. /content/drive/MyDrive/uwct/runs)")
     p = p.resolve()
-    for root, what in ((repo_root, "the git repository"), (raw_root, "the read-only raw data")):
+    raw_roots = (raw_root,) if isinstance(raw_root, (str, Path)) else tuple(raw_root)
+    for root, what in ((repo_root, "the git repository"), *((r, "the read-only raw data") for r in raw_roots)):
         r = Path(root).resolve()
         if p == r or r in p.parents:
             raise ConfigError(f"{p} is inside {what} ({r}); runs and weights must stay outside it")
@@ -341,6 +345,10 @@ def verify_built_dataset(dataset_dir: Path, cfg: dict, processed_root: Path = PR
         problems.append(f"class names {summary.get('class_names')} != {CLASS_NAMES}")
     if summary.get("target_ultralytics_version") != cfg["ultralytics_version"]:
         problems.append("view was built for a different Ultralytics version")
+    image_source = image_source_of(version, processed_root)
+    if summary.get("image_source", DEFAULT_IMAGE_SOURCE) != image_source:
+        problems.append(f"view was built from image source {summary.get('image_source')!r}, "
+                        f"but {version} uses {image_source!r}")
 
     manifest = {r["filename"]: r for r in _read_csv(vdir / "image_manifest.csv")}
     built = _read_csv(d / "build_manifest.csv")
@@ -357,6 +365,10 @@ def verify_built_dataset(dataset_dir: Path, cfg: dict, processed_root: Path = PR
         if r["split"] not in SPLITS or r["split"] != m["split"]:
             problems.append(f"{r['filename']}: split {r['split']} differs from the manifest ({m['split']})")
             continue
+        if "image_sha256" in r:  # D-017: the image bytes are part of the dataset identity
+            img = d / "images" / r["split"] / r["filename"]
+            if not img.is_file() or sha256_file(img) != r["image_sha256"]:
+                problems.append(f"{r['filename']}: image content differs from the build (sha256)")
         c = counts[r["split"]]
         c["images"] += 1
         c["positive" if m["label_status"] == "positive" else "negative"] += 1
@@ -379,6 +391,7 @@ def verify_built_dataset(dataset_dir: Path, cfg: dict, processed_root: Path = PR
         "status": "frozen",
         "frozen_registry_verified": True,
         "fingerprint": fingerprint,
+        "image_source": image_source,
         **manifest_hashes,
         "dataset_dir": str(d.resolve()),
         "splits_used_for_training": list(TRAIN_SPLITS),

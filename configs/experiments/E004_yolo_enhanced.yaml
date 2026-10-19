@@ -1,0 +1,20 @@
+# E004 -- the E001 baseline trained and tested on Harsh's enhanced images (D-017). PLANNED, not run.
+# Single variable changed vs E001: the images (raw -> enhanced). Dataset v2 = the v1 sessions, split
+# and labels byte for byte, with images from the enhanced_2026-09 source; dataset_version and
+# dataset_fingerprint differ only because they identify those images. Model, imgsz, epochs,
+# patience, batch, seed and ultralytics version are exactly as in E001.
+id: E004
+slug: yolo_enhanced
+parent: E001
+changed: "images raw -> enhanced (dataset v1 -> v2, D-017)"
+dataset_version: v2
+dataset_fingerprint: "8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e"
+model: yolo26s.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 640
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true

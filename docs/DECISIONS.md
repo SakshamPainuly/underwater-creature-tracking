@@ -274,6 +274,290 @@ Short, dated records of project decisions. New dataset versions must reference a
   location): a copy of it for branch `anu/model-development` and E003, with an added smoke-test
   cell that stops on non-finite losses (docs/COLAB.md). `scripts/train_yolo.py` keeps its name and trains either family.
 
+## D-016 — Repository layout: all Colab notebooks live in `notebooks/` (2026-09-29, accepted)
+- **Context:** D-015 placed the E003 notebook and a README in a new top-level `my_model/` folder.
+  The documented layout (README.md) keeps notebooks in `notebooks/`, experiment configs in
+  `configs/experiments/` and runbooks in `docs/`. A per-person model folder would split the
+  shared pipeline by author instead of by stage.
+- **Decision (user-requested):** `my_model/colab_train_rtdetr.ipynb` moves to
+  `notebooks/colab_train_rtdetr.ipynb` (content unchanged except the Colab badge path).
+  `my_model/README.md` is removed; its runbook steps are in docs/COLAB.md ("Other experiments") and
+  its file table duplicated README.md. `my_model/` no longer exists. This supersedes the notebook
+  location stated in D-015; nothing else in D-015 changes.
+- **Rule going forward:** new models are added as experiment configs plus code in `src/`, never
+  as a per-person or per-model top-level folder. Notebooks go in `notebooks/`, docs in `docs/`.
+- **Consequence:** no code, config, dataset, split, frozen or raw file changes. The Colab badge
+  points at `notebooks/` on branch `anu/model-development`, so it works once that branch includes
+  this commit. `COMMIT` in cell 1 stays empty on this branch (it is set per run).
+
+## D-017 — Enhanced images (Harsh, 2026-09) as image source; dataset v2 and experiment E004 (2026-09-29, accepted)
+- **Context:** a teammate (Harsh) delivered preprocessed ("enhanced") copies of the Set 100 +
+  Set 2000 images. The goal is to train and test the E001 baseline on them, the same way as E001,
+  for a fair raw vs enhanced comparison. Inspection of the delivery (OBSERVED, 2026-09-29):
+  - 2,105 PNGs in `images/{train,val,test}/` plus macOS metadata (`__MACOSX/`, `.DS_Store`).
+  - Every filename is in the v1 image manifest. They are exactly the v1 train + val + test
+    images; no zExtra.
+  - Every image has the same width × height as its raw original, and 0 of 40 sampled images
+    are byte-identical to the raw file.
+  - The delivered folders are **not the v1 split**. They are session-grouped, but assigned
+    differently: 234 of the delivered `test/` images are v1 train, and 221 of the delivered
+    `train/` images are v1 test.
+- **Problem found in the pipeline:** the dataset fingerprint covers `build_manifest.csv` + label
+  files, not image bytes. Swapping in other images would have given E001's fingerprint, so the
+  records could not tell raw and enhanced runs apart.
+- **Decision (user-requested):**
+  - **Raw source:** the delivery is stored as a new read-only raw root,
+    `data/raw/enhanced_2026-09/images/{train,val,test}/`, as delivered minus the macOS files.
+    Content fingerprint (`--full`): `data/processed/raw_fingerprint_enhanced_2026-09.json`.
+    Colab root: `UWCT_ENHANCED_ROOT`.
+  - **Images found by filename:** the delivered folders, and the split they imply, are never used.
+  - **Image sources:** `config.IMAGE_SOURCES` names each image root (`biology` = raw,
+    `enhanced_2026-09`). A version's `VERSION.json` may name its `image_source` (default `biology`).
+    Labels always come from the raw data.
+  - **Builder rules** for a non-raw source:
+    - every image must be a PNG with the same size as its raw original;
+    - `build_manifest.csv` gains `image_source` and `image_sha256`, so the fingerprint identifies
+      the image content;
+    - `verify_built_dataset` (preflight, final test) re-hashes the images and checks the image
+      source.
+    - v1's build is byte-identical to before: rebuilt with this code, its fingerprint is still
+      `9f2bf857…ef810` (OBSERVED).
+  - **Dataset v2** = draft from v1 (`scripts/create_dataset_version.py`): the v1 manifests byte
+    for byte (same sessions, split, labels, label policies; zExtra excluded) plus
+    `image_source: enhanced_2026-09`. Freezing it needs the user's explicit approval (rule 4).
+  - **E004** (`configs/experiments/E004_yolo_enhanced.yaml`): parent E001. The single variable
+    changed is the images (raw → enhanced). `dataset_version`/`dataset_fingerprint` change only
+    because they identify those images. Everything else is as in E001.
+  - **Procedure:** same code path, notebook and machinery as E001 (preflight → smoke → full →
+    register → declare → final test). The operating confidence is chosen on E004's own val.
+- **Comparison rule:** declared in docs/EXPERIMENTS.md before any E004 result exists.
+- **zExtra:** still excluded and unlabelled (D-014). Enhanced zExtra images, when delivered, are a
+  separate raw root and are for qualitative inspection only. No metric is possible without labels.
+- **UNKNOWN — requires confirmation (Harsh):**
+  1. the method and its parameters, and whether they were identical for every image;
+  2. whether anything was tuned, fitted or chosen while looking at images (in particular any
+     v1 val/test image);
+  3. whether any geometric change (crop, shift, warp, rotation) was applied. The sizes match,
+     but that does not rule out a shift.
+
+  Results are not reported before these are answered and recorded here.
+
+## D-018 — Harsh's answers on the enhanced images; E004 val results reported, test after a review-list check (2026-10-01, accepted)
+- **Context:** D-017 left three questions about the enhanced images UNKNOWN and held back E004
+  results until they were answered. E004 trained on 2026-09-30 (commit `97ac710`, one launch,
+  81 epochs) and is registered; its records are in `experiments/records/E004/` (D-013). Harsh
+  answered in writing on 2026-10-01. The points below are his statements, summarized; we have not
+  verified them unless marked OBSERVED.
+- **Answers:**
+  1. **Method:** profile `fusion_mild`, a classical pipeline with no learned model and no physical
+     dehazing model:
+     - red/blue compensation from green (strength 0.5);
+     - channel balancing (maximum gain 4.0, common 99.5th-percentile highlight normalization);
+     - LAB luminance stretch (1st–99th percentiles, blend 0.5, if normalized range > 0.03);
+     - CLAHE on luminance (clip 1.5, 8×8 tiles, blend 0.3);
+     - gamma branch (0.85) and sharpening branch (Gaussian σ 1, unsharp 0.2);
+     - multiscale fusion (≤ 5 pyramid levels; contrast, saturation and well-exposedness
+       weights); final blend 1.0; denoising off; near-black border threshold 8/255.
+  2. **Same for every image:** one configuration for all images. Nothing depends on split, folder,
+     video or annotations. Per-image statistics (channel means, percentiles, CLAHE histograms,
+     border mask, fusion weights) are computed from each image, so the correction is adaptive
+     while the settings are fixed. No random operations.
+  3. **Tuning:** no training and no learned checkpoint. The settings were not re-tuned for this
+     delivery. However, the profile was originally chosen by **visually reviewing lobster images**
+     under several profiles; seven review images are documented in Harsh's
+     `previously_reviewed_images.json` (not in this repository). That review excluded Harsh's own
+     test split, which is not v1's: D-017 OBSERVED that 221 of his `train/` images are v1 test.
+  4. **Geometry:** no crop, rotation, flip, translation, warp or resize; the original coordinate
+     grid and dimensions are kept, so labels need no transformation (consistent with the matching
+     sizes OBSERVED in D-017). Caveats: pyramid fusion resamples internally and filters mix
+     neighbouring pixels, so edges can look sharper or softer; edge-connected near-black pixels
+     can be set to black.
+  5. **Output:** 8-bit, three-channel PNGs. The zExtra export uses the same definitions and
+     settings.
+- **Provenance caveat:** the answers describe Harsh's *updated* notebook, which was not run on our
+  images. He verified that it reproduces the original definitions pixel for pixel on three inputs.
+  INFERRED: the answers also describe the delivered images.
+- **Decision (user-approved, 2026-10-01; option chosen: "val now, test later"):**
+  - The D-017 reporting hold is lifted for **val**. E004 val results and the declared E001 vs E004
+    val comparison (docs/EXPERIMENTS.md) may be reported, each with the limitations below.
+  - The E004 **test** evaluation (declaring E004 in `experiments/final_candidates.csv`) waits
+    until Harsh's review list has been checked against the v1 val and test filenames and the
+    result is recorded in a new decision. If a reviewed image is in v1 val or test, that decision
+    states how E004's results are qualified.
+  - D-017 is not edited. This decision replaces only its last line ("Results are not reported
+    before these are answered and recorded here").
+- **Limitations every E004 result carries:**
+  - UNKNOWN — requires confirmation: whether any v1 val/test image was among the images reviewed
+    while the profile was chosen.
+  - The enhancement adapts to each image's statistics; it is not a fixed per-pixel mapping.
+  - One run per arm (seed 0); E001 trained 100 epochs, E004 stopped early at 81.
+  - The v1 limitations (new sessions, not new sites; concentrated val/test sessions; sparse
+    metadata; zExtra excluded).
+- **Open:** obtain `previously_reviewed_images.json` from Harsh and check it. Optional: ask Harsh to
+  run the updated notebook on a few v1 raw images, and compare the result with the delivered images
+  pixel for pixel, to replace the INFERRED provenance above with an OBSERVED one.
+
+## D-019 — Owner override: Saksham may merge his own PRs without a review (2026-10-01, accepted)
+- **Context:** CLAUDE.md §10 required 1 approving review for every change to the protected
+  `p4/colab-baseline` and said never to bypass it. GitHub does not let an author approve their own
+  PR, so the owner's PRs waited on a teammate. PR #5 (E004 records, D-018) was merged by the owner
+  on 2026-10-01 as `0446faa` with no review, through the repository admin's bypass.
+- **Decision (user-approved, 2026-10-01; option chosen: "process rules only"):**
+  - Saksham, the repository owner, may merge his own PRs into `p4/colab-baseline` without an
+    approving review. Each such PR says "Owner merge, no review", so the history shows it. PR #5
+    is the first such merge (recorded here after the fact).
+  - Teammates' PRs still need Saksham's approving review. No one else bypasses the protection.
+  - Everything else is unchanged: PR + squash merge, the commit-plan approval in §8, and every PR
+    is still checked against CLAUDE.md before merging.
+  - The override covers **merge review only**. The §2 hard rules (raw data, frozen versions,
+    splits, test split, no fabrication) keep their existing exception routes, which need
+    explicit user approval and their own DECISIONS.md entry. Never fabricating data, metrics,
+    files or results has no exception.
+- **Consequence:** CLAUDE.md §10 is updated to match. The GitHub branch protection stays as it is;
+  the owner's admin bypass is how an owner merge is done.
+
+## D-020 — Val-only secondary-metrics evaluation; IoU 0.5 matching fixed before results (2026-10-10, accepted 2026-10-12)
+- **Context:** the selection metric and secondary metrics are declared in docs/EXPERIMENTS.md, but
+  the repository had no val evaluation of the secondary metrics. `src/training/final_test.py`
+  chooses the operating confidence on val (max mean F1) and then evaluates on test. Comparing E001
+  (v1) with E004 (v2, D-017/D-018) needs these numbers on val, without touching test (rule 7).
+- **Decision (user-approved; plan approved on 2026-10-01, this text approved on 2026-10-12):**
+  - New stage `src/training/val_eval.py` with CLIs `scripts/val_eval.py` (GPU env) and
+    `scripts/compare_val_eval.py` (local, standard library). It reads only the run's train/val data
+    file and manifest rows whose split is `val`, and refuses any image path outside `images/val/`.
+  - Operating confidence: the same rule as `final_test.py` (max mean F1 on Ultralytics' val curves);
+    E001 must reproduce 0.298 as a check of the code.
+  - Matching rule, **fixed here before any result exists**: greedy by confidence, one ground-truth
+    box per prediction, IoU ≥ 0.5 (`MATCH_IOU`). It is not tuned afterwards.
+  - Reported at the operating confidence: TP/FP/FN, P, R, F1; false positives on the confirmed-negative
+    val images (images with ≥ 1 detection, total detections); the same per session and per
+    `lighting_flag` (from the version's `split_manifest.csv`), with AP50 per group (101-point).
+  - Cost, for the comparisons that declare it (D-015): parameters and GFLOPs of the unfused model
+    at the training imgsz, and speed as the median ms per image over the batch-1 val predictions
+    (first image dropped as warm-up) plus Ultralytics' batched val speed, with the GPU name.
+    Speeds are compared only between runs measured on the same GPU type.
+  - `val_eval_record.json` (schema `uwct.val_eval_record/1`) joins the D-013 archive in
+    `experiments/records/<experiment_id>/`. Predictions, per-image CSV and plots stay off-repo.
+- **Limitations (stated with every result):** val chose each run's checkpoint and every operating
+  confidence, so these are not unbiased estimates; one seed per run; E001 trained 100 epochs, E004
+  81 (early stop); red-light val is 2 sessions / 31 boxes; `21_MACK_10` holds 465 of 1,010 val boxes.
+- **Run (2026-10-11):** E001 and E004 evaluated on Colab in one Tesla T4 session at commit `d84a664`.
+  Two GPU-only defects were fixed on the way: `c45b341` (the val path check followed the view's
+  symlinks to the raw files) and `d84a664` (`model.info(verbose=False)` returns None). E001
+  reproduced the operating confidence 0.2983 of its `final_test_record.json`. Records archived in
+  `experiments/records/E001/` and `E004/`; the side-by-side tables are in
+  `experiments/comparisons/E001_vs_E004_val.md` (`scripts/compare_val_eval.py`). The two records
+  carry the earlier limitation wording "Val chose E001's checkpoint"; it means each run's checkpoint.
+
+## D-021 — Collaborators use a short-lived classic token on Colab (2026-10-11, accepted 2026-10-12)
+- **Context:** D-012 has the Colab notebook clone the private repo with a fine-grained token
+  (this repository only, Contents read-only). On 2026-10-11 Anu's clone in cell 4 failed with
+  `403 Write access to repository not granted`, using a fine-grained read-only token stored as
+  `UWCT_GITHUB_TOKEN`. OBSERVED: `anusidhu9` is a collaborator with write permission and no pending
+  invite. OBSERVED (GitHub docs, checked 2026-10-11): fine-grained tokens do not support access to
+  repositories where the user is a collaborator. The repo belongs to a personal account, so only
+  the owner can use the D-012 token. The same applies to Harsh.
+- **Decision (user-approved; option "classic token now" chosen on 2026-10-11, this text approved on 2026-10-12):**
+  - The owner keeps the D-012 fine-grained, read-only token.
+  - Collaborators use a classic token with scope `repo` and an expiration of 30 days or less,
+    stored only in Colab Secrets as `UWCT_GITHUB_TOKEN`. This supersedes the token rule of D-012 for
+    collaborators only. The notebook code (GIT_ASKPASS, no credential storage, clone/fetch only)
+    is unchanged.
+  - LIMITATION: a classic `repo` token can write to every repository its holder can access,
+    including this one (collaborators already have write access). Branch protection on
+    `p4/colab-baseline` still applies. A leaked token is revoked on GitHub at once.
+- **Rejected for now:** moving the repo to an organization with Anu and Harsh as members, so
+  everyone can use fine-grained read-only tokens. It changes the repo URL, the notebooks' `REPO`,
+  every remote and the branch protection. It can be revisited in its own decision.
+- **Consequence:** docs/COLAB.md (one-time setup, authentication limitation) is updated. No code,
+  data, dataset version or experiment changes.
+
+## D-022 — Harsh's green-enhancement follow-up; E004 declared for test with limitations (2026-10-12, accepted)
+- **Context:** D-018 held E004's test evaluation until Harsh's review list was checked against the
+  v1 val and test filenames. Harsh answered in writing on 2026-10-12. The points below are his
+  statements, summarized; we have not verified them unless marked OBSERVED.
+- **Answers:**
+  1. **Review list:** seven documented green-profile review images, six from Set 2000 and one from
+     Set 100. None is from zExtra.
+  2. **Other images viewed while the profile was chosen:** "not sure". There is no complete
+     viewing or decision log. Later verification runs with fixed settings also processed the
+     listed Set 100 image and one zExtra image.
+  3. **Version that produced the 2,105 delivered images:** UNKNOWN. No execution record links a
+     notebook version, date or environment to the delivery.
+  4. **Five-image pixel check:** the current notebook was re-run on five raw images (Set 100 and
+     Set 2000) with unchanged `fusion_mild` settings. The outputs were not compared with the
+     delivery.
+- **Check (OBSERVED, `data/processed/image_manifest.csv`, 2026-10-12):** of the seven images,
+  five are in v1 train. `21_SUB6_10_BW_20220815_GP080026_13777` is in **val** (7 boxes) and
+  `06_HERR_08_CW_20200903_GP120003_00001` is in **test** (1 box; 348 test images). All five
+  pixel-check filenames are present in `data/raw/enhanced_2026-09/`.
+- **Decision (user-approved, 2026-10-12; option chosen: "declare E004 for test, with limitations"):**
+  - E004 is declared a final candidate by a committed row in `experiments/final_candidates.csv`.
+    Its test evaluation may run once and is logged in docs/EXPERIMENTS.md. E004's test numbers are
+    reported whatever they are and are never used to choose between E001 and E004.
+  - This replaces D-018's test hold. D-018 is not edited.
+- **Limitations every E004 result carries, in addition to D-018's:**
+  - one val image and one test image (above) were among the documented review images;
+  - whether other val or test images were viewed while the profile was chosen is UNKNOWN;
+  - the delivery's provenance stays INFERRED, not OBSERVED.
+- **Open:** Harsh's handoff ZIP (requested 2026-10-12). When it arrives, the five delivered images
+  are compared with his outputs on decoded pixel arrays, and the result is recorded in a new
+  decision. A match would be observed equivalence for those five pairs only.
+
+## D-023 — Five-image pixel check of the enhanced delivery: near-identical, not bit-identical (2026-10-12, accepted)
+- **Context:** D-022 left open a comparison of Harsh's five-image re-run with the delivered
+  enhanced images. Harsh's handoff ZIP arrived on 2026-10-12: `harsh_green_followup_2026-10-12.zip`,
+  15 files, SHA-256 `f7bd3f0c79be9fa5b0f5516a45527097cead87a037887e9dcce8ee635af7f5f6` (computed
+  on receipt; Harsh's own hash was not received, so arrival intact is not confirmed). The ZIP is
+  kept off-repo on the shared Drive. It was extracted outside the repository and read only.
+- **Checks (OBSERVED, 2026-10-12):**
+  - Harsh's seven raw inputs match our `data/raw/biology` files by SHA-256 (7/7). His relative
+    paths differ: our Set 2000 images sit in a nested `batch_2 (2k - imgOnly)/` folder.
+  - His five outputs match the file and decoded-pixel hashes in his `pixel_check_manifest.json` (5/5).
+  - Against the delivered images in `data/raw/enhanced_2026-09/` (decoded RGB arrays, same shapes):
+    not bit-identical. Per image 96–210 pixels differ (0.005–0.010%), maximum absolute difference
+    2–3 of 255, mean absolute difference about 0.00005.
+  - `scripts/check_raw_unchanged.py` (default structural check) afterwards: RAW DATA MATCHES
+    FINGERPRINT.
+- **Interpretation:**
+  - INFERRED: the delivery was produced with the `fusion_mild` method and settings described in
+    D-018. A different formula or setting would change most pixels, not about 0.01% by 1–3 levels.
+  - HYPOTHESIS, not tested: the differences come from the runtime (the re-run used OpenCV 5.0.0;
+    Harsh's earlier recorded review used 4.12.0).
+  - LIMITATION: near-equivalence for five images only. It does not identify the notebook version
+    or date that produced all 2,105 images, and it does not bear on which images were viewed.
+- **Decision (user-approved, 2026-10-12):** recorded as above. D-022's limitations and E004's
+  declaration are unchanged; no image, dataset version or experiment changes. The comparison
+  script was a one-off outside the repository and is not committed.
+
+## D-024 — Enhanced zExtra (Harsh, 2026-10) as a separate read-only image source, for qualitative inspection only (2026-10-12, accepted)
+- **Context:** D-017 said enhanced zExtra images, when delivered, form a separate raw root for
+  qualitative inspection only. Harsh shared `zExtra_Photos_green_fusion_mild.zip` via Google Drive
+  on 2026-10-12: 1,601,390,788 B, SHA-256
+  `94ef7084332d7c8195dc0c9fff35e8ea989aa7c7784de5f1c673fb00ff87df8b` (computed on receipt; Harsh's
+  own hash was not received).
+- **Inspection (OBSERVED, 2026-10-12, read from the ZIP before extraction):**
+  - 436 entries, all PNG, in one folder `zExtra Photos/`; no unsafe paths, no macOS files;
+  - the filenames are exactly the 436 raw zExtra names: none missing, none extra, no duplicates;
+  - every image has the same width × height as its raw original, and 0 of 436 are byte-identical
+    to it; all RGB.
+- **Decision (user-approved, 2026-10-12):**
+  - **Raw source:** `data/raw/enhanced_zextra_2026-10/images/zExtra/<name>.png`, extracted byte for
+    byte (ZIP CRC verified), registered as image source `enhanced_zextra_2026-10` (env
+    `UWCT_ENHANCED_ZEXTRA_ROOT`). Full content fingerprint:
+    `data/processed/raw_fingerprint_enhanced_zextra_2026-10.json` (436 files, verified MATCH).
+    Read-only like every raw root (CLAUDE.md rule 1). The ZIP's layout (`zExtra Photos/<name>.png`)
+    differs from the first delivery, so the extraction was a one-off outside the repository rather
+    than `scripts/unpack_image_source.py`.
+  - **Use:** qualitative inspection only, e.g. the GUI's raw/enhanced switch showing E004 on
+    enhanced zExtra. zExtra stays unlabelled and excluded from every dataset version (D-003,
+    D-014). No metric is computed on it; no training, tuning or threshold choice uses it.
+- **LIMITATIONS:** the profile (`fusion_mild`, same settings as D-018) is Harsh's statement, from the
+  filename and D-018 answer 5: INFERRED, not verified. No record of the notebook version, runtime or
+  date (the same provenance gap as D-022). D-022 noted that one zExtra image was processed in Harsh's
+  later verification runs; that does not affect qualitative use.
+- **Consequence:** no dataset version, split, label, frozen file or experiment changes.
+
 ## D-025 — E003 diverged to NaN losses; RT-DETR rerun as E005 with AMP off (2026-10-13, accepted)
 - **Context (OBSERVED, Colab session 2026-10-13, Tesla T4, ultralytics 8.4.155, torch 2.11.0+cu130;
   notebook outputs saved in commit `f186f4e`):** the E003 smoke test (`E003_smoke_20261013T154708`)

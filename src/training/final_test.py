@@ -32,7 +32,7 @@ import csv
 import json
 from pathlib import Path
 
-from dataset_audit.config import BIOLOGY_ROOT, PROJECT_ROOT
+from dataset_audit.config import PROJECT_ROOT, RAW_ROOTS
 from dataset_audit.versioning import sha256_file
 from training import experiment as X
 from training import run_record as R
@@ -237,7 +237,7 @@ def run_final_test(runs_root: Path, exp_id: str, env_collect, dataset_dir: Path 
     from yolo_prep.verify import counts_match, ultralytics_split_counts
 
     ultralytics = require_gpu_environment()
-    runs_root = X.check_output_location(runs_root, PROJECT_ROOT, BIOLOGY_ROOT)
+    runs_root = X.check_output_location(runs_root, PROJECT_ROOT, RAW_ROOTS)
     run_dir = runs_root / exp_id
 
     git = R.git_state(PROJECT_ROOT)

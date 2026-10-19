@@ -41,6 +41,24 @@ DATASET_SOURCES = [
 #   "error":    every image is documented as labeled, so a missing label is a data error (Set 100)
 MISSING_LABEL_POLICY = {"Set100": "error", "Set2000": "negative", "zExtra": "pending"}
 
+# Image sources (D-017). A dataset version takes its labels from the sources above and its images
+# from one image source, named in its VERSION.json ("biology" when absent, e.g. v1). A delivered,
+# processed copy of the raw images is its own read-only raw root: images are found there by
+# filename, so the folders it was delivered in (and any split they imply) are never used.
+ENHANCED_2026_09_ROOT = Path(os.environ.get("UWCT_ENHANCED_ROOT",
+                                            PROJECT_ROOT / "data" / "raw" / "enhanced_2026-09"))
+# Harsh's enhanced zExtra (D-024): unlabelled, for qualitative inspection only; no dataset version
+# uses it. Layout: images/zExtra/<name>.png, names as in the raw zExtra Photos folder.
+ENHANCED_ZEXTRA_2026_10_ROOT = Path(os.environ.get("UWCT_ENHANCED_ZEXTRA_ROOT",
+                                                   PROJECT_ROOT / "data" / "raw" / "enhanced_zextra_2026-10"))
+DEFAULT_IMAGE_SOURCE = "biology"
+IMAGE_SOURCES = {
+    "biology": BIOLOGY_ROOT,                    # the raw images (v1)
+    "enhanced_2026-09": ENHANCED_2026_09_ROOT,  # Harsh's enhanced Set 100 + Set 2000 (v2)
+    "enhanced_zextra_2026-10": ENHANCED_ZEXTRA_2026_10_ROOT,  # Harsh's enhanced zExtra (D-024)
+}
+RAW_ROOTS = tuple(IMAGE_SOURCES.values())  # every one is read-only (CLAUDE.md rule 1)
+
 SPREADSHEET_PATH = BIOLOGY_ROOT / "What's been done.xlsx"
 
 # Filename pattern observed across all three sources:

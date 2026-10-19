@@ -62,6 +62,20 @@ class VersioningTest(unittest.TestCase):
             self.draft(decision="D-999")
         self.assertFalse((self.root / "v1.1").exists())
 
+    def test_draft_records_its_image_source(self):
+        self.assertEqual(V.image_source_of("v1", root=self.root), "biology")
+        self.draft()  # same images as the parent: VERSION.json keeps its v1-era shape
+        self.assertNotIn("image_source", json.loads((self.root / "v1.1" / V.VERSION_FILE).read_text()))
+        d = V.open_draft("v2", "v1", "D-010", root=self.root, decisions_path=self.decisions,
+                         image_source="enhanced_2026-09")
+        self.assertEqual(V.image_source_of("v2", root=self.root), "enhanced_2026-09")
+        self.assertEqual((d / "image_manifest.csv").read_bytes(), (self.root / "image_manifest.csv").read_bytes())
+        self.assertEqual(V.check_extends_parent("v2", root=self.root), [])
+        with self.assertRaises(V.VersionError):  # an existing draft cannot switch image source
+            V.open_draft("v2", "v1", "D-010", root=self.root, decisions_path=self.decisions, image_source="biology")
+        with self.assertRaises(V.VersionError):
+            V.open_draft("v3", "v1", "D-010", root=self.root, decisions_path=self.decisions, image_source="nope")
+
     def test_draft_starts_as_copy_of_parent_and_extends_it(self):
         d = self.draft()
         self.assertEqual((d / "split_manifest.csv").read_bytes(), (self.root / "split_manifest.csv").read_bytes())

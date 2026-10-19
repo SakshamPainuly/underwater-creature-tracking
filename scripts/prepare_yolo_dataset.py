@@ -10,7 +10,9 @@ A frozen version is hash-verified against data/processed/FROZEN.json before buil
 Draft versions build only with --allow-draft and are labeled "draft" in build_summary.json
 (never use draft builds for reported experiments).
 
-Images are linked, not duplicated (symlink where the OS allows, else hardlink).
+Images come from the version's image source (VERSION.json "image_source", D-017): the raw images
+for v1, the enhanced images for v2 (root: UWCT_ENHANCED_ROOT). Labels always come from the raw
+data. Images are linked, not duplicated (symlink where the OS allows, else hardlink).
 Run it once per machine (Windows PC, Colab, lab GPU) -- it takes seconds.
 """
 
@@ -21,8 +23,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from dataset_audit.config import BIOLOGY_ROOT, PROJECT_ROOT
-from dataset_audit.versioning import VersionError, is_frozen, read_version_meta, verify_frozen, version_dir
+from dataset_audit.config import BIOLOGY_ROOT, IMAGE_SOURCES, PROJECT_ROOT
+from dataset_audit.versioning import (VersionError, image_source_of, is_frozen, read_version_meta,
+                                      verify_frozen, version_dir)
 from yolo_prep.build import DATASET_BASENAME, BuildError, build_yolo_dataset
 
 
@@ -48,10 +51,12 @@ def main():
     print(f"raw data root: {BIOLOGY_ROOT}")
     try:
         vdir, status = resolve_version(args.version, args.allow_draft)
+        image_source = image_source_of(args.version)
+        print(f"image source: {image_source} ({IMAGE_SOURCES.get(image_source)})")
         out = args.out or PROJECT_ROOT / "data" / "yolo" / f"{DATASET_BASENAME}_{args.version}"
         summary = build_yolo_dataset(
             vdir / "image_manifest.csv", vdir / "split_manifest.csv", out, args.link_mode,
-            version=args.version, version_status=status,
+            version=args.version, version_status=status, image_source=image_source,
         )
     except (VersionError, BuildError) as e:
         sys.exit(f"BUILD FAILED: {e}")

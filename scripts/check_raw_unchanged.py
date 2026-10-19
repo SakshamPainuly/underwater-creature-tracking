@@ -30,7 +30,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from dataset_audit.config import BIOLOGY_ROOT, DATASET_SOURCES, PROJECT_ROOT
+from dataset_audit.config import BIOLOGY_ROOT, DATASET_SOURCES, PROJECT_ROOT, RAW_ROOTS
 
 V1_FINGERPRINT_PATH = PROJECT_ROOT / "data" / "processed" / "raw_fingerprint.json"
 DEFAULT_FINGERPRINT_PATH = PROJECT_ROOT / "data" / "processed" / "raw_fingerprint_d011_post_cleanup.json"
@@ -95,7 +95,7 @@ def main():
         sys.exit(f"raw root not found: {args.root}")
 
     if args.write:
-        reason = write_refusal(fingerprint, [args.root, BIOLOGY_ROOT])
+        reason = write_refusal(fingerprint, [args.root, BIOLOGY_ROOT, *RAW_ROOTS])
         if reason:
             print(f"refusing to write: {reason}")
             sys.exit(2)
