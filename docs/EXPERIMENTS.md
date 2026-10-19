@@ -59,7 +59,7 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | ID | Date | Parent | Changed | Dataset | Val mAP50 | Val mAP50-95 | Notes |
 |---|---|---|---|---|---:|---:|---|
 | E001 | 2026-09-19 | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | v1 | 0.8527 | 0.6115 | 100 epochs completed; best.pt recorded; final candidate |
-| E005 | 2026-10-15 | E001 | rtdetr-l.pt, amp off (D-025); effective batch 8 (D-026) | v1 | 0.8359 | 0.5884 | 100 epochs completed over 5 launches; best.pt recorded; final candidate |
+| E005 | 2026-10-15 | E001 | rtdetr-l.pt, amp off (D-025); effective batch 8 (D-026) | v1 | 0.8359 | 0.5884 | 100 epochs completed over 5 launches; best.pt recorded, later lost on Drive (final test uses the recovered epoch-41 best.pt, D-027); final candidate |
 
 E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
 The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
@@ -97,4 +97,31 @@ E001 test-evaluation limitations:
 - Test boxes are concentrated: 13_SHRI_12 + 21_SUB6_03 hold 1,135 of 1,512 test boxes (D-008).
 - Substrate/visibility metadata is mostly missing; zExtra is excluded.
 - Ultralytics-reported precision/recall use the confidence that maximizes F1 on the test split; the reported operating point uses confidence 0.298 selected on val.
+- Test results were not used for training, threshold selection, or model choice.
+
+| Date | Experiment | Reason | Result |
+|---|---|---|---|
+| 2026-10-18 | E005 | Final held-out test evaluation of the declared candidate after registration, with the recovered epoch-41 best.pt (D-027) | mAP50 0.8788; mAP50-95 0.6604; precision @ val-chosen conf 0.619 = 0.8411; recall = 0.7712; F1 = 0.8046 |
+
+E005 test evaluation (OBSERVED in the RT-DETR notebook output, cells R3, 16 and 17; attempt 1; record
+`runs/E005/final_test/final_test_record.json` on Drive, outside Git):
+
+- Weights: `train/weights/best.pt` sha256 `b2fc006a…` (263,628,970 B, checkpoint epoch 40 = results.csv
+  epoch 41, EMA present; cell R3), not the registered `ae5f2356…`, which is lost (D-027).
+- D-027 val check before the test split was touched: val P 0.771, R 0.814, mAP50 0.836, mAP50-95 0.588
+  (324 images, 1,010 boxes); absolute differences from the registered val metrics printed as 0.0 on all
+  four (tolerance 0.002).
+- Test split: 348 images (27 backgrounds), 1,512 boxes. Ultralytics-reported P 0.8105, R 0.7996 (at the
+  confidence that maximizes F1 on test). Confusion matrix as printed by cell 17 (rows = predicted,
+  cols = true; lobster, background): [[1443, 1458], [69, 0]].
+- Ultralytics 8.4.155, torch 2.11.0+cu130, Tesla T4; notebook COMMIT a2b9f99.
+
+E005 test-evaluation limitations:
+
+- v1 test sessions share sites (mostly also dates) with train sessions: results measure new-session generalization, not new-site generalization (D-007).
+- Test boxes are concentrated: 13_SHRI_12 + 21_SUB6_03 hold 1,135 of 1,512 test boxes (D-008).
+- Substrate/visibility metadata is mostly missing; zExtra is excluded.
+- Ultralytics-reported precision/recall use the confidence that maximizes F1 on the test split; the reported operating point uses confidence 0.619 selected on val.
+- Evaluated weights are the recovered epoch-41 best.pt, not the registered file; E005's final `last.pt` and the 100-epoch `results.csv` are lost (98 epochs survive) (D-027).
+- False positives on negative test images were not reported separately: UNKNOWN — requires the per-image predictions in the final-test record.
 - Test results were not used for training, threshold selection, or model choice.
