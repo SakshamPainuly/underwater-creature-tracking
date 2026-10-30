@@ -633,3 +633,30 @@ Short, dated records of project decisions. New dataset versions must reference a
   stores both the registered and the evaluated sha256 and the val differences. E005's `last.pt` and
   100-epoch `results.csv` are lost (only 98 epochs survive); this is a LIMITATION of every E005
   report. Training code is unchanged.
+
+## D-028 — Tracking stage: format, analytics and synthetic development data (2026-10-30, proposed)
+- **Status:** proposed by Anu on `anu/tracking`; needs Saksham's agreement (tracking has no owner in
+  CLAUDE.md §10) before it is marked accepted. Re-check the ID against `origin/p4/colab-baseline`
+  before opening the PR.
+- **Context (OBSERVED):** the project's tracking stage has not started (README). The delivery holds
+  no video; its frames are 300–900 frames apart and cannot support tracking (docs/DATASET.md).
+  Raw GoPro MP4s and their fps are being requested from the biology department.
+- **Decision (proposed):**
+  - Tracks are exchanged as `tracks.csv` + `tracks_meta.json` (docs/PIPELINE.md); analytics read
+    only these files, so the detector (E001 YOLO, E005 RT-DETR) and the tracker can change
+    independently.
+  - First tracker: Ultralytics' built-in ByteTrack (`bytetrack.yaml`) with a registered `best.pt`;
+    BoT-SORT is a later single-variable comparison. No new dependency (`ultralytics==8.4.155`).
+  - Analytics are descriptive, in px and frames (seconds only with a known fps): track lengths, gaps,
+    path length, speed, straightness, stationary frames, short-track count, occupancy. No
+    IDF1/HOTA/MOTA until a clip has hand-labelled track IDs (CLAUDE.md rule 9).
+  - Until project video exists, development uses a scripted synthetic scenario
+    (`src/tracking/synthetic.py`, no images) with hand-checkable answers. Synthetic outputs are
+    marked `synthetic` in the meta, analytics and plots and are never reported as results.
+  - Project videos, when delivered, are a new read-only source under `data/raw/` (§4) with their own
+    decision entry. A public non-project clip may be used only as a smoke test, marked `--synthetic`,
+    stored outside `data/raw/` and outside the dataset versions, with no results reported from it.
+- **Consequences:** `src/tracking/`, `scripts/{track_video,analyze_tracks,make_synthetic_tracks}.py`,
+  `tests/test_tracking.py`, `docs/PIPELINE.md`. `track_video.py` / `tracking/run.py` are written but
+  NOT YET RUN (no video); the first run is a Colab smoke test checked by eye. No change to datasets,
+  experiments or training code.

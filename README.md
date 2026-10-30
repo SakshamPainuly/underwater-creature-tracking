@@ -15,8 +15,9 @@ run records; docs/COLAB.md) is complete on `p4/colab-baseline`: **E001, the firs
 detector, was trained on Colab (100 epochs, val mAP50 0.8527) and evaluated once on the held-out
 test split (mAP50 0.8974)**. Every result must be reported with the v1 limitations in
 docs/DATASET.md — the test split measures generalization to new *sessions*, not new *sites*.
-E002 (imgsz 1280) is configured but not run. No tracking or video work has started: the delivery
-contains no video (docs/DATASET.md).
+E002 (imgsz 1280) is configured but not run. Tracking (D-028, proposed, `anu/tracking`): the tracks
+file format (docs/PIPELINE.md), trajectory analytics and a Colab tracker script exist and are tested on
+synthetic tracks only; the tracker has not been run, because the delivery contains no video (docs/DATASET.md).
 `data/raw/biology/` and `data/raw/enhanced_2026-09/` (D-017) are read-only and never written to by any script.
 
 ## Project layout
