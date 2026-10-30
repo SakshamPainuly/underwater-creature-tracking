@@ -19,7 +19,8 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
   - Every test evaluation is logged below (date, experiment, reason).
   - Test results never feed back into model or threshold choice.
   - Mechanism (D-012): a final candidate is declared by a committed row in
-    `experiments/final_candidates.csv` (E001 declared). `scripts/final_test_eval.py` refuses
+    `experiments/final_candidates.csv` (E001 declared; E005 declared 2026-10-15 while still training,
+    tested only after it is registered and reviewed). `scripts/final_test_eval.py` refuses
     undeclared experiments, fixes the operating confidence on val, then evaluates once on test
     (docs/COLAB.md).
 
@@ -32,17 +33,18 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 |---|---|---|---|---|
 | E001 | `configs/experiments/E001_yolo_baseline.yaml` | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | completed; 100 epochs; final candidate evaluated on test |
 | E002 | `configs/experiments/E002_yolo_imgsz1280.yaml` | E001 | imgsz 640 → 1280 only | planned; not run |
-| E003 | `configs/experiments/E003_rtdetr_baseline.yaml` | E001 | model yolo26s.pt → rtdetr-l.pt only (D-015) | planned; not run |
+| E003 | `configs/experiments/E003_rtdetr_baseline.yaml` | E001 | model yolo26s.pt → rtdetr-l.pt only (D-015) | diverged: NaN losses by epoch 46 with AMP on; not registered (D-025) |
 | E004 | `configs/experiments/E004_yolo_enhanced.yaml` | E001 | images raw → enhanced only: dataset v1 → v2 (D-017) | completed; 81 epochs (early stop); registered; declared final candidate (D-022); evaluated on test once, 2026-10-12 |
+| E005 | `configs/experiments/E005_rtdetr_amp_off.yaml` | E001 | as E003 (model yolo26s.pt → rtdetr-l.pt) plus amp true → false; replaces the diverged E003 (D-025) | training finished: 100 epochs at commit 292d9ab, run_record.json finalized 2026-10-15 on Drive (OBSERVED in the RT-DETR notebook output); effective batch 8 after automatic OOM reduction (D-026); declared final candidate 2026-10-15; registered 2026-10-17 |
 
-E001–E003 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
+E001–E003 and E005 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
 E004 uses dataset v2 (fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e`):
 v1's sessions, split and labels byte for byte, with Harsh's enhanced images. All use ultralytics
 8.4.155. Colab procedure: docs/COLAB.md.
 
-**YOLO vs RT-DETR (D-015):** E001 and E003 are compared on val mAP50, then on the secondary
+**YOLO vs RT-DETR (D-015, D-025):** the RT-DETR side is now E005 (E003 diverged). E001 and E005 are compared on val mAP50, then on the secondary
 metrics above, with parameter count, GFLOPs and inference speed on the same GPU type reported
-alongside. E003 is evaluated on test only after it is registered, reviewed and declared in
+alongside, and E005's AMP-off training is stated. E005 is evaluated on test only after it is registered, reviewed and declared in
 `experiments/final_candidates.csv`; test numbers are reported, never used to choose.
 
 **Raw vs enhanced images (D-017), declared before any E004 result:**
@@ -85,6 +87,13 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 |---|---|---|---|---|---:|---:|---|
 | E001 | 2026-09-19 | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | v1 | 0.8527 | 0.6115 | 100 epochs completed; best.pt recorded; final candidate |
 | E004 | 2026-09-30 | E001 | images raw → enhanced only (dataset v1 → v2, D-017) | v2 | 0.8385 | 0.5864 | 81 epochs (early stop, patience 30); best.pt recorded; not a final candidate (D-018) |
+| E005 | 2026-10-15 | E001 | rtdetr-l.pt, amp off (D-025); effective batch 8 (D-026) | v1 | 0.8359 | 0.5884 | 100 epochs completed over 5 launches; best.pt recorded, later lost on Drive (final test uses the recovered epoch-41 best.pt, D-027); final candidate |
+
+E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
+The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
+downloaded. Its output sha256 values, sizes and val metrics match the notebook outputs in Git, and its
+config sha256 matches `E005_rtdetr_amp_off.yaml`. Byte-identity with the Drive file is checked by
+notebook cell 15a: UNKNOWN until that cell prints MATCH.
 
 ### E001 training observations
 
@@ -171,6 +180,7 @@ Matching: IoU ≥ 0.5, each run at its own val-chosen operating confidence (OBSE
 |---|---|---|---|
 | 2026-09-19 | E001 | Final held-out test evaluation after completed validation run and candidate declaration | mAP50 0.8974; mAP50-95 0.6832; precision @ val-chosen conf 0.298 = 0.8447; recall = 0.8127; F1 = 0.8284 |
 | 2026-10-12 | E004 | Final held-out test evaluation of the declared candidate (D-022), raw vs enhanced comparison (D-017) | mAP50 0.8734; mAP50-95 0.6555; precision @ val-chosen conf 0.276 = 0.8614; recall = 0.7521; F1 = 0.8031 |
+| 2026-10-18 | E005 | Final held-out test evaluation of the declared candidate after registration, with the recovered epoch-41 best.pt (D-027) | mAP50 0.8788; mAP50-95 0.6604; precision @ val-chosen conf 0.619 = 0.8411; recall = 0.7712; F1 = 0.8046 |
 
 E001 test-evaluation limitations:
 
@@ -216,4 +226,31 @@ E004 test-evaluation limitations (in addition to E001's above, which apply uncha
 - Environment differs from training and from E001's test: torch 2.11.0+cu130 / CUDA 13.0
   (E004's training and E001's test: 2.11.0+cu128 / 12.8); same GPU type, Ultralytics 8.4.155 and
   Python 3.13.15.
+- Test results were not used for training, threshold selection, or model choice.
+
+E005 test evaluation (OBSERVED in the RT-DETR notebook output, cells R3, 16 and 17; attempt 1; record
+`runs/E005/final_test/final_test_record.json` on Drive, outside Git):
+
+- Weights: `train/weights/best.pt` sha256 `b2fc006a…` (263,628,970 B, checkpoint epoch 40 = results.csv
+  epoch 41, EMA present; cell R3), not the registered `ae5f2356…`, which is lost (D-027).
+- D-027 val check before the test split was touched: val P 0.771, R 0.814, mAP50 0.836, mAP50-95 0.588
+  (324 images, 1,010 boxes); absolute differences from the registered val metrics printed as 0.0 on all
+  four (tolerance 0.002).
+- Test split: 348 images (27 backgrounds), 1,512 boxes. Ultralytics-reported P 0.8105, R 0.7996 (at the
+  confidence that maximizes F1 on test). Confusion matrix as printed by cell 17 (rows = predicted,
+  cols = true; lobster, background): [[1443, 1458], [69, 0]], i.e. TP / FP / FN 1443 / 1458 / 69
+  (TP + FN = 1,512 test boxes). The FP count is far above E001's 263 and E004's 190 (table above).
+  UNKNOWN — requires confirmation: whether Ultralytics builds the RT-DETR confusion matrix at the same
+  confidence threshold as for YOLO; until then these confusion-matrix counts are not compared across
+  model families.
+- Ultralytics 8.4.155, torch 2.11.0+cu130, Tesla T4; notebook COMMIT a2b9f99.
+
+E005 test-evaluation limitations:
+
+- v1 test sessions share sites (mostly also dates) with train sessions: results measure new-session generalization, not new-site generalization (D-007).
+- Test boxes are concentrated: 13_SHRI_12 + 21_SUB6_03 hold 1,135 of 1,512 test boxes (D-008).
+- Substrate/visibility metadata is mostly missing; zExtra is excluded.
+- Ultralytics-reported precision/recall use the confidence that maximizes F1 on the test split; the reported operating point uses confidence 0.619 selected on val.
+- Evaluated weights are the recovered epoch-41 best.pt, not the registered file; E005's final `last.pt` and the 100-epoch `results.csv` are lost (98 epochs survive) (D-027).
+- False positives on negative test images were not reported separately: UNKNOWN — requires the per-image predictions in the final-test record.
 - Test results were not used for training, threshold selection, or model choice.

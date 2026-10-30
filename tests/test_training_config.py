@@ -18,6 +18,7 @@ E001 = CONFIG_DIR / "E001_yolo_baseline.yaml"
 E002 = CONFIG_DIR / "E002_yolo_imgsz1280.yaml"
 E003 = CONFIG_DIR / "E003_rtdetr_baseline.yaml"
 E004 = CONFIG_DIR / "E004_yolo_enhanced.yaml"
+E005 = CONFIG_DIR / "E005_rtdetr_amp_off.yaml"
 
 
 def valid_cfg(**overrides):
@@ -84,6 +85,14 @@ class CommittedConfigsTest(unittest.TestCase):
         v1, v2 = version_dir("v1"), version_dir("v2")  # same sessions, split and labels as E001's data
         for name in ("split_manifest.csv", "image_manifest.csv"):
             self.assertEqual((v1 / name).read_bytes(), (v2 / name).read_bytes(), name)
+
+    def test_e005_is_e003_with_amp_off(self):
+        e1, e3, e5 = X.load_and_validate(E001), X.load_and_validate(E003), X.load_and_validate(E005)
+        self.assertEqual(e5["parent"], "E001")  # E003 diverged and is not registered (D-025)
+        diff = {k for k in e3 if k in ("id", "slug", "parent", "changed") or e3[k] != e5[k]}
+        self.assertEqual(diff, {"id", "slug", "parent", "changed", "train_args"})
+        self.assertEqual({**e3["train_args"], "amp": False}, e5["train_args"])
+        self.assertNotIn("amp", e1["train_args"])  # E001/E003 ran with the Ultralytics default amp=True
 
     def test_model_family_is_required(self):
         cfg = X.load_and_validate(E003)

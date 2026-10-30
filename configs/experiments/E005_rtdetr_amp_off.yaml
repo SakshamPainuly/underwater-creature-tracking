@@ -1,0 +1,22 @@
+# E005 -- RT-DETR rerun with AMP off, after the E003 full run diverged to NaN losses (D-025).
+# Identical to E003 (rtdetr-l.pt, v1, imgsz 640, <=100 epochs, patience 30, batch 16, seed 0,
+# deterministic, ultralytics 8.4.155) except amp: false. Parent is E001 because E003 diverged and
+# will not be registered (train.py requires a registered parent), so vs E001 two things change:
+# the model (as in E003) and AMP (fp16 mixed precision -> fp32). If batch 16 does not fit in fp32
+# on the GPU, or losses are still non-finite, stop and record a new decision.
+id: E005
+slug: rtdetr_amp_off
+parent: E001
+changed: "model yolo26s.pt -> rtdetr-l.pt (as E003); amp true -> false (E003 diverged with AMP, D-025)"
+dataset_version: v1
+dataset_fingerprint: "9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810"
+model: rtdetr-l.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 640
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true
+  amp: false

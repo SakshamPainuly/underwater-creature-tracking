@@ -20,6 +20,12 @@ Rules: CLAUDE.md (hard rules 1–4 and 7, section 6). Decision: D-012.
      - Keep it only in Colab Secrets; never paste it into a notebook cell, chat or file.
    - Do not reuse the GitHub CLI credential.
 
+   A fine-grained token can only reach repositories owned by its resource owner. The repo
+   belongs to a personal account, so a collaborator's own fine-grained token cannot read it, even
+   with collaborator access. Cell 4 then fails with `remote: Write access to repository not
+   granted.` / `error: 403`. Fix: the owner creates the token as above and shares it with the
+   collaborator privately, never in the repo or the notebook.
+
    In Colab, open **Secrets** (key icon), add `UWCT_GITHUB_TOKEN`, and allow notebook access.
    See "GitHub authentication" below for how the notebook uses it.
 2. **Raw data as a shared ZIP (D-014).** The delivery is kept as one ZIP on Drive, shared by
@@ -143,10 +149,10 @@ Training receives `data_trainval.yaml`, written into the run folder. It has only
 `train`, `val` and `names`: **the test split does not exist for the training process**. Early
 stopping and `best.pt` selection use val. After training, `best.pt` is validated on `split="val"`.
 
-### Other experiments (e.g. E003, RT-DETR)
+### Other experiments (e.g. E005, RT-DETR)
 
-The notebook defaults to E001. E003 has its own copy, `notebooks/colab_train_rtdetr.ipynb`
-(branch `anu/model-development`, `EXPERIMENT_ID = "E003"`, plus cell 12b, which stops on non-finite
+The notebook defaults to E001. RT-DETR has its own copy, `notebooks/colab_train_rtdetr.ipynb`
+(branch `anu/model-development`, `EXPERIMENT_ID = "E005"`: E003 with AMP off after E003 diverged, D-025; plus cell 12b, which stops on non-finite
 smoke-test losses; location: D-016). For any other experiment, set `EXPERIMENT_CONFIG` in cell 1 and the run id in
 cell 15. Nothing else changes: `train_yolo.py` picks `RTDETR` or `YOLO` from the config's checkpoint name (D-015), and
 the final-test cell takes the experiment id in `FINAL_TEST_EXPERIMENT`.

@@ -557,3 +557,79 @@ Short, dated records of project decisions. New dataset versions must reference a
   date (the same provenance gap as D-022). D-022 noted that one zExtra image was processed in Harsh's
   later verification runs; that does not affect qualitative use.
 - **Consequence:** no dataset version, split, label, frozen file or experiment changes.
+
+## D-025 — E003 diverged to NaN losses; RT-DETR rerun as E005 with AMP off (2026-10-13, accepted)
+- **Context (OBSERVED, Colab session 2026-10-13, Tesla T4, ultralytics 8.4.155, torch 2.11.0+cu130;
+  notebook outputs saved in commit `f186f4e`):** the E003 smoke test (`E003_smoke_20261013T154708`)
+  finished with finite losses (train giou 1.313, cls 7.450, l1 0.530; val mAP50 0.004 after 1 epoch
+  on 10% of train). The E003 full run trained with `amp=True` (Ultralytics default). When it was
+  resumed, every training loss was `nan` from the first batch of epoch 46, i.e. the checkpoint saved
+  after epoch 45 already produced non-finite losses. UNKNOWN — requires confirmation: the first
+  epoch with non-finite losses (in `RUNS_ROOT/E003/train/results.csv` on Drive, not read here).
+  Ultralytics notes that AMP can produce NaN losses for RT-DETR; D-015 anticipated this and required
+  a decision before changing AMP.
+- **Decision (user-approved):**
+  - **E003 is abandoned as diverged.** Not registered, not a final-test candidate, never compared
+    with E001. Its Drive folder `RUNS_ROOT/E003/` is kept as evidence and not resumed.
+  - **E005** (`configs/experiments/E005_rtdetr_amp_off.yaml`) reruns E003 from the pretrained
+    `rtdetr-l.pt` with `amp: false` (fp32 training); everything else is identical to E003.
+  - **Parent is E001, not E003:** `train.py` requires a registered parent and E003 will not be
+    registered. Relative to E001, E005 therefore changes two variables: the model (as in E003) and
+    AMP. HYPOTHESIS: AMP caused the divergence; E005 tests it. A YOLO vs RT-DETR comparison with
+    E005 must state that E001 trained with AMP on and E005 with AMP off.
+  - Fresh run under a new ID (no resume from any E003 checkpoint). The smoke test and the
+    non-finite-loss check (notebook cell 12b) run first, and notebook cell 15 now reports
+    non-finite losses in the full run.
+- **Risks (UNKNOWN until run):** fp32 needs more GPU memory than AMP and is slower; E003 used
+  ~12.7 GB at batch 16 with AMP on a 15 GB T4, so batch 16 may not fit. If it runs out of memory, or
+  losses are still non-finite, stop and record a new decision before changing batch or lr.
+- **Consequence:** no dataset, split, frozen or raw file changes. `my_model/colab_train_rtdetr.ipynb`
+  now runs E005 (switches reset to `False`, the E003 outputs cleared; they remain in Git history).
+  E003 stays in docs/EXPERIMENTS.md with status "diverged".
+
+## D-026 — E005 trained at batch 8 after an automatic out-of-memory reduction (2026-10-13, accepted)
+- **Context (OBSERVED, Colab 2026-10-13, Tesla T4 15 GB, ultralytics 8.4.155):** the E005 smoke test
+  (`E005_smoke_20261013T163151`, `amp=False`, 10% of train) fitted at batch 16. The E005 full run
+  then printed `CUDA out of memory with batch=16. Reducing to batch=8 and retrying (1/3)` before
+  epoch 1, and trained at batch 8 (180 iterations per epoch instead of 90; ~10.2 GB GPU memory).
+  Ultralytics made this change itself; the config still says `batch: 16`. Losses stayed finite
+  through epoch 21; best val mAP50 so far 0.832 / mAP50-95 0.585 (epoch 15). The session stopped
+  during epoch 22. UNKNOWN — requires confirmation: the cause of the stop (output ended without a
+  visible error; a Colab disconnect is likely).
+- **Decision (user-approved):** keep the E005 run and resume it from `train/weights/last.pt` rather
+  than restarting. E005's effective batch size is **8**. D-025 required a decision before batch
+  changed; this entry records it after the fact.
+- **Consequences:**
+  - Compared with E001, E005 now differs in three ways: model (rtdetr-l.pt), AMP (off) and batch
+    (8 instead of 16). Every E001 vs E005 comparison states all three; the YOLO vs RT-DETR
+    difference cannot be attributed to the model alone.
+  - E005's `run_record.json` and `experiments/registry.csv` row show the configured batch 16
+    (`train_args`, and Ultralytics' `args.yaml` written before the reduction). The effective batch
+    is 8 per this entry; the registry row gets a note when registered.
+  - The validation of `best.pt` after training uses the configured batch 16 (inference only, lower
+    memory); this does not change the val metrics' meaning.
+  - If the resumed run runs out of memory again or shows non-finite losses: stop and record a new
+    decision. A clean rerun would be a new experiment with `batch: 8` in its config.
+
+## D-027 — E005's final test uses the epoch-41 best.pt recovered from Drive (2026-10-18, accepted)
+- **Context (OBSERVED):** the E005 log `runs/E005_logs/20261014T213006Z.log` shows epoch 100/100,
+  `Optimizer stripped ... best.pt, 66.2MB` and the run record (best.pt sha256 `ae5f2356…`, 66,225,149
+  B). Drive never received these final files: `runs/E005` (and the user's download
+  `uwct-20261018T225917Z-1-001`) holds `results.csv` with 98 epochs (11,843 B), unstripped
+  `best.pt` 263,628,970 B sha256 `b2fc006a…`, `last.pt` sha256 `5a52fc26…`, no `run_record.json`.
+  No 66,225,149 B file was found in Drive (incl. Trash and old versions, cell R1d).
+- **Reasoning:** by the results.csv fitness (0.1·mAP50 + 0.9·mAP50-95), epoch 41 is the best of
+  epochs 1–98 (P 0.772, R 0.811, mAP50 0.8358, mAP50-95 0.5889); the log shows epochs 99–100 at val
+  mAP50 0.797 / 0.799, so they did not replace it. Ultralytics writes best.pt only at a new best.
+  INFERRED: the recovered best.pt holds the same epoch-41 EMA weights as the registered file, which
+  differs only by `strip_optimizer` (optimizer removed, fp16, new date) — hence a different sha256.
+- **Decision (user-approved 2026-10-18):** E005's final test evaluates the recovered best.pt,
+  named in `experiments/records/E005/weights_recovery.json`. It is accepted only if (1) its sha256
+  is `b2fc006a…`, (2) its checkpoint epoch is 40 (0-based, = results.csv epoch 41; notebook cell R3),
+  and (3) before the test split is touched, its val metrics reproduce the registered ones within
+  0.002 absolute on P, R, mAP50 and mAP50-95 (`src/training/final_test.py`; the tolerance allows
+  for fp32 vs fp16 weights). Otherwise the test is refused and E005 needs a retrain decision.
+- **Consequences:** the registered run record and registry row are unchanged. The final test record
+  stores both the registered and the evaluated sha256 and the val differences. E005's `last.pt` and
+  100-epoch `results.csv` are lost (only 98 epochs survive); this is a LIMITATION of every E005
+  report. Training code is unchanged.
