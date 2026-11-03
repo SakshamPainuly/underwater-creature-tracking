@@ -633,3 +633,44 @@ Short, dated records of project decisions. New dataset versions must reference a
   stores both the registered and the evaluated sha256 and the val differences. E005's `last.pt` and
   100-epoch `results.csv` are lost (only 98 epochs survive); this is a LIMITATION of every E005
   report. Training code is unchanged.
+
+## D-029 — Tritonia (sea slug) timelapse data as a new source; class 1 and label approach (2026-11-03, proposed)
+- **Status:** proposed by Anu on `anu/sea-slug-detection`; needs Saksham's agreement before it is
+  marked accepted. The ID assumes D-028 (tracking, proposed on `anu/tracking`) lands first; re-check
+  against `origin/p4/colab-baseline` before opening the PR and renumber if needed. Nothing below is
+  user-approved yet.
+- **Context (OBSERVED, 2026-11-03; details in docs/DATASET_TRITONIA.md):** Dr. Wyeth's Tritonia data
+  is on an external drive (`E:\Tritonia\`): 17 grayscale TIFF stacks (one per day, 2013-05-18 to
+  2013-06-03, 37,170 frames of 1056 × 480 px, 15 s per frame, each frame a 6-camera montage) and 16
+  MTrackJ `.mdf` files with 956 manually clicked tracks (117,969 points, no boxes, no class field).
+  `20130518` has no MDF. The lobster pipeline accepts only class `0` (`CLASS_NAMES` in
+  `src/yolo_prep/build.py`; `image_manifest.py` flags any other class ID).
+- **Proposed decision:**
+  - **Class:** `1: sea_slug` (appended; `0: lobster` unchanged, CLAUDE.md §4). OPEN: `sea_slug` or
+    `tritonia` as the name; whether other sea slug species will join this class.
+  - **Raw source:** a new read-only source `tritonia` holding the 17 TIFF stacks, the 16 MDF files and
+    `Tritonia Info.txt` byte for byte, with a content fingerprint (all files hashed) before use.
+    OPEN: copy (~18.9 GB) to `data/raw/tritonia/`, or a separate raw root on the external drive via
+    its own environment variable. Either way it is read-only (rule 1) and nothing writes there.
+  - **Missing-label policy:** `pending`. A frame without points is excluded, never treated as negative,
+    until Dr. Wyeth confirms every visible slug was clicked (rule 6).
+  - **Split unit:** the recording day (one stack = one session), so all frames of a day stay in one
+    split (rule 5). The split itself is a later step with its own seed and decision.
+  - **Labels for detection:** OPEN, to decide with Saksham (and Dr. Wyeth if needed):
+    (a) draw boxes by hand on a sample of frames (the MDF points help find the slugs), then train YOLO
+    on them; (b) a point-based detector instead of boxes (new model code); (c) no detector training
+    yet, use the MDF tracks as ground truth for tracking evaluation once a detector exists.
+    Not allowed under any option: boxes of an assumed size placed around points (rule 8).
+  - **Reporting:** frames are 15 s apart, so all results are "sparse-frame/timelapse analysis", never
+    "video tracking"; px and frames only (seconds via the stated 15 s); no physical units.
+    The MDF tracks carry hand-assigned track IDs, so IDF1/HOTA/MOTA become possible on this data
+    once a detector and tracker produce tracks (rule 9), per camera, since slugs are tracked per camera.
+- **LIMITATIONS:** the 6-camera layout (INFERRED 3 × 2 tiles of 352 × 240 px) is not recorded in the
+  files read; the MDF track flag (`true`/`false`) and the one `Reference` line are not yet understood;
+  2 points sit on or just past the frame edge; site and setting are UNKNOWN; the 17 days are
+  INFERRED to be one setup, so a day split measures new-day, not new-site, generalization.
+- **Consequences (when accepted):** a `DATASET_SOURCES` entry and `MISSING_LABEL_POLICY["tritonia"]`;
+  an MTrackJ reader and a TIFF-stack frame extractor in `src/` with tests; `CLASS_NAMES` and the
+  class-ID check accept `1`; a new draft dataset version with its own decision. No change to v1, v2,
+  their splits, labels or experiments. A local 50-frame inspection sample exists at
+  `C:\sample_data\Tritonia\` (outside the repository, not a dataset).

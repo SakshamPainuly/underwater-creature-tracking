@@ -1,6 +1,7 @@
 # Dataset card — Lobster detection dataset, version v1
 
 Evidence labels: OBSERVED (verified from files), INFERRED, UNKNOWN — requires confirmation.
+Sea slug (Tritonia) data, not part of any version yet: docs/DATASET_TRITONIA.md (D-029, proposed).
 
 ## Source
 Biology department delivery, stored read-only at `data/raw/biology/` (4,407 files, 5,477,325,614
