@@ -7,7 +7,8 @@ Not yet a dataset version, not under `data/raw/`, not used by any experiment. Lo
 - Location (OBSERVED, 2026-11-03): external drive, folder `E:\Tritonia\` (17 `.tif`, 16 `.tif.mdf`;
   18,846,191,199 B of TIFF + 4,353,299 B of MDF), plus `E:\Tritonia Info.txt` (778 B, SHA-256
   `a6ec1db19a393acc12e87ca26d8789be2787a7d7c4fbe3f41b2409c90bcd0d26`). Read only; nothing on the
-  drive was changed. Where the project copy will live is open (D-029).
+  drive was changed. Project copy (D-029): `D:\uwct_raw\tritonia\` (`UWCT_TRITONIA_ROOT`), read-only,
+  all 34 files with SHA-256 checked against the external drive.
 - Provenance (from `Tritonia Info.txt`, comments from Dr. Wyeth; not independently verified):
   - old, low-resolution grayscale video stored as TIFF stacks, one frame every 15 s;
   - each frame is a montage of 6 cameras; slugs are tracked in each camera separately and there is
@@ -25,8 +26,9 @@ Not yet a dataset version, not under `data/raw/`, not used by any experiment. Lo
 | Frame size, mode | 1056 × 480 px, 8-bit grayscale (`L`), every stack; big-endian TIFF |
 | Frame interval | 15 s (Info file and the `15spf` filename suffix; not read from TIFF metadata) |
 
-- INFERRED, not verified: the 6 cameras are tiled 3 × 2 at 352 × 240 px each. Camera boundaries
-  are not recorded in the files read so far; UNKNOWN — requires confirmation.
+- OBSERVED by eye in 16 trial frames: the 6 cameras are tiled 3 × 2 (about 352 × 240 px each, from
+  the visible borders), numbered 1–3 on the top row and 4–6 below, each tile with a burned-in date
+  and time (e.g. `13/06/02 15:39:28`). Exact tile edges in pixels are not measured yet.
 - Recording dates 2013-05-18 to 2013-06-03 come from the filenames. Site, tank or field setting,
   time of day and lighting: UNKNOWN — requires confirmation.
 
@@ -47,11 +49,21 @@ Frame counts, sizes and the label numbers below are reproduced by
 - 2 points lie on or just outside the frame edge: `20130529` point 23 at x = −1, `20130531` point 336
   at y = 480. Kept as recorded; a converter must clip or flag them, never move them silently.
 - `20130518all_15spf.tif` (507 frames) has no MDF file: unlabelled, not negative.
+- Points vs pixels (OBSERVED, 2026-11-03, 150 random points per stack, 5 × 5 px mean at the point
+  minus its median over frames 200–400 away): `20130523` +15.0 grey levels at the point's own frame,
+  +15.6 one frame before, +3.2 eight frames after, about −4.5 at ±200; `20130602` +5.4 at d = 0,
+  +3.5 at +8, +0.5 at +40. INFERRED: points sit on something brighter than usual that leaves within
+  minutes, i.e. slugs appear bright, and the frame numbering lines up within about ±1 frame. By eye,
+  crosses often sit beside or at the edge of a bright shape rather than at its centre, and many bright
+  shapes have no cross; whether those are slugs is UNKNOWN — requires confirmation (Dr. Wyeth).
 
 ## Missing-label meaning
 A frame with no point is **not** a confirmed slug-free frame. The Info file says the whole set was
 tracked, but whether every visible slug in every frame was clicked is UNKNOWN — requires
-confirmation. Proposed `missing_label_policy`: `pending` (excluded, never negative) until confirmed.
+confirmation. `missing_label_policy` for the MDF points: `pending` (excluded, never negative).
+
+Hand-drawn boxes (D-029, batch 1, docs/TRITONIA_LABELLING.md): 150 frames in which every visible slug
+is boxed, so in those frames only, a missing box means "no slug". Not yet delivered.
 
 ## Known limitations
 - Timelapse (15 s per frame), not video: results are "sparse-frame/timelapse analysis", never
