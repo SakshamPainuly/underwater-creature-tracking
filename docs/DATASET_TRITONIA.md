@@ -31,6 +31,9 @@ Not yet a dataset version, not under `data/raw/`, not used by any experiment. Lo
   time of day and lighting: UNKNOWN — requires confirmation.
 
 ## Labels (OBSERVED)
+Frame counts, sizes and the label numbers below are reproduced by
+`python scripts/inspect_tritonia.py --root <source>` (read-only, standard library; 2026-11-03 run on
+`E:\Tritonia`: 17 stacks, 0 parse errors, 0 frame numbers beyond their stack, no duplicate track ids).
 - Format: MTrackJ 1.5.0 data files (`<stack>.tif.mdf`, text). `Track <id> <colour> <flag>` starts a
   track; each `Point <id> <x> <y> <z> <t> <c>` is one hand-clicked slug position in montage pixels.
 - `t` is the 1-based frame number: in all 16 files the largest `t` is ≤ the stack's frame count, and
