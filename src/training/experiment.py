@@ -21,8 +21,9 @@ import re
 from pathlib import Path
 
 from dataset_audit.config import DEFAULT_IMAGE_SOURCE, MISSING_LABEL_POLICY, PROJECT_ROOT
-from dataset_audit.versioning import (PROCESSED_ROOT, VersionError, image_source_of, is_frozen, sha256_file,
-                                      verify_frozen, version_dir)
+from dataset_audit import tritonia_dataset as T
+from dataset_audit.versioning import (PROCESSED_ROOT, VersionError, image_source_of, is_frozen, read_version_meta,
+                                      sha256_file, verify_frozen, version_dir)
 from yolo_prep.build import CLASS_NAMES, INCLUDED_STATUSES, SPLITS, TARGET_ULTRALYTICS_VERSION, dataset_fingerprint
 
 EXPERIMENTS_CONFIG_DIR = PROJECT_ROOT / "configs" / "experiments"
@@ -238,7 +239,18 @@ def assert_trainval_only(data_yaml: Path) -> None:
                           "a training data file never lists the test split")
 
 
-def write_trainval_yaml(dataset_dir: Path, out_path: Path) -> Path:
+def dataset_kind(version: str, processed_root: Path = PROCESSED_ROOT) -> str:
+    """'lobster' for the lobster versions (no dataset_kind in VERSION.json), else the recorded kind."""
+    return (read_version_meta(version, processed_root) or {}).get("dataset_kind", "lobster")
+
+
+def default_dataset_dir(version: str, processed_root: Path = PROCESSED_ROOT) -> Path:
+    """data/yolo/lobster_<version> or data/yolo/tritonia_<version> (D-030)."""
+    kind = dataset_kind(version, processed_root)
+    return PROJECT_ROOT / "data" / "yolo" / f"{kind}_{version}"
+
+
+def write_trainval_yaml(dataset_dir: Path, out_path: Path, class_names: list | None = None) -> Path:
     """Ultralytics data file for training: the same dataset view as data.yaml, without `test`."""
     root = Path(dataset_dir).resolve().as_posix().replace("'", "''")
     lines = [
@@ -248,7 +260,7 @@ def write_trainval_yaml(dataset_dir: Path, out_path: Path) -> Path:
         "train: images/train",
         "val: images/val",
         "names:",
-        *[f"  {i}: {name}" for i, name in enumerate(CLASS_NAMES)],
+        *[f"  {i}: {name}" for i, name in enumerate(class_names or CLASS_NAMES)],
         "",
     ]
     out_path = Path(out_path)
@@ -310,7 +322,15 @@ def verify_built_dataset(dataset_dir: Path, cfg: dict, processed_root: Path = PR
     built image/label belongs to an included label status and split, that no source with a
     'pending' label policy (zExtra) is present, and that the image/label folders hold exactly the
     built files. Returns the facts for the run record.
+
+    Tritonia versions (dataset_kind 'tritonia', D-030) are checked by tritonia_dataset.verify_view
+    with the same guarantees; their result also carries the dataset's class_names.
     """
+    if dataset_kind(cfg["dataset_version"], processed_root) == T.DATASET_KIND:
+        try:
+            return T.verify_view(dataset_dir, cfg, processed_root)
+        except (T.TritoniaError, VersionError) as e:
+            raise ConfigError(str(e)) from None
     d = Path(dataset_dir)
     summary_path = d / "build_summary.json"
     if not summary_path.is_file():

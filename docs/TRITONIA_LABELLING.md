@@ -33,12 +33,25 @@ UNKNOWN — confirm before using it if Dr. Wyeth's data must not leave the PC.
 - Tight box around the visible body, not the shadow or trail.
 - The frame is a montage of 6 cameras. Never draw a box across a camera border; a slug cut by a
   border gets one box per camera, around the part visible in each.
-- A cross with no slug you can see (too dark, blurred, hidden): no box; write the frame name and
-  track number in `notes.txt`. Never draw a box just because there is a cross.
-- Unsure whether something is a slug: no box, note it in `notes.txt`.
+- A cross with no slug you can see (too dark, blurred, hidden): no box, and a `note` line in
+  `notes.txt` (format below). Never draw a box just because there is a cross.
+- Unsure whether something is a slug, or a frame you cannot label completely: mark the whole frame
+  `exclude`. It then never reaches a dataset, so its missing boxes are never read as "no slug".
 - A lobster in frame (unlikely): box it as `lobster`.
-- Do not skip frames. If a frame cannot be labelled at all, list it in `notes.txt` with the reason.
+- Do not skip frames silently: every frame is either labelled or marked `exclude`.
+
+`notes.txt` (in the batch folder), one line per issue; `#` lines are comments:
+```
+20130521all_15spf_t0123 | note | cross of track 12 has no visible slug
+20130524all_15spf_t1450 | exclude | camera 4 too dark to tell slugs from rocks
+```
+`scripts/ingest_tritonia_boxes.py` refuses lines in any other form.
 
 ## 4. Hand back
-The YOLO ZIP plus `notes.txt`. They become a new read-only label source and a new dataset version
-(D-029). Nothing is trained before they are checked against `manifest.csv`.
+The YOLO ZIP plus `notes.txt` (create it even if it holds only a comment). Then, on the local PC:
+```
+python scripts/ingest_tritonia_boxes.py --zip D:\uwct_work\tritonia_batch1_yolo.zip --notes D:\uwct_work\tritonia_label_batch1\notes.txt --batch D:\uwct_work\tritonia_label_batch1 --out D:\uwct_raw\tritonia_boxes_batch1
+```
+It checks every file against `manifest.csv` (one label file per frame unless excluded, classes 0/1,
+boxes inside the frame and not across a camera border) and writes nothing if anything is wrong.
+Next steps (dataset v3, Colab training): D-030.

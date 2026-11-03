@@ -199,8 +199,9 @@ def run(config_path: Path, runs_root: Path, weights_dir: Path, mode: str, env_co
         raise TrainError("the git working tree has uncommitted changes; full runs need a clean checkout "
                          "(--allow-dirty is accepted for preflight/smoke only and is recorded)")
 
-    dataset_dir = Path(dataset_dir or PROJECT_ROOT / "data" / "yolo" / f"lobster_{cfg['dataset_version']}")
+    dataset_dir = Path(dataset_dir or X.default_dataset_dir(cfg["dataset_version"]))
     dataset = X.verify_built_dataset(dataset_dir, cfg)
+    class_names = dataset.get("class_names", X.CLASS_NAMES)  # lobster views: ["lobster"]
 
     exp_id = cfg["id"]
     if mode in ("resume", "finalize"):
@@ -242,18 +243,18 @@ def run(config_path: Path, runs_root: Path, weights_dir: Path, mode: str, env_co
     # every check passed, so a failed check never leaves a half-made run folder behind.
     tmp = tempfile.TemporaryDirectory()
     try:
-        check_yaml = X.write_trainval_yaml(dataset_dir, Path(tmp.name) / TRAINVAL_FILE)
+        check_yaml = X.write_trainval_yaml(dataset_dir, Path(tmp.name) / TRAINVAL_FILE, class_names)
         data, seen = ultralytics_split_counts(check_yaml, X.TRAIN_SPLITS)
         verification = {s: {"seen": seen[s], "match": counts_match(dataset["counts"][s], seen[s])}
                         for s in X.TRAIN_SPLITS}
-        if data["names"] != dict(enumerate(X.CLASS_NAMES)) or not all(v["match"] for v in verification.values()):
+        if data["names"] != dict(enumerate(class_names)) or not all(v["match"] for v in verification.values()):
             raise TrainError(f"Ultralytics does not read the dataset as built: {verification}, names={data['names']}")
         dataset = {**dataset, "ultralytics_verification": verification}
 
         model, model_info = load_pretrained(cfg["model"], weights_dir, ultralytics.__version__)
         if mode != "preflight":
             run_dir.mkdir(parents=True)
-            trainval = X.write_trainval_yaml(dataset_dir, run_dir / TRAINVAL_FILE)
+            trainval = X.write_trainval_yaml(dataset_dir, run_dir / TRAINVAL_FILE, class_names)
         else:
             trainval = check_yaml
         train_args = X.build_train_args(cfg, trainval, run_dir, TRAIN_SUBDIR, smoke=(mode == "smoke"))
