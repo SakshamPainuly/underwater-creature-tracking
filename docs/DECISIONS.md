@@ -637,8 +637,9 @@ Short, dated records of project decisions. New dataset versions must reference a
 ## D-029 — Tritonia (sea slug) timelapse data as a new source; class 1 and label approach (2026-11-03, proposed)
 - **Status:** proposed by Anu on `anu/sea-slug-detection` (draft PR #16). The choices marked
   "user-approved" below were made by Anu on 2026-11-03 (Saksham did not know the data). The entry is
-  accepted when the PR is reviewed and merged. The ID assumes D-028 (tracking, draft PR #15) lands
-  first; re-check against `origin/p4/colab-baseline` before the PR leaves draft.
+  accepted when the PR is reviewed and merged. D-028 is intentionally unused: it was a tracking
+  proposal (PR #15) that Anu withdrew on 2026-11-03 before merge; the PR is closed and its branches
+  deleted.
 - **Context (OBSERVED, 2026-11-03; details in docs/DATASET_TRITONIA.md):** Dr. Wyeth's Tritonia data
   is on an external drive (`E:\Tritonia\`): 17 grayscale TIFF stacks (one per day, 2013-05-18 to
   2013-06-03, 37,170 frames of 1056 × 480 px, 15 s per frame, each frame a 6-camera montage) and 16
