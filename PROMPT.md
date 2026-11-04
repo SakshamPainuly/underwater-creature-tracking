@@ -15,7 +15,7 @@ Relevant decisions: <docs/DECISIONS.md entries>.
 - Dataset version: <v1 + fingerprint from build_summary.json>
 - Latest relevant experiment(s): <E### + key val metrics, or "none">
 - Known open issues: <from docs/DATASET.md / docs/EXPERIMENTS.md>
-- Machine: <local Windows | Colab | lab GPU>
+- Machine: <local Windows | Colab | Kaggle>
 
 ###TASK###
 <One clear objective.>

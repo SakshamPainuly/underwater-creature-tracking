@@ -865,7 +865,7 @@ Short, dated records of project decisions. New dataset versions must reference a
        `REC_` images without a site (no lobsters, per Harsh) are left out.
      A new site-held-out test split is not made: with 11 sites, mostly one session each, the score
      would depend on which sites were picked, and E001–E005 could not be compared on it.
-  7. **Runs** go on one lab GPU, one at a time, in stages: (1) a data ladder (originals only, then
+  7. **Runs** go on Kaggle GPU notebooks (the lab GPU is dropped, see the platform note), one at a time, in stages: (1) a data ladder (originals only, then
      one new source at a time, then all) with E001's settings; (2) model choice on the best data
      mix; (3) hyperparameter tuning in a pre-declared search space and budget; (4) the final
      configuration with 3 seeds; (5) leave-site-out cross-validation (point 6). Each stage gets its
@@ -883,11 +883,23 @@ Short, dated records of project decisions. New dataset versions must reference a
     are 2022/08/11 10:19:23 vs 2024/08/11 13:19:04, and the trap shape and angle, seabed, rope and
     lobster position all differ; both are top-down views of a trap on green water, which explains the
     hash similarity. All three images are kept; rule 6 counts as passed;
-  - the 29 train frames the review kept as `positive_incomplete` (a lobster without a box) stay in
-    train, as in E001–E005; leaving them out (and their derived images) is the alternative;
-  - the selection metric: the project's is val mAP50 (docs/EXPERIMENTS.md); keep it or declare
-    another one before stage 1;
-  - lab GPU model and time per run, which set how many tuning trials and folds fit.
+  - **decided 2026-11-04, user-approved ("i aggree for both"):** the 29 train frames the review
+    kept as `positive_incomplete` (a lobster without a box; 108 boxes, no derived image) **stay in
+    train**, as in E001–E005, so the first Model A run changes only the data. LIMITATION: up to
+    29 unboxed lobsters are trained as background;
+  - **decided 2026-11-04, user-approved:** the selection metric stays **val mAP50**
+    (docs/EXPERIMENTS.md); mAP50-95, P, R and false positives on negative images are still reported;
+  - **platform, decided 2026-11-04 by the user** ("lets drop the plan of using the lab's gpu
+    altogether and use kaggle's gpu"): runs go on **Kaggle GPU notebooks**, not the lab PC (an RTX
+    A2000 12 GB, reported the same day, no longer used). Harsh's three deliveries are already Kaggle
+    datasets and are attached read-only under `/kaggle/input` (rule 1 holds by construction); the
+    lab-PC copy and its download/fingerprint steps are dropped. The Kaggle copy is still checked
+    against the committed fingerprints before use. ASSUMPTION — requires confirmation in the first
+    Kaggle session: GPU type, VRAM, session time limit and weekly GPU quota (these set batch size,
+    whether a run needs a resume across sessions, and how many tuning trials and folds fit). OPEN:
+    how `biology` (our originals, 5.2 GB) reaches Kaggle (a private Kaggle dataset uploaded by the
+    user, or Harsh's `1 Original - our lobsters` copy if it proves byte-identical). Time per run:
+    UNKNOWN — measured by the smoke test.
 - **LIMITATIONS (expected):** train labels rest on an unverified AI review; the README states
   that other frames may also be missing boxes; test sessions share sites with train (§3); we have
   seen E001/E004 test results, so choices are made from validation numbers only; Zenodo images are

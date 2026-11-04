@@ -20,7 +20,8 @@ version and never blocks progress. Must-haves beat optional features.
    must be built with `--link-mode copy` (Ultralytics rewrites corrupt JPEGs in place).
 3. Local Windows PC: code, metadata, git, CPU tests of about a minute or less. No training, no
    large-scale video inference, no sweeps. Do not install torch/ultralytics/opencv or other heavy
-   packages locally without explicit user approval. GPU work runs on Colab or the lab GPU only.
+   packages locally without explicit user approval. GPU work runs on Colab or Kaggle only
+   (the lab GPU is not used, D-031).
 4. Frozen dataset versions (registered in `data/processed/FROZEN.json`, currently v1) are immutable.
    Never edit, regenerate or overwrite their files; there is no override. Corrections or new data
    create a new draft version (e.g. v1.1, v2) from a parent with a DECISIONS.md entry; freezing a
@@ -64,14 +65,15 @@ raw → `run_audit.py` → `run_split.py` → `build_image_manifest.py` (all `--
 - Each run writes `run_record.json`: git commit + dirty flag, dataset version + fingerprint, model +
   pretrained checkpoint, Ultralytics args, seed, env report, duration, val metrics (test metrics only
   for declared final evaluations). One row per run in `experiments/registry.csv`.
-- Weights and run folders live off-repo (Drive/lab storage), referenced by path + sha256.
+- Weights and run folders live off-repo (Drive / Kaggle outputs and datasets), referenced by path + sha256.
 - Report P, R, mAP50, mAP50-95, per-condition results and false positives on negative images, never a
   single number. Selection metric is declared in docs/EXPERIMENTS.md before comparisons.
 
 ## 6. GPU procedure
 Before any long job: `env_report.py` → raw check → `prepare_yolo_dataset.py` →
 `verify_yolo_dataset.py` (must print VERIFIED) → smoke test (≤1 epoch, small fraction) → launch with
-checkpoints on persistent storage and a resume path.
+checkpoints on persistent storage and a resume path. On Kaggle, `/kaggle/working` is kept only
+when the notebook version is saved: save before the session limit and keep `last.pt` for resume.
 
 ## 7. Code conventions
 - Python ≥3.10. Standard library first; heavy imports only inside GPU-side modules.
