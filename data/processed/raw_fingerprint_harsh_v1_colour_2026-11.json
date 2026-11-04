@@ -1,0 +1,2714 @@
+{
+ "files": {
+  "README.md": {
+   "sha256": "cb9f48ad79a573a919b0a53fab2f078567b23864ccedcd8d057bd2dcdc1f152c",
+   "size": 2651
+  },
+  "SHA256SUMS.txt": {
+   "sha256": "7edc759e15e2eb84924199ce9258b79b41a3cfb025cdb7aca8d9f8eddc5392da",
+   "size": 104511
+  },
+  "counts.csv": {
+   "sha256": "1c2cb03e8bf2ae0dfac73abd162a7add980ed0fdc15e970ee53f4aaaacf05c66",
+   "size": 78
+  },
+  "derived_images_index.csv": {
+   "sha256": "0565fc2c3ecbe8b487fef055e6ae040fbf80a5e72c2700c5ff330b0127790d75",
+   "size": 69966
+  },
+  "dropped_sources.json": {
+   "sha256": "19a8543435de66d9fdfd410253affdd4cf1a9deb9f27ba18b5722f600f77f9d1",
+   "size": 2732
+  },
+  "ours/images/water__06_HERR_02_CW_20200901_GP299683_05401.png": {
+   "sha256": "d965c57be86dcb686a0e71bd1bfbe7d5b60ffa1c182e79a5a355dc736815d506",
+   "size": 1574213
+  },
+  "ours/images/water__06_HERR_02_CW_20200901_GP299683_10351.png": {
+   "sha256": "d2a8cfe4dbe8c1b583565d3b95baf5d51ca5c71fbfff574ab9702cbb217c4268",
+   "size": 1811409
+  },
+  "ours/images/water__06_HERR_02_CW_20200901_GP299683_11251.png": {
+   "sha256": "b7ac6727d20deabad4b910190c1c1dcb4190cf87f90c1845029af6ff2544a2df",
+   "size": 1970918
+  },
+  "ours/images/water__06_HERR_02_CW_20200901_GP309683_05401.png": {
+   "sha256": "be35465e59b3359e4a95a7e0763de5054556df0bfa32d06203ae669f6dfb8dee",
+   "size": 2205281
+  },
+  "ours/images/water__06_HERR_02_CW_20200901_GP309683_05851.png": {
+   "sha256": "c4f73dab5ccf5646e909914589f4691164cce1d439f105645b586e108688a3ba",
+   "size": 1872408
+  },
+  "ours/images/water__06_HERR_05_CW_20200902_GP090255_02701.png": {
+   "sha256": "855b3778d0b0c09f78de19027bd7ce91470b147091ca1c9084a3b138780819e3",
+   "size": 1662258
+  },
+  "ours/images/water__06_HERR_05_CW_20200902_GP090255_06301.png": {
+   "sha256": "f66e3a672f91848616e3c4a0e7bcfb9014a332c4bb1f0e6c72cb930f0af33599",
+   "size": 1541418
+  },
+  "ours/images/water__06_HERR_05_CW_20200902_GP090255_07651.png": {
+   "sha256": "9f0a4344f68dfb77732e1d9103cdbb49494a9e17dc470ce2ff76883730787b63",
+   "size": 1672940
+  },
+  "ours/images/water__06_HERR_05_CW_20200902_GP090255_11251.png": {
+   "sha256": "4d9c0c23c770d443a7660fc2e7047243815fd0cc088fb107e58adbbb2d58fd5d",
+   "size": 1729037
+  },
+  "ours/images/water__06_HERR_05_CW_20200902_GP100255_00901.png": {
+   "sha256": "900abe9113d8730883425ed98fc397b332a817316424510c832aaa46fe574921",
+   "size": 1830271
+  },
+  "ours/images/water__06_HERR_05_CW_20200902_GP100255_02701.png": {
+   "sha256": "26471407c67f9a15281da5c5ba3b96de07cf084bdab0876f141962025331267c",
+   "size": 1838336
+  },
+  "ours/images/water__06_HERR_05_CW_20200902_GP100255_03151.png": {
+   "sha256": "83dc8ff7b271e05e3da5bfd0169253c6366f93eb21af053f8d0764b6e2873d3e",
+   "size": 1324686
+  },
+  "ours/images/water__06_HERR_05_CW_20200902_GP100255_05401.png": {
+   "sha256": "683336646bf1b7e2edfd101848a2f9b1eb153e5c9d485beab0a2c2b63f16ae87",
+   "size": 1806338
+  },
+  "ours/images/water__06_HERR_05_CW_20200902_GP100255_11251.png": {
+   "sha256": "21df6e7a1720d9935b558c799c4af5240079afebd72411fe71d05d780f4db404",
+   "size": 1658788
+  },
+  "ours/images/water__06_HERR_12_BW_20200906_GP128224_11381.png": {
+   "sha256": "102f03ebcfa4592728d78eae1b6b517a4db5bf1cf09906e68d7c8488d6c02a2b",
+   "size": 2196964
+  },
+  "ours/images/water__06_HERR_12_BW_20200906_GP128224_16173.png": {
+   "sha256": "0fb86ab169978a38f63e1715c5e5bb3a02ee9fe0ce74a039827974918c52da42",
+   "size": 1806238
+  },
+  "ours/images/water__06_HERR_12_BW_20200906_GP128224_26356.png": {
+   "sha256": "c777af65c17ed6fa2a545e1aefe5eede614d907d3164bcdc867961128a70830a",
+   "size": 1815182
+  },
+  "ours/images/water__13_CHOR_03_AW_20210803_GP199637_00000.png": {
+   "sha256": "84939309dc48e3a625462fcf6c19a00ab522a5958a8217d5dea9c18ed076cb21",
+   "size": 1465234
+  },
+  "ours/images/water__13_CHOR_03_AW_20210803_GP199637_00899.png": {
+   "sha256": "4adc9d3e7b91940b6738fe1cc0ecb2817c89e64d8d52f0ba6a74794050924b59",
+   "size": 1378972
+  },
+  "ours/images/water__13_CHOR_03_AW_20210803_GP199637_04495.png": {
+   "sha256": "0508a86522f20669d79ab6bbee34e9d3dde6c398e2a19660c97c300bcd76d2e5",
+   "size": 1140121
+  },
+  "ours/images/water__13_CHOR_03_AW_20210803_GP199637_07192.png": {
+   "sha256": "957c4ecaa5f85da078357b7e49bb27e4b14e04ba26662169c8a6038d248053ae",
+   "size": 1209906
+  },
+  "ours/images/water__13_CHOR_03_AW_20210803_GP199637_08091.png": {
+   "sha256": "0318b3e423d1bc9eea4443711f9a712b935a413d1098e067b70a7b8568999131",
+   "size": 1236717
+  },
+  "ours/images/water__13_CHOR_03_AW_20210803_GP199637_12586.png": {
+   "sha256": "624e9168bf67d7dcd5b97c1ff88e7f8ef0daf821ba0e56fae6fb6dbc94dc0795",
+   "size": 1260308
+  },
+  "ours/images/water__13_CHOR_03_AW_20210803_GP199637_24273.png": {
+   "sha256": "d88eac4dd6bd1641f94980ba4c7afe27f96de134eebcab83ad8dcc721cbb87ab",
+   "size": 1218059
+  },
+  "ours/images/water__13_SHRI_10_BW_20210809_GP100296_07192.png": {
+   "sha256": "51ca84dd637123b796963a91eb98c5fa04613556a9c9b87f7cb64fe2ff1c57db",
+   "size": 1047713
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene00301.png": {
+   "sha256": "537282f9ea171022d5ae9eb55733c79a3bef34e377d6236ea95dd0aee3b4fda9",
+   "size": 3002905
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene01801.png": {
+   "sha256": "75505424dfc4ef1961bf6132b5a3c5347cbde00d87ece606239d16a5b57f5ac1",
+   "size": 2995564
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene03901.png": {
+   "sha256": "6db54aedeb130bd1e046c6b20793ac6670bab38791bed2a8545d1cd817e5cc63",
+   "size": 2499775
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene04201.png": {
+   "sha256": "d3eb2f6a90ab5fd0f2c538013bed70ba20274cd33804b8104194ce38f55ae559",
+   "size": 3166088
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene06901.png": {
+   "sha256": "174a6358852cf972e170add4847c3f46e1bdc5be13566e6ab3b73a5f1aff1f38",
+   "size": 3143014
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene11701.png": {
+   "sha256": "043c077dfd5a0cfbb821389be0b7a086e0911b5c417f21cce5449c04d184d847",
+   "size": 2789454
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene12901.png": {
+   "sha256": "19275988b4f54d9fb465cc933c3b3b7bc9b9639b27a50da019a32d06f874bcc9",
+   "size": 2721333
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene15301.png": {
+   "sha256": "4526f4b9bbc82ee48b332d1592bbbaa4527a3d0d14c6dbadf190c4cef1041683",
+   "size": 2662706
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene16201.png": {
+   "sha256": "a0355778d7c2182314b874f2be3d796c987e09723b966632798238670658fc0d",
+   "size": 2787574
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene18301.png": {
+   "sha256": "0ef7308590d4b5cb974758528329f5f5d5926045b01a213001bf4d15c1d82e28",
+   "size": 2863690
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene19201.png": {
+   "sha256": "65a8af2dc50a57503009b9ea6f635578740a4354a516abb667a26f891780fb10",
+   "size": 2454703
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene19501.png": {
+   "sha256": "0159b6582b41c36b6d73a82773ad4b431a44e66a1f745f5bc79f6690c55b2e51",
+   "size": 2311313
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene26401.png": {
+   "sha256": "36a745048f9cf2ebb012bf998229181bee81f8a407f9d9ac5ac5a957bc9d0237",
+   "size": 2050540
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene27901.png": {
+   "sha256": "56eec9606e6ae35d25c160f6f3038671b945a0734390b76ad0e701a502ee9e06",
+   "size": 2090972
+  },
+  "ours/images/water__16_HERR_01_CW_20220509_GP141792scene28801.png": {
+   "sha256": "7f41c6637468d01da36081c863261689f9ae02e607507e957a85f50716f34747",
+   "size": 2752048
+  },
+  "ours/images/water__18_ALRA_02_CW_20220607_GP070086_00000.png": {
+   "sha256": "964135f049f5e5430acab1bf50049f54d6382a06a9836ae5b0d4bba2eae8a431",
+   "size": 1690489
+  },
+  "ours/images/water__18_ALRA_02_CW_20220607_GP070086_12586.png": {
+   "sha256": "67077938769e094f817a95efc4418a04c45749de3d32b9195994dfc2e610d602",
+   "size": 2126713
+  },
+  "ours/images/water__18_ALRA_02_CW_20220607_GP070086_16182.png": {
+   "sha256": "49fd1ce52bc390b9c2dccaba0a4cbdf2c7ffbe5eb8c41ba8a1d8beed8dff8a8b",
+   "size": 1885386
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_00000.png": {
+   "sha256": "7cf67fee349a21b459beb65a4ddbb9bab96943803972e351e4353826a0aa9f90",
+   "size": 1731377
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_02697.png": {
+   "sha256": "279f9f456f8b8dabd28d20818cbd3bba6bc013e15bb5d6104d1b8bf99e136240",
+   "size": 1599706
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_03596.png": {
+   "sha256": "a4383841d6c4d9826ca7b26ae86851d934634e8f82ba6aff71a9b3a4bb6d0241",
+   "size": 1867806
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_05394.png": {
+   "sha256": "005cc78015efe3df1ac28003da213a8c95c1d931a8a01dac9cfbbeb960567791",
+   "size": 1405099
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_09889.png": {
+   "sha256": "384215feb6a6b861381d320268d779b3cebb8a6ab85d44c0e26f2ded1d067663",
+   "size": 1411631
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_16182.png": {
+   "sha256": "f086d342ee825b16322085bac37ac969b5f4d792a9d970c5a22431033ab89712",
+   "size": 1735696
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_17980.png": {
+   "sha256": "307e288bb52b6fb0f61aa5c107e26e8a3a39e8588ac3a91c4f61520ba1b7b0fd",
+   "size": 1840366
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_19778.png": {
+   "sha256": "8321d8b0743ec3a640b98ea23cff3528537a23899c085a1e1318a29ea5a1894c",
+   "size": 1534523
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_25172.png": {
+   "sha256": "cc03754bcc0f6214ca7504b1244b225cd1ac76a9806346540c9aa98c92fdf57c",
+   "size": 1689225
+  },
+  "ours/images/water__18_ALRA_04_CW_20220608_GP051808_27869.png": {
+   "sha256": "bc7f28d144718cb23461cb05f95da5f727bfebaf8c464e37b68b99a1f2c9e7ed",
+   "size": 2254884
+  },
+  "ours/images/water__18_ALRA_05_CW_20220608_GP050283_00899.png": {
+   "sha256": "49be5401cf736cc71275a9725dec779f91585efa51a6f072c4edfe1f53306665",
+   "size": 2625672
+  },
+  "ours/images/water__18_ALRA_05_CW_20220608_GP050283_02697.png": {
+   "sha256": "84eeb4571b8507944fdefdc479ba0a1484e54e55d8cab63179936532e6fa1ecf",
+   "size": 2514302
+  },
+  "ours/images/water__18_ALRA_05_CW_20220608_GP050283_03596.png": {
+   "sha256": "7940423df7e29b05210ffefd5a739f835459902e38b600d59c3bc985db668202",
+   "size": 2360620
+  },
+  "ours/images/water__18_ALRA_05_CW_20220608_GP050283_05394.png": {
+   "sha256": "203fdce25a826184986c78e0bf08e63e738040e619db666e1467c6ffd7bcd386",
+   "size": 2337587
+  },
+  "ours/images/water__18_ALRA_05_CW_20220608_GP050283_09889.png": {
+   "sha256": "24c9979f20ea8341fd8451aa62a5f9bf754c3fbcfd5645a2ef42567f8158616f",
+   "size": 2429863
+  },
+  "ours/images/water__18_ALRA_05_CW_20220608_GP050283_19778.png": {
+   "sha256": "df318ba02950a51cc6ba1831ce9287c8ceeac84213956fffb414fe91bb8a5474",
+   "size": 2563914
+  },
+  "ours/images/water__18_ALRA_05_CW_20220608_GP050283_22475.png": {
+   "sha256": "9d71a40fd843955b89d1250fd10af0336d47eccfb7fd05f2c3c364fd6e4a32d4",
+   "size": 2360703
+  },
+  "ours/images/water__18_ALRA_05_CW_20220608_GP050283_25172.png": {
+   "sha256": "bf007d5cf53074da6b7729e982694a9d4004a3930642db63fc71f042dc5e37b3",
+   "size": 2428818
+  },
+  "ours/images/water__18_ALRA_06_CW_20220613_GP061690_00000.png": {
+   "sha256": "41949b5f6a9d2c3e19bd29a443e27821c0765efcc76cc35db354e6f4d3390429",
+   "size": 1999173
+  },
+  "ours/images/water__18_ALRA_06_CW_20220613_GP061690_03596.png": {
+   "sha256": "94a5be9fae4beabeac27b903379aabfdd4b09725dc31ee6eab7e89e80885d41c",
+   "size": 1419853
+  },
+  "ours/images/water__18_ALRA_06_CW_20220613_GP061690_05394.png": {
+   "sha256": "2020de7795a78c70a9d556df377383543fb0759c9ba39ca81a5b4dd43afe822a",
+   "size": 1100211
+  },
+  "ours/images/water__18_ALRA_06_CW_20220613_GP061690_11687.png": {
+   "sha256": "34192ab27ba444ba01c363845f22098dc674c1fab27ebdfc74128e349d5f2b2c",
+   "size": 1686727
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_00899.png": {
+   "sha256": "9e3dac982e74a44d9f93508bbe27b3c74283c8e78ec99d504e7f49a9135bef16",
+   "size": 2422746
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_01798.png": {
+   "sha256": "7fcd1fd9a445860bd354448eb15645330fe33bcf57586f10b71c8c0054b6d144",
+   "size": 1776502
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_03596.png": {
+   "sha256": "2fda834de099c15123e0c4ecf90d74e718ff8db3f4ce64c8e287ded5dbf1dc09",
+   "size": 1991937
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_04495.png": {
+   "sha256": "9c5dc5b29df2614c33a95e8034fc0bf1f700855a344591ca2eeda04e373c2c64",
+   "size": 1867350
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_08091.png": {
+   "sha256": "13fd13b35e2b18aa164f571565f7ef38d0b0419ac36b1d20f0459d003e162b4c",
+   "size": 1782865
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_09889.png": {
+   "sha256": "e14991e8a986b5740aaaabeac10cd30291e6d545ba1e27ab9f7b83dd1d4d8dc1",
+   "size": 1829318
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_13485.png": {
+   "sha256": "468a6d3dd669f899bc529007d5fbecbdaedc6f1ef417dd74926e7246ff6502f7",
+   "size": 1973077
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_23374.png": {
+   "sha256": "663677870b28c1af330d78c41a4b122781a5e278021af269f02dda981a250673",
+   "size": 1711945
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_28768.png": {
+   "sha256": "13dc8c9f7125d72483d93defc6c738aa40a22d6b4b20e32eefb0bea64a168140",
+   "size": 1815655
+  },
+  "ours/images/water__18_ALRA_07_CW_20220613_GP050284_29667.png": {
+   "sha256": "3c773e2db673cef565aa6de48e3c10e29f3ce5204643a85e61fa8191e964a54e",
+   "size": 1433406
+  },
+  "ours/images/water__18_ALRA_09_CW_20220623_GP071637_17081.png": {
+   "sha256": "f395497f934980c0a69b233762cd73ea6a59c59bb6d8a4e3eafc70445e1710b5",
+   "size": 2681920
+  },
+  "ours/images/water__18_ALRA_09_CW_20220623_GP071637_24273.png": {
+   "sha256": "46cfd4100094a7c5576c6e51fb7fc6c3dcf7afee95373cb4925e3125b9f29908",
+   "size": 2712694
+  },
+  "ours/images/water__18_ALRA_09_CW_20220623_GP071637_25172.png": {
+   "sha256": "6fe68fc15668e0f759f2280e9a8bc7ed7f01ea58bfcc726bda23f21089e496bd",
+   "size": 2245743
+  },
+  "ours/images/water__18_ALRA_10_CW_20220623_GP050063_02697.png": {
+   "sha256": "53d6d837e567d0dfc09003fe4f9fd4ceb857e266289f6bdf8b9f93bcc5b1c5ac",
+   "size": 2502008
+  },
+  "ours/images/water__18_ALRA_10_CW_20220623_GP050063_18879.png": {
+   "sha256": "a3e45975db4f42d151c8d55f9e7d9f8784f19367b11c14f2c7ec540d58eecfb4",
+   "size": 2403932
+  },
+  "ours/images/water__18_ALRA_10_CW_20220623_GP050063_26970.png": {
+   "sha256": "7a4b362a9b72f0343611928c35a2c71a26fd8dc119da545aeded03af05edcbf3",
+   "size": 2113235
+  },
+  "ours/images/water__18_ALRA_12_CW_20220623_GP069667_00000.png": {
+   "sha256": "e37797ac8cbb1345865d37c8a833f69e76091b5f446b71a12298dafd366acfb0",
+   "size": 2917517
+  },
+  "ours/images/water__18_ALRA_12_CW_20220623_GP069667_01798.png": {
+   "sha256": "4e1ce383a204abf15494780be0e1eb6fa5fad8d9e12085b94660b9d6aa9c0bda",
+   "size": 2696525
+  },
+  "ours/images/water__18_ALRA_12_CW_20220623_GP069667_17980.png": {
+   "sha256": "55de38634668fe53cf995d193bc1f63dad2695030c8adb44c80b266044608f21",
+   "size": 2125033
+  },
+  "ours/images/water__18_ALRA_12_CW_20220623_GP069667_18879.png": {
+   "sha256": "dd3446acba6866ab9c64aedddd4c743af1ee91ad5da237a4de91773946ccf301",
+   "size": 2540979
+  },
+  "ours/images/water__18_ALRA_12_CW_20220623_GP069667_29667.png": {
+   "sha256": "caf7687d6cb863951c6f6545463ec7a03ae0f78192c517197ade3839f6f3e956",
+   "size": 2244295
+  },
+  "ours/images/water__19_HERR_05_CW_20220621_GP070520_08990.png": {
+   "sha256": "0dfc5e290571a7a27ce4909c868e6dfdd7ab0aa9658a61beea4e90e37e44c02e",
+   "size": 1501607
+  },
+  "ours/images/water__19_HERR_05_CW_20220621_GP070520_11687.png": {
+   "sha256": "937ffcc6ce3145f81702f38b437c37772d70ac16a80aba53befc6498045eac82",
+   "size": 1426550
+  },
+  "ours/images/water__19_HERR_05_CW_20220621_GP070520_15283.png": {
+   "sha256": "dd78282866cf82811d11207d7d069f82ed26faf5793d4237a5486d4d0717e6a7",
+   "size": 1425149
+  },
+  "ours/images/water__19_HERR_05_CW_20220621_GP070520_22475.png": {
+   "sha256": "dd6dea07ce39b26a39e35167bc05da908c99b1a619c0c18d27a61b446d9b0254",
+   "size": 1468767
+  },
+  "ours/images/water__19_HERR_08_CW_20220622_GP030521_10788.png": {
+   "sha256": "1427b277c4912392e36d7a6926a5a9ee12569417dfeb3d300f48a99f15d1a91b",
+   "size": 1333773
+  },
+  "ours/images/water__19_HERR_08_CW_20220622_GP030521_17980.png": {
+   "sha256": "5ea09d04b834f0337b3ac275dce18c25c8ba5de0e7c2cabc02cf465769528323",
+   "size": 1368563
+  },
+  "ours/images/water__19_HERR_08_CW_20220622_GP030521_22475.png": {
+   "sha256": "88bfae5a81944b171cc9fe8a6404186d5332047e94a62140fed89e82720a62f2",
+   "size": 1301344
+  },
+  "ours/images/water__19_HERR_08_CW_20220622_GP030521_23374.png": {
+   "sha256": "83fb7ff1628b21868c8cc4d46837717f9b56826018c2ca2f9d5673e4fe00f485",
+   "size": 1309310
+  },
+  "ours/images/water__19_HERR_08_CW_20220622_GP030521_25172.png": {
+   "sha256": "bd8844b8f7a4903ae72ce3f5daedbee582889b25857462273b3fb651244c0e8f",
+   "size": 1325197
+  },
+  "ours/images/water__19_HERR_08_CW_20220622_GP030521_28768.png": {
+   "sha256": "b8ecf4df896ee9162ea7d700a1c6cc8f9e32afaa1c352698d77fbd901fe1f1af",
+   "size": 1254083
+  },
+  "ours/images/water__19_HERR_10_CW_20220627_GP080093_06293.png": {
+   "sha256": "f2076004f7adaf9e84dbd59822d2af343bf178d1fc8510d814545896db81d388",
+   "size": 1644989
+  },
+  "ours/images/water__19_HERR_10_CW_20220627_GP080093_11687.png": {
+   "sha256": "80f683349e5e75c945e57a20b447ba448ce096fceddfff911bc509852e1c09ef",
+   "size": 1189593
+  },
+  "ours/images/water__19_HERR_10_CW_20220627_GP080093_12586.png": {
+   "sha256": "0979d8b78ccd9010c319954209080baddfb0fda09fd1524a96894afa85d61856",
+   "size": 1621762
+  },
+  "ours/images/water__19_HERR_10_CW_20220627_GP080093_21576.png": {
+   "sha256": "8eaec90749ff24f47ed2adff8676b0d7b2b3db7b1f9bdf6cdf83292d067de45d",
+   "size": 1719084
+  },
+  "ours/images/water__19_HERR_10_CW_20220627_GP080093_23374.png": {
+   "sha256": "5e60b6a94ed025c30b8012d944627f832fb592806d603e4a9d0db7f795337467",
+   "size": 1493062
+  },
+  "ours/images/water__19_HERR_10_CW_20220627_GP080093_24273.png": {
+   "sha256": "753ee93db0029e897bf3787f39253007b2741e727ae98dbe77d3f8190416014f",
+   "size": 1612467
+  },
+  "ours/images/water__19_HERR_10_CW_20220627_GP080093_26970.png": {
+   "sha256": "f998c846332f84dd5184c94a3d81af4a9dbf10bc32ce950dda7833d6fe95a8d0",
+   "size": 1668316
+  },
+  "ours/images/water__19_SUB1_03_CW_20220621_GP081811_00899.png": {
+   "sha256": "50fc3203265e7a8f20966e6449b6fcc3c2eccb1a3708eea17fd14893936ebb6d",
+   "size": 1621180
+  },
+  "ours/images/water__19_SUB1_03_CW_20220621_GP081811_21576.png": {
+   "sha256": "1f2faf2be3d5ada67d0d523d096ea3a46cb786fea6537d3bccab9c32c1621623",
+   "size": 1722620
+  },
+  "ours/images/water__19_SUB1_03_CW_20220621_GP081811_27869.png": {
+   "sha256": "3ed2714d60cb92f833ef4fb12d27218e56e2464a6aa35ff041502cd47c3c33f3",
+   "size": 2067944
+  },
+  "ours/images/water__19_SUB1_03_CW_20220621_GP081811_31465.png": {
+   "sha256": "ff922fbfd08b005204223597b1e58ea22ec3f89ba6b9085d3358674b70ddf772",
+   "size": 1797006
+  },
+  "ours/images/water__19_SUB1_09_CW_20220627_GP081638_03596.png": {
+   "sha256": "dd3f892afc7a7c72c72b11c8076f27ab4d89ddab4db7b8cf5a4d43cba9fca3b5",
+   "size": 1874914
+  },
+  "ours/images/water__19_SUB1_09_CW_20220627_GP081638_08091.png": {
+   "sha256": "17fe276109b1aee5476a12b1d753753495e3613eb172c38d6a4af2a847ff20e7",
+   "size": 2155741
+  },
+  "ours/images/water__19_SUB1_09_CW_20220627_GP081638_08990.png": {
+   "sha256": "2cde70aa2efae5801bc33235e06936993e032d59c7b5c60cc7bba3e5470f877c",
+   "size": 2127328
+  },
+  "ours/images/water__19_SUB1_09_CW_20220627_GP081638_09889.png": {
+   "sha256": "ce8b5e1c67592370a17f9441d0761a56f02dbfdc6ec77ae42a4d654b80a1d061",
+   "size": 2148735
+  },
+  "ours/images/water__19_SUB1_09_CW_20220627_GP081638_19778.png": {
+   "sha256": "2bff9fccda4e0e6f520f81df5ac3af130439d5124bd9266f9001682d77d465ca",
+   "size": 1925804
+  },
+  "ours/images/water__19_SUB1_09_CW_20220627_GP081638_31465.png": {
+   "sha256": "efcc2f5f363838e64e72094fff650e8f2359f72dc7a3359ef7ac1f03ca7d0272",
+   "size": 2076426
+  },
+  "ours/images/water__21_MACK_12_BW_20220815_GP070027_05391.png": {
+   "sha256": "3dc6d0acdb5615c8ad3b98d52c8241db99881c5a7800aaf49b7032db04a0599b",
+   "size": 1951956
+  },
+  "ours/images/water__21_MACK_12_BW_20220815_GP070027_12579.png": {
+   "sha256": "bf34073a691c56926bd10914a65dcdb1a634cdc0ebea8e6df3b65758bda28bdb",
+   "size": 1918154
+  },
+  "ours/images/water__21_MACK_12_BW_20220815_GP070027_14376.png": {
+   "sha256": "1d5f39a219ecd8114d0e4d67174793daeb67f1a7a347f8999fbb1e9c0fad4e81",
+   "size": 1607175
+  },
+  "ours/images/water__21_MACK_12_BW_20220815_GP070027_19767.png": {
+   "sha256": "7002a014641dd665a470b364adbbc4e57f704735ecc2eb8af8c0f8109c11e4d7",
+   "size": 1643061
+  },
+  "ours/images/water__21_MACK_12_BW_20220815_GP070027_22762.png": {
+   "sha256": "dcc2b7c28b52cc37b480ffe2dd53f3bd7257be425758886162f1517e68b0c0b0",
+   "size": 1539348
+  },
+  "ours/images/water__21_MACK_12_BW_20220815_GP070027_25158.png": {
+   "sha256": "65760b86a9f6f81f63cd406687937e1376b091d4f993f5658268873693543ba2",
+   "size": 1597259
+  },
+  "ours/images/water__21_MACK_12_BW_20220815_GP070027_30549.png": {
+   "sha256": "59690fe1fe7b84950d69f793b689d827d6dca066063ea4951cf8b60dcab7233e",
+   "size": 1850961
+  },
+  "ours/images/water__21_SUB6_04_BW_20220810_GP040299_04193.png": {
+   "sha256": "7e1ff9a53557cebf8ba8bc0870550ca2005cae57c9b3a1a298049c17a7bb8963",
+   "size": 1526832
+  },
+  "ours/images/water__21_SUB6_04_BW_20220810_GP040299_09584.png": {
+   "sha256": "019ae966d6757a922a861f4e2f4531c6a90b65e889de418d7d6c49cf7c4078e5",
+   "size": 1806705
+  },
+  "ours/images/water__21_SUB6_04_BW_20220810_GP040299_12579.png": {
+   "sha256": "469fc3249935c660ae7fa43191c6c7017c0bd84680e5830f9281da4bc4328674",
+   "size": 1522151
+  },
+  "ours/images/water__21_SUB6_04_BW_20220810_GP040299_14376.png": {
+   "sha256": "98f96b2c1860c5fef84042287157f1f11168c5dd80b96de4b7548a91c2099ce3",
+   "size": 1421774
+  },
+  "ours/images/water__21_SUB6_04_BW_20220810_GP040299_14975.png": {
+   "sha256": "abf6001ff646e8ec76f689d4d5910df7446b0cef180b47eb243768ca9b964265",
+   "size": 1620327
+  },
+  "ours/images/water__21_SUB6_04_BW_20220810_GP040299_18569.png": {
+   "sha256": "9678b9ade7640ef1d2164b9a4dd9a16e162c1480d3cf15e03c45b0720f8f9ece",
+   "size": 1951026
+  },
+  "ours/images/water__21_SUB6_04_BW_20220810_GP040299_23960.png": {
+   "sha256": "ba905fcdf5e29841e215e47cb703da3d596f82f0ca9fe13d6b491bb616bdf688",
+   "size": 1476547
+  },
+  "ours/images/water__21_SUB6_04_BW_20220810_GP040299_31148.png": {
+   "sha256": "47a01fa246622e75546714305145adfa195718630bbad115f5f108a4f6b9e3a2",
+   "size": 1498369
+  },
+  "ours/images/water__21_SUB6_08_BW_20220812_GP030301_05990.png": {
+   "sha256": "f031e20ba3bdf864c64f7f71c53ba73da16784ae2355fd8c5a9a90a195495165",
+   "size": 1654457
+  },
+  "ours/images/water__21_SUB6_08_BW_20220812_GP030301_06589.png": {
+   "sha256": "2340f1bd912d9502f37aff4a119e79ef50f31769b263e71e5c5eecff011f939d",
+   "size": 1736634
+  },
+  "ours/images/water__21_SUB6_08_BW_20220812_GP030301_09584.png": {
+   "sha256": "372290c7d0f248ca43c438c2b113d8fa5511815c845362d7fef7faf07ac59d31",
+   "size": 2178217
+  },
+  "ours/images/water__21_SUB6_08_BW_20220812_GP030301_13178.png": {
+   "sha256": "1b9a97370781cefd5c8c34aaf7a25236509e81cedb360d4141d0c2b3d28e1276",
+   "size": 1635870
+  },
+  "ours/images/water__21_SUB6_08_BW_20220812_GP030301_15574.png": {
+   "sha256": "10489c30239c5bd90e239bda9a21b5cc7cf79e71f0fa6b9dc9ca8253697cd255",
+   "size": 1385573
+  },
+  "ours/images/water__21_SUB6_08_BW_20220812_GP030301_19168.png": {
+   "sha256": "a61bf2be7430737eaa11d9af3d708d7a8f35ab40bef0158b279fbc159f1ef149",
+   "size": 1305958
+  },
+  "ours/images/water__21_SUB6_08_BW_20220812_GP030301_22163.png": {
+   "sha256": "d826beb686c6cf3e93a0e080c0fddf2975719a3d8a246407e66c9fc668320e30",
+   "size": 1581339
+  },
+  "ours/labels/water__06_HERR_02_CW_20200901_GP299683_05401.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "ours/labels/water__06_HERR_02_CW_20200901_GP299683_10351.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "ours/labels/water__06_HERR_02_CW_20200901_GP299683_11251.txt": {
+   "sha256": "0bf13b7fb39ee399d83cd21b64b23e3d32457b3ab228744eb4280533389a8892",
+   "size": 38
+  },
+  "ours/labels/water__06_HERR_02_CW_20200901_GP309683_05401.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "ours/labels/water__06_HERR_02_CW_20200901_GP309683_05851.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "ours/labels/water__06_HERR_05_CW_20200902_GP090255_02701.txt": {
+   "sha256": "b58b5b81907855f0b6da6f0fd2d15edc91633c49ff0e0ff51beeeaf39a80d68a",
+   "size": 114
+  },
+  "ours/labels/water__06_HERR_05_CW_20200902_GP090255_06301.txt": {
+   "sha256": "bd602ce1d0a18c099305bfdb13c8323e16d43d4502144cefa664decf74b7eb00",
+   "size": 190
+  },
+  "ours/labels/water__06_HERR_05_CW_20200902_GP090255_07651.txt": {
+   "sha256": "580bd0378efc9e125dddbecdb4f9ff94284d18f28480b3a966fbbd1e7f4b42b0",
+   "size": 76
+  },
+  "ours/labels/water__06_HERR_05_CW_20200902_GP090255_11251.txt": {
+   "sha256": "ce0ebd95f53286e81de4522d275fb38387f2ef80ed89ead854e7c4a11bdc0e07",
+   "size": 152
+  },
+  "ours/labels/water__06_HERR_05_CW_20200902_GP100255_00901.txt": {
+   "sha256": "048713bc17e2ee701865042753f55d9a5eca874e95893ab19073df67ea50e080",
+   "size": 114
+  },
+  "ours/labels/water__06_HERR_05_CW_20200902_GP100255_02701.txt": {
+   "sha256": "63d7f261870ff2204b13b2f25c6f14b308b989ff0bd6e135b3c66803f130f898",
+   "size": 114
+  },
+  "ours/labels/water__06_HERR_05_CW_20200902_GP100255_03151.txt": {
+   "sha256": "b3b53b5901355ee9ec6ab6974e494307773447715d36572e9c7a6fe040f84241",
+   "size": 114
+  },
+  "ours/labels/water__06_HERR_05_CW_20200902_GP100255_05401.txt": {
+   "sha256": "13c102047fdb24fffa86cf9a204a859057395704638118df434171ab5d5fd349",
+   "size": 114
+  },
+  "ours/labels/water__06_HERR_05_CW_20200902_GP100255_11251.txt": {
+   "sha256": "c4f8f8085211d892936be470de08cf94645698f9b70aaa2fe0ac812ca9fe2c81",
+   "size": 114
+  },
+  "ours/labels/water__06_HERR_12_BW_20200906_GP128224_11381.txt": {
+   "sha256": "9d25d4aeb776d488d1376f33d7616a07dfc33743662c2b1fbc04133e8f4aad22",
+   "size": 38
+  },
+  "ours/labels/water__06_HERR_12_BW_20200906_GP128224_16173.txt": {
+   "sha256": "1a223e110ed9c9246ee1cf2b3ed99c727286bfcff08f59f983c0938ebca8970c",
+   "size": 38
+  },
+  "ours/labels/water__06_HERR_12_BW_20200906_GP128224_26356.txt": {
+   "sha256": "888d218b16d40ff60c5172349638d2c4b5d0cd1f06962080f2fee37b723889e4",
+   "size": 38
+  },
+  "ours/labels/water__13_CHOR_03_AW_20210803_GP199637_00000.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "ours/labels/water__13_CHOR_03_AW_20210803_GP199637_00899.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "ours/labels/water__13_CHOR_03_AW_20210803_GP199637_04495.txt": {
+   "sha256": "e6a3933c313866f1ebc0d64f8cd2137d847c3ebb49679cc699b7d392b12217b3",
+   "size": 114
+  },
+  "ours/labels/water__13_CHOR_03_AW_20210803_GP199637_07192.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "ours/labels/water__13_CHOR_03_AW_20210803_GP199637_08091.txt": {
+   "sha256": "ea3cf1bad7789d4a177418d2e08fd834fa28c9bc220f8d816577796a5d1f92dd",
+   "size": 38
+  },
+  "ours/labels/water__13_CHOR_03_AW_20210803_GP199637_12586.txt": {
+   "sha256": "0c451668d462c5870159ebe51e3c9b8de87636eb757b718ab2e0bc2224a4dbee",
+   "size": 38
+  },
+  "ours/labels/water__13_CHOR_03_AW_20210803_GP199637_24273.txt": {
+   "sha256": "6dbb8261d08e908be211e7a6d141300d74660cb204635bb422044cff5faded00",
+   "size": 38
+  },
+  "ours/labels/water__13_SHRI_10_BW_20210809_GP100296_07192.txt": {
+   "sha256": "e6703eae789e26a57084c803539aca2d2a0723bbdfaf41319c4d6e3616ffad89",
+   "size": 38
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene00301.txt": {
+   "sha256": "9bb2258af42d82725f21602c36c2af7f8d9a208719f2f3b4efaaec530bbb753d",
+   "size": 38
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene01801.txt": {
+   "sha256": "150a0118ef8583d8d768f152a5a7d1e0cf04b7d4cdf78ac484ea732693bb99ff",
+   "size": 38
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene03901.txt": {
+   "sha256": "63b551dc12ad9e168027205feb2bf5bd653c95e332a9daa9c3817f8fe52a1de1",
+   "size": 38
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene04201.txt": {
+   "sha256": "52550dd0924ea9c24afdf3eba24f907755fdd62f99047ea27c6fc4321a0c1595",
+   "size": 38
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene06901.txt": {
+   "sha256": "148deda0d09da0019e7a187b1912b2ad5a2a323d499c7354c6911a32ad9f6c7d",
+   "size": 38
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene11701.txt": {
+   "sha256": "0515b23c887a6ba7a3747a7bd1e18916de4c505a92c749dc7c2c2b93a99c39d1",
+   "size": 38
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene12901.txt": {
+   "sha256": "23a2328beb6408e925c3fd55d5af49a3618e198b8b88101961e7c89a24bb18c3",
+   "size": 76
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene15301.txt": {
+   "sha256": "f8c79aa7baa276bd6a6108e4c4fda0101e4265b6caf1a384c3ef5a67fe6e1734",
+   "size": 76
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene16201.txt": {
+   "sha256": "b188861f669041655b01c35bcd94454dac6b70bfa03420954ad21c9a687c1848",
+   "size": 76
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene18301.txt": {
+   "sha256": "ae435a36d87bf6b24a6aa0dd35cb51ba9e6188c63b283f42403b5183f0c0abc1",
+   "size": 76
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene19201.txt": {
+   "sha256": "4cbf7d48002f662b991b85cfb97ef4cacfcedffaee52198da919b7ad2adda8c9",
+   "size": 76
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene19501.txt": {
+   "sha256": "0230ca5e4d1fa542c17f0f092970228ecdbc12b70d09f8a38ae5167a04c03c66",
+   "size": 76
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene26401.txt": {
+   "sha256": "a892b5e2b4714dd5be84ab80531b1342729ba838ca6171c7ca269208b517e843",
+   "size": 38
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene27901.txt": {
+   "sha256": "91b931e78516ae253cf112dd09baeb0b27b49afd124dd0945ea133269cfb02ae",
+   "size": 76
+  },
+  "ours/labels/water__16_HERR_01_CW_20220509_GP141792scene28801.txt": {
+   "sha256": "92f457bd5fd4483c0de5ca23a1e34fee0120d8ac359333ba7c6a8ed7211f99d9",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_02_CW_20220607_GP070086_00000.txt": {
+   "sha256": "b3482add2750ab836235917c6442049c9129b709e544cb6d23fbc7feef5ec9f2",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_02_CW_20220607_GP070086_12586.txt": {
+   "sha256": "3a2f4917ab66ca2c88aacd6324c7a1979e3e8fff059ea3d300d9f2f81e706909",
+   "size": 114
+  },
+  "ours/labels/water__18_ALRA_02_CW_20220607_GP070086_16182.txt": {
+   "sha256": "8e8e9fd0358bc35fa820f41946f6c614f7625085a4e5e16c85784853fd3e9b4a",
+   "size": 114
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_00000.txt": {
+   "sha256": "b04b49152012539ed5d1caaffb1766c975e9b017ee30a2cdf8bc631ce26a6614",
+   "size": 114
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_02697.txt": {
+   "sha256": "3084ff498e0b0ccedb11ff57b8682e6e936f9b271e68a736e110049ac198f18c",
+   "size": 114
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_03596.txt": {
+   "sha256": "f3ad900556d8adb05b472843c126209c6872d865531401a10050b111738655e5",
+   "size": 190
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_05394.txt": {
+   "sha256": "ed9ccb9fc88fe25e82acec337c55bb98c2bcd2d3a1b2d6061d328bbf0fa30999",
+   "size": 152
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_09889.txt": {
+   "sha256": "39de90f917e665f76310dc1227fecf5e0c3a994a9aa2a4a9ee468c6a68d38bc0",
+   "size": 190
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_16182.txt": {
+   "sha256": "eba24ed08cb3326b69cb5bbf67d520bfefe3d9e1b9880bccdd0668ced01a1a2e",
+   "size": 152
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_17980.txt": {
+   "sha256": "21347d8434eed269cc6a736eb709458c775ee577197c5d526d4f7a64bee3ebf4",
+   "size": 190
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_19778.txt": {
+   "sha256": "3b11905af8d837865d8ccd4d3c9f2765e9f3c5cf8dda2b3ba0f674c30c3dc8ff",
+   "size": 190
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_25172.txt": {
+   "sha256": "e03486305a8797444b26b2a4b1c3c2063042a05e279ee55658a25fe38220c974",
+   "size": 228
+  },
+  "ours/labels/water__18_ALRA_04_CW_20220608_GP051808_27869.txt": {
+   "sha256": "a58db67bbba155057971a00d32dac4221ce2c9a3ae08186339adec9b9683e04b",
+   "size": 304
+  },
+  "ours/labels/water__18_ALRA_05_CW_20220608_GP050283_00899.txt": {
+   "sha256": "51383bc7dc05d7f517e83337a00a79163754d06406b2a240a872c5c8d0641a51",
+   "size": 38
+  },
+  "ours/labels/water__18_ALRA_05_CW_20220608_GP050283_02697.txt": {
+   "sha256": "f7bf2b4bea60d224d7fb701679e0f09ea0741dee2742930bbacbfb6f798d2c76",
+   "size": 38
+  },
+  "ours/labels/water__18_ALRA_05_CW_20220608_GP050283_03596.txt": {
+   "sha256": "9d0916d6c9ed1b314cc1a14039e6f8f0c77299273d520130b99d87182339175d",
+   "size": 38
+  },
+  "ours/labels/water__18_ALRA_05_CW_20220608_GP050283_05394.txt": {
+   "sha256": "10b7f6f11d6470d6afacac1cb1c30a42ca1b60671aacf23d00c805b89b12898a",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_05_CW_20220608_GP050283_09889.txt": {
+   "sha256": "eb4ca7b12e15c1a1eadb00aa2d72c2d4a2b1e54ea7d08db85448e365a174c7b8",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_05_CW_20220608_GP050283_19778.txt": {
+   "sha256": "ff24a27fb20207fe1bbdc54387c6f9137ec9d92417bafa30daf0c78b1542eeff",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_05_CW_20220608_GP050283_22475.txt": {
+   "sha256": "a91da55cee91e292f698e288af48c6c9690e9b33b8872ff646fbc5278e787cd4",
+   "size": 114
+  },
+  "ours/labels/water__18_ALRA_05_CW_20220608_GP050283_25172.txt": {
+   "sha256": "e915e25cfa21a3c38f6d34fedd930004e9221bb4e025bb6a133d471b0d3501a9",
+   "size": 38
+  },
+  "ours/labels/water__18_ALRA_06_CW_20220613_GP061690_00000.txt": {
+   "sha256": "8069088aae78c4713be773f19010d72f27ecef95365fc43da3ae6bba1b663c2f",
+   "size": 190
+  },
+  "ours/labels/water__18_ALRA_06_CW_20220613_GP061690_03596.txt": {
+   "sha256": "0fba8804008a35cd244eaddd8479c3cd8a6f43257955209cac7c7c4b0b2d8cd3",
+   "size": 228
+  },
+  "ours/labels/water__18_ALRA_06_CW_20220613_GP061690_05394.txt": {
+   "sha256": "b9b7f5e56c60c6e42dbce732895dcd10304d59be363291fb022cf65f5613c2db",
+   "size": 152
+  },
+  "ours/labels/water__18_ALRA_06_CW_20220613_GP061690_11687.txt": {
+   "sha256": "c756cafabbe6497eae78646e7e8b8a010d800997bc8693ca595ea84f15935123",
+   "size": 152
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_00899.txt": {
+   "sha256": "d0d97a1ef12bff556be2f9a47f72cd579be596c4fb4fd42206d61f6dc79d3df9",
+   "size": 152
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_01798.txt": {
+   "sha256": "6e2a845e78499691ede4c3bb89fdb8696f910d1b59c124c0a20f9cf8a3a3551d",
+   "size": 152
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_03596.txt": {
+   "sha256": "c603c7681c25d334af67adf5b6f756466ef69780307176522c05855a27b3864b",
+   "size": 152
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_04495.txt": {
+   "sha256": "aea1fa8a69753da8a35678230e1c9cad3c0c4fb26424b582c3ecec2d962e7b2e",
+   "size": 114
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_08091.txt": {
+   "sha256": "88548ba6eee46a195f6aafb6538eaa13fdd3b5ff4c0b7fa9565779277fe444f3",
+   "size": 190
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_09889.txt": {
+   "sha256": "b3d343095b3ec0c2178f0f4a36eb09a2ae57c97f084f1c69b4fa97263f449ea2",
+   "size": 228
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_13485.txt": {
+   "sha256": "42cdee7ff05fcf6d113a444e4a91bd52ffa104a90f706c370d6fec5cc80346c9",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_23374.txt": {
+   "sha256": "a3f60d45ae45d3ebb49d052037cce333091063dd82167fd1a51d35ea3f6154a3",
+   "size": 190
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_28768.txt": {
+   "sha256": "b133d79ada3fcceff61f62a239b5097245c98080c54763b21f43dd529027493a",
+   "size": 190
+  },
+  "ours/labels/water__18_ALRA_07_CW_20220613_GP050284_29667.txt": {
+   "sha256": "659d23ce01df0fd0163900c5c4b81a882e8604d1604f5ebd4b952809685ea350",
+   "size": 228
+  },
+  "ours/labels/water__18_ALRA_09_CW_20220623_GP071637_17081.txt": {
+   "sha256": "bb08c3b9fa4db1855802a21b1c5e389347dbf5508f510bd26ebfd830686f4196",
+   "size": 38
+  },
+  "ours/labels/water__18_ALRA_09_CW_20220623_GP071637_24273.txt": {
+   "sha256": "3ddfde43561b065606c7ae84567258baf935f3a02bbff84e0b87e84cc86b6a3d",
+   "size": 114
+  },
+  "ours/labels/water__18_ALRA_09_CW_20220623_GP071637_25172.txt": {
+   "sha256": "ae866b57fa32b5eac05ac024d93007b3c8ede8dd13a0015c9bfa0b02c7638c2a",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_10_CW_20220623_GP050063_02697.txt": {
+   "sha256": "7b1da916df92d7c39e7428b0f51d79d611ef09b72e71f5dafe01c56257fc0bbc",
+   "size": 38
+  },
+  "ours/labels/water__18_ALRA_10_CW_20220623_GP050063_18879.txt": {
+   "sha256": "e2c5f0bac3c8c851cb9a5bf4e832342aaafa08155f84e44a70ccda18856b418e",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_10_CW_20220623_GP050063_26970.txt": {
+   "sha256": "0ec62901a98f5ababb174ee886438f54cad6787823170262a7e90de3978a1d22",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_12_CW_20220623_GP069667_00000.txt": {
+   "sha256": "1439d4ea89ec49dae62fa1deb8f79749a52a3f704073485973a92a8e2c5817d1",
+   "size": 76
+  },
+  "ours/labels/water__18_ALRA_12_CW_20220623_GP069667_01798.txt": {
+   "sha256": "4256cf0b4ba0297b3d4b59e7b986e87fe324a9b072e4bbe5b62c32c56eee6540",
+   "size": 38
+  },
+  "ours/labels/water__18_ALRA_12_CW_20220623_GP069667_17980.txt": {
+   "sha256": "9719761f7f1801873e7bd41262e611c7c29f57019c6c2d3ee660e2aba4d44516",
+   "size": 38
+  },
+  "ours/labels/water__18_ALRA_12_CW_20220623_GP069667_18879.txt": {
+   "sha256": "1667a25ed9a30ddd56fd0e9c00f9fd6df2894d779b0c7612edf4079ad90f58bd",
+   "size": 152
+  },
+  "ours/labels/water__18_ALRA_12_CW_20220623_GP069667_29667.txt": {
+   "sha256": "f97df5f8d5aca42f7ed3ed6fbe9d822548c54c7b6b8c0b21db77a0fc389fc9d3",
+   "size": 38
+  },
+  "ours/labels/water__19_HERR_05_CW_20220621_GP070520_08990.txt": {
+   "sha256": "981e443cb631d9fe94dce24ec8ae0f558c67e1317766b63aa4106809527ca466",
+   "size": 190
+  },
+  "ours/labels/water__19_HERR_05_CW_20220621_GP070520_11687.txt": {
+   "sha256": "0d6c18986c1df6208001d80f5c6402c25e6b9d36567be841d4c16cff4639557a",
+   "size": 76
+  },
+  "ours/labels/water__19_HERR_05_CW_20220621_GP070520_15283.txt": {
+   "sha256": "ac698f5824c520e61aa1e1ba3ce35466df5dd03a6cd2464ba6724f873ff22678",
+   "size": 152
+  },
+  "ours/labels/water__19_HERR_05_CW_20220621_GP070520_22475.txt": {
+   "sha256": "9e8df5113a8813dbaad795b9c2e102657289ee6f7001d23efb009128aaa2be04",
+   "size": 190
+  },
+  "ours/labels/water__19_HERR_08_CW_20220622_GP030521_10788.txt": {
+   "sha256": "cea1c7f392595dc8c81121c81b2cdf62c463e3c991eb1fa8c0efa13f27717484",
+   "size": 76
+  },
+  "ours/labels/water__19_HERR_08_CW_20220622_GP030521_17980.txt": {
+   "sha256": "ebba397b4dce786527df805187d5e928e7baa76906cc2e8db683e4b9332a071c",
+   "size": 190
+  },
+  "ours/labels/water__19_HERR_08_CW_20220622_GP030521_22475.txt": {
+   "sha256": "1e7151a9d04e4e24d3c125021eee1c75ee0814a27d3c8d603ff0fe6e98cfa9e3",
+   "size": 152
+  },
+  "ours/labels/water__19_HERR_08_CW_20220622_GP030521_23374.txt": {
+   "sha256": "7cec109bc8eb7c6615365e1c31efff09f6388bfd8895c95d599a71187b2687f7",
+   "size": 114
+  },
+  "ours/labels/water__19_HERR_08_CW_20220622_GP030521_25172.txt": {
+   "sha256": "d1c698b3fc076aa3c07c988066dd9b8fb75def04495fefe8025dc8be830cb953",
+   "size": 152
+  },
+  "ours/labels/water__19_HERR_08_CW_20220622_GP030521_28768.txt": {
+   "sha256": "27eba4f57e4d333a308afa07237bd032c5fa22907a83d03ec86f9c5d11438cfd",
+   "size": 190
+  },
+  "ours/labels/water__19_HERR_10_CW_20220627_GP080093_06293.txt": {
+   "sha256": "987e40bc324707e63dcceaa791e069049598bf645f55e89a7ce79a7fbad6151f",
+   "size": 266
+  },
+  "ours/labels/water__19_HERR_10_CW_20220627_GP080093_11687.txt": {
+   "sha256": "1e5a5b2d1dfc2535574c1d94210754fdc7fede4e3aeb339c5a14aad1766d01b3",
+   "size": 228
+  },
+  "ours/labels/water__19_HERR_10_CW_20220627_GP080093_12586.txt": {
+   "sha256": "b9c7cf446408e664e4ef32b3b7099f27bfc3bd91c00487553c8bd3f431da81ab",
+   "size": 114
+  },
+  "ours/labels/water__19_HERR_10_CW_20220627_GP080093_21576.txt": {
+   "sha256": "56425b46b79412da58048c1de26f26cb7799d44e32de91d57b10b002789fadb8",
+   "size": 152
+  },
+  "ours/labels/water__19_HERR_10_CW_20220627_GP080093_23374.txt": {
+   "sha256": "e18cdebe59a951ac943840d2bb553cd0be859aa0101dbc21d21a4884533a3a6b",
+   "size": 190
+  },
+  "ours/labels/water__19_HERR_10_CW_20220627_GP080093_24273.txt": {
+   "sha256": "d4e1d7eee8792e6bb72673eddcfb4cb8f83bbaa9f6f40627872f02a5fb78b4c2",
+   "size": 114
+  },
+  "ours/labels/water__19_HERR_10_CW_20220627_GP080093_26970.txt": {
+   "sha256": "6121ac797c418f69e1aa64f39c6b8177f089df6150fc1cd9c0908d3b1adcf78e",
+   "size": 152
+  },
+  "ours/labels/water__19_SUB1_03_CW_20220621_GP081811_00899.txt": {
+   "sha256": "88db90321235318160abaa81aa57ef8c78e8f7308e6c6aabbdbaff7c1e6d7d65",
+   "size": 76
+  },
+  "ours/labels/water__19_SUB1_03_CW_20220621_GP081811_21576.txt": {
+   "sha256": "ca8f8eefe6c16dc527cd1ef8740c412c9747436ac12991fdca04533d46f99bd2",
+   "size": 114
+  },
+  "ours/labels/water__19_SUB1_03_CW_20220621_GP081811_27869.txt": {
+   "sha256": "73748a52dc08f76fb894a31b03227de3c0ab91e95b1cc0cbd1839aff123b7690",
+   "size": 76
+  },
+  "ours/labels/water__19_SUB1_03_CW_20220621_GP081811_31465.txt": {
+   "sha256": "7e07ae3e01f152a1ecbf7e70eef9afb32c456729a1c52f8296119eef66211fed",
+   "size": 114
+  },
+  "ours/labels/water__19_SUB1_09_CW_20220627_GP081638_03596.txt": {
+   "sha256": "0682eeef526af3901a5f2cb789e9ef5585bfc55b5cbfb9cdab8b058363e51e67",
+   "size": 76
+  },
+  "ours/labels/water__19_SUB1_09_CW_20220627_GP081638_08091.txt": {
+   "sha256": "2593d2288265cd82061a20db1632b0e44cfab2749760535d407c64e78e645bec",
+   "size": 114
+  },
+  "ours/labels/water__19_SUB1_09_CW_20220627_GP081638_08990.txt": {
+   "sha256": "a5d2e03b7a6c273712ecfc2c23e63a2a23d5042c83a26877b209c7f935541238",
+   "size": 38
+  },
+  "ours/labels/water__19_SUB1_09_CW_20220627_GP081638_09889.txt": {
+   "sha256": "97c6162f55d8dd9271cb1311daa467cb21ac356fcc1b5a83aab2a44b717a6f7a",
+   "size": 76
+  },
+  "ours/labels/water__19_SUB1_09_CW_20220627_GP081638_19778.txt": {
+   "sha256": "0c0f798d23a08fe4d0697fe36564347495149e389a8231cbacb23c9e9f6802a1",
+   "size": 114
+  },
+  "ours/labels/water__19_SUB1_09_CW_20220627_GP081638_31465.txt": {
+   "sha256": "70e69ab2d71db7e8b1b6531816ad97605c33718ac09bd2eb7d0afbe6e6e8af90",
+   "size": 114
+  },
+  "ours/labels/water__21_MACK_12_BW_20220815_GP070027_05391.txt": {
+   "sha256": "8f4d58c0a8f84060c0a024c361e6bd49d1784654fe9d123a5044d24ecf6d94b8",
+   "size": 38
+  },
+  "ours/labels/water__21_MACK_12_BW_20220815_GP070027_12579.txt": {
+   "sha256": "12460ae9faa93122790086e3ddabee6c128ca1e41c698d0a91f4cea7705fa59f",
+   "size": 114
+  },
+  "ours/labels/water__21_MACK_12_BW_20220815_GP070027_14376.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "ours/labels/water__21_MACK_12_BW_20220815_GP070027_19767.txt": {
+   "sha256": "7e3b168c51c08165e2c86ae38b156d52e95eeb90f5ce1fc501baaf72641f695f",
+   "size": 38
+  },
+  "ours/labels/water__21_MACK_12_BW_20220815_GP070027_22762.txt": {
+   "sha256": "a81de1763c4f475f68b8a4d846c4f6b0d536ba5a305476eabf834099793d4d48",
+   "size": 38
+  },
+  "ours/labels/water__21_MACK_12_BW_20220815_GP070027_25158.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "ours/labels/water__21_MACK_12_BW_20220815_GP070027_30549.txt": {
+   "sha256": "b6fdd047a7de8da389545dc8c25a8f42fe22582acd448a5b081bcc1ce05b3c25",
+   "size": 38
+  },
+  "ours/labels/water__21_SUB6_04_BW_20220810_GP040299_04193.txt": {
+   "sha256": "ebf5fdfe4b1e4fc2cdc2d8ffb1501a22c60f96cf132c69f5ad463a086ec09d1e",
+   "size": 190
+  },
+  "ours/labels/water__21_SUB6_04_BW_20220810_GP040299_09584.txt": {
+   "sha256": "ad93950332299296c55a1e0b51f5876a035e0745487c0a60a0ef50af719c2a07",
+   "size": 114
+  },
+  "ours/labels/water__21_SUB6_04_BW_20220810_GP040299_12579.txt": {
+   "sha256": "963028d0dd163433676cac7e0e3f080b06f8c82ac458f3dc24bd7ac61b1f0fc6",
+   "size": 152
+  },
+  "ours/labels/water__21_SUB6_04_BW_20220810_GP040299_14376.txt": {
+   "sha256": "7eda1685d995b550d2f33feb57e9ffc3115a99d7312224c2d1a54d026d81858e",
+   "size": 228
+  },
+  "ours/labels/water__21_SUB6_04_BW_20220810_GP040299_14975.txt": {
+   "sha256": "0a8927ff3578b2a94797922ce192f1f9e337803c02da85ce84495e09f3697bee",
+   "size": 228
+  },
+  "ours/labels/water__21_SUB6_04_BW_20220810_GP040299_18569.txt": {
+   "sha256": "68bd61c309360772410bfd6d106cc15a3cc5af2bdc334ff88d9a75629692b6f1",
+   "size": 114
+  },
+  "ours/labels/water__21_SUB6_04_BW_20220810_GP040299_23960.txt": {
+   "sha256": "aac4aa6dc8b49491235481a8649e80c7a364539d208478e282e7390ecfc33d94",
+   "size": 342
+  },
+  "ours/labels/water__21_SUB6_04_BW_20220810_GP040299_31148.txt": {
+   "sha256": "fe2684f18434f30f3b197c74a0e92f79b30f4a45b04200ea6c01d3a607a6a84c",
+   "size": 114
+  },
+  "ours/labels/water__21_SUB6_08_BW_20220812_GP030301_05990.txt": {
+   "sha256": "29b1be3d91cf022f481667abdf9efa9ce6717b8274e90b8c6c2adff0afecb8e6",
+   "size": 76
+  },
+  "ours/labels/water__21_SUB6_08_BW_20220812_GP030301_06589.txt": {
+   "sha256": "6d63a30b1b927b360c279205833dfbc299c4bfe6418979ce9779f28aaed40a5f",
+   "size": 38
+  },
+  "ours/labels/water__21_SUB6_08_BW_20220812_GP030301_09584.txt": {
+   "sha256": "f286a4ed902a359e04ae740ba02bf4f98e7ca9b0fdb63a1bdc057f0d6518dfa6",
+   "size": 114
+  },
+  "ours/labels/water__21_SUB6_08_BW_20220812_GP030301_13178.txt": {
+   "sha256": "e9e0d1befcc7db1c619829c0b91b094732783e6d01c0dbda8c7d4fe0d80925e2",
+   "size": 114
+  },
+  "ours/labels/water__21_SUB6_08_BW_20220812_GP030301_15574.txt": {
+   "sha256": "125e889674ac96b3d7a9d055f986749fe6f3f48cf74b2c6f28996872b608daed",
+   "size": 76
+  },
+  "ours/labels/water__21_SUB6_08_BW_20220812_GP030301_19168.txt": {
+   "sha256": "b4f7f05a0921fde193c3b5e06ad5e29e81f964f26f704175430b4525834d5a0a",
+   "size": 76
+  },
+  "ours/labels/water__21_SUB6_08_BW_20220812_GP030301_22163.txt": {
+   "sha256": "1d5d1aaf25d65eedf43c7bc3f7ae28d8c1ccf9d79089fcae0579942365666448",
+   "size": 38
+  },
+  "ours/manifest.json": {
+   "sha256": "90aab4f223e92e273372eca23fb94cee0f50c08e8bee4c3fbfd8d1f3eaf098ba",
+   "size": 21939
+  },
+  "zenodo/images/water__kso__REC_001_frame_0023_jpeg.rf.cb7ea51c5cdf70039566c0f0de46fa45.jpg": {
+   "sha256": "5aeb91c2e3f5f43f0b1636d8e7be6cfb76d12dba8588af0ec75bbe245d39ff65",
+   "size": 40667
+  },
+  "zenodo/images/water__kso__REC_001_frame_0031_jpg.rf.614dc6836af266e7f5a54c86c1d0a156.jpg": {
+   "sha256": "86d5a7f450e50be160c308862a0c6f08c034c61d016ebf2db90d83b8e9e47a5b",
+   "size": 41141
+  },
+  "zenodo/images/water__kso__REC_002_frame_00_jpeg.rf.d8fe09a96e8f4a93eef861187a5dc509.jpg": {
+   "sha256": "c6fc871287f25bb4b58dc8d87b719eec61af4e430375f8eec1d4bc5a80c33608",
+   "size": 29397
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_002_frame_0040_jpeg.rf.d662fecede64e33591a9c130f8fffe7e.jpg": {
+   "sha256": "d76e5674c7917114e121f02b3f08772887c19b13c6048e5d889f9afc31dfb6fc",
+   "size": 45220
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_003_frame_0009_jpeg.rf.8f1f414a90c2b81f4769ba11ae2b9f0b.jpg": {
+   "sha256": "9ecf460264bbda9d51193acc0d33f03bfe753ce27d09f1ed47c3289ec2bddac2",
+   "size": 37195
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_003_frame_0012_jpeg.rf.df4ba0645595bab492ccaa5995b09475.jpg": {
+   "sha256": "08acefa2d440ece0e28af14cff7cab7675ce2b83dafc5b19e41910b2eaafd192",
+   "size": 51689
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_003_frame_0014_jpeg.rf.361bdcdaaef514f58412a42f215de52a.jpg": {
+   "sha256": "a6f4221e9bfefbe9fde191cd2e341b39fb3f9c0193c3fc226faf83da94b40c97",
+   "size": 46917
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_004_frame_0040_jpeg.rf.a04ae8e03522081905da78718f436598.jpg": {
+   "sha256": "54d0cdfa7060b1c8259ac8f9de240cfc89a80bec9f90386caa34f370013e7bff",
+   "size": 41090
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_005_frame_0015_jpeg.rf.ea2ea4af6f784e1cb68e87b4cfd23c52.jpg": {
+   "sha256": "d9d9619cee10597c8c3685d98dd7da2645c8253de2785e1d2f19dfebed3d8c85",
+   "size": 44965
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_005_frame_0032_jpeg.rf.b275f7653d114683e9d7b209d6cd935c.jpg": {
+   "sha256": "bab8c43b12301fbfc7fa4e86bf172ac999735578f701380c7f9e05a281b5c2a1",
+   "size": 44746
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_010_frame_0033_jpeg.rf.8b8daed3529a3ca160175e270a21eefe.jpg": {
+   "sha256": "d04e9643233518da31f98c7041023c9cddaa84d37c5c1ea06df5ec68b44499cf",
+   "size": 51948
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_010_frame_00_jpeg.rf.b1043fc559ad4ac7e5daf26aebccfe0d.jpg": {
+   "sha256": "b924cc7d791509ed2b99362d41fbd743ee4b05ddbd8ec1931d06746103367a00",
+   "size": 45066
+  },
+  "zenodo/images/water__kso__mpa_cam1_110822_rec_011_frame_0003_jpeg.rf.8e8b35a9e41698d66a38c40adb751737.jpg": {
+   "sha256": "aa52fe99947f7711109bb7af54ece43d62a4908a5dd0f162fd491ccd12399236",
+   "size": 45554
+  },
+  "zenodo/images/water__kso__mpa_cam2_100822_rec005_frame_0047_jpeg.rf.36d082af48500f5cb14e997a4c49d010.jpg": {
+   "sha256": "8a838a97b4339e3bcfb73c0a628856bc4632577b8b4abc5fde763d2ce7ee455d",
+   "size": 22510
+  },
+  "zenodo/images/water__kso__mpa_cam2_100822_rec010_frame_0040_jpeg.rf.d59879a675f6b99248ce55b3c0c0b218.jpg": {
+   "sha256": "eac51a8ebad98f3779110e9a9d42cbaf971c7e4f50fb789fbf7c986c08a3c9f6",
+   "size": 19256
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_012_frame_0017_jpeg.rf.196cc350f0634735b89c09ce099a6d3c.jpg": {
+   "sha256": "7e8c27702e14056dac396c461ffe6a4219c624b77f9530521802b0caac9fa621",
+   "size": 35288
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_012_frame_0017_jpg.rf.51d9bfc8750024448e378ce0affc15e9.jpg": {
+   "sha256": "e5e14a45f0446d58f64f0f3c8015da8c755cd5f61c9df13feb300f1e2421be70",
+   "size": 36306
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_012_frame_0032_jpeg.rf.fae210a9a9c885efd845b923f5003280.jpg": {
+   "sha256": "6b026169488ba1f0fc28e18c235ca7f4d7998deda47e25bfba343488d1639fae",
+   "size": 29251
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_012_frame_0037_jpeg.rf.eeae524e1c448317ca95ce1d21e06fa2.jpg": {
+   "sha256": "e07be9d998b8eefb81e816d63c1ad0eb81770737c46435c7657430e36b8391cc",
+   "size": 36529
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_012_frame_0038_jpeg.rf.9f696a15889a344a8516ad3bfcf9f1de.jpg": {
+   "sha256": "892727c18afa642ddf06fbc06fd1c5b5b2f783d77bc3f7f83fb69887352217ed",
+   "size": 25803
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_012_frame_0042_jpeg.rf.9bffd636b80ec1d8ed08d5a8c8f31a23.jpg": {
+   "sha256": "37e1aab9c6290efdc44cb8e7b6c825ff6b9c9708bd82e8dd35e386dbd4fa85e0",
+   "size": 31513
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_012_frame_0046_jpeg.rf.be7079b76f8df219c713925e6e69a426.jpg": {
+   "sha256": "a79a301ab84e4f07784658203cce1007115a8f6f96f152567d64ebff0a5d6f6f",
+   "size": 32636
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_012_frame_008_jpeg.rf.42ab4adea42545d6862b0ae3227cca1f.jpg": {
+   "sha256": "db09a649ecfad3177cd9e85d4b395696434e419e97dac0bd13cd32c21320191b",
+   "size": 31968
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_012_frame_009_jpeg.rf.b0d1f266a658eac13ffb1cd8ac2e7d68.jpg": {
+   "sha256": "9abe5e4560a247c9f551491a9f024228943be1b15413626cc0a0711e6d504a56",
+   "size": 40400
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_013_frame_0016_jpeg.rf.0c3cca900b1ac685cb13ece0c750473e.jpg": {
+   "sha256": "80724ddea2ba64c048756773de753e42f4134178cec0f64fdacfcd6d5646aa29",
+   "size": 27845
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_013_frame_0021_jpeg.rf.6787299c163faf43c79e3f4e8be8efdb.jpg": {
+   "sha256": "68a7d1ccee3208bd5be67608435a5396a153e6f01a7ec83878f7f022ffae437a",
+   "size": 34067
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_013_frame_0045_jpeg.rf.1af4711ae5553056a90a6d64bbe39d47.jpg": {
+   "sha256": "7a110ddaa850536d74b688f368191a12dfc4750184e36252840b459e0f6cd127",
+   "size": 32488
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_013_frame_007_jpeg.rf.83283add3b72b483b31d8aab5af4c552.jpg": {
+   "sha256": "b3ad2e708f5e03ceabe333b75b54d50d5fcef9e664a8da5af6d17828c0682aaa",
+   "size": 34331
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_014_frame_0031_jpg.rf.62da3e33985e2bc0fb44e635ca32d1cf.jpg": {
+   "sha256": "ff0dc895f3a6e643ef8a71e195a4173cb803a64c17044480a32d2d5420d2e199",
+   "size": 27660
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_014_frame_0047_jpeg.rf.8ce5b896d5a2c2f8c8ddff40fc9ffedd.jpg": {
+   "sha256": "7eeeb58d82bb285f24052e97a613072e7857e6e70866595855b4aa90a19b0173",
+   "size": 29591
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_014_frame_0048_jpeg.rf.a633a6a0cfb55f0d96eb3e9fbec600ca.jpg": {
+   "sha256": "3927b4b65914cbca4df712613932f05443fecb8c5e8d6b5a61bc34d872192684",
+   "size": 27282
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_015_frame_0038_jpeg.rf.c9307a1ea8e00b0e7e18f678c7963724.jpg": {
+   "sha256": "fb26325c437c9a40fa8bc72f6b0a8eb3f8daad58d99bd6386e864d79dd1fd82f",
+   "size": 18306
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_020_frame_0004_jpeg.rf.cb9c089eb389e15bbdda6322fc7e2f0b.jpg": {
+   "sha256": "3a847d3dc44bac24963aebdeec0ac8317e963359eb50fb1e5c6e50740e685fe6",
+   "size": 21483
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_020_frame_0008_jpeg.rf.e80ecd60ad8afedc08383e722531c7d4.jpg": {
+   "sha256": "2fec71402be7eced05592f5be9f3b316ad750a77b0a76251fce13071a2697081",
+   "size": 28922
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_020_frame_0012_jpeg.rf.709b48e71624267c15ae97719621a342.jpg": {
+   "sha256": "a7c8c8b1aeb81e9c9e0f2e06c5d7eea98eacc1b69dd74bb31352ce7fdca538a4",
+   "size": 27865
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_020_frame_0015_jpeg.rf.39cf663b664cd9378feb9ee8ea4ee75f.jpg": {
+   "sha256": "f62ed1f84c1969d9711b04e6b0e952d545f2ea270133e65f6311294607268e41",
+   "size": 25488
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_020_frame_0019_jpg.rf.bc983a53a3a6e55502dc4ccae5047927.jpg": {
+   "sha256": "9332ed2b0511ea670bcd9ea15e3242d682e6526cdc06278697cfb03d2a6c162e",
+   "size": 24645
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_020_frame_0020_jpeg.rf.daea01406257eafcc4258d83c08f5147.jpg": {
+   "sha256": "9ba7bc8bb09abf187667b04951f9879cb169bc30862ff7ef1a69b77e23632dbb",
+   "size": 25528
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_020_frame_0029_jpeg.rf.b8c3a128832e197cfad213ffcb6a831f.jpg": {
+   "sha256": "e75f36589a89b8a55c23d9d627380335495d5c82b8636f87831850b19205e259",
+   "size": 27342
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_020_frame_0035_jpeg.rf.6ba188f18467819729f78ceae9462365.jpg": {
+   "sha256": "5e66841b9804aacc7963f9f0c54a332af41923428e8539b272f9e1c8c7ce579d",
+   "size": 30435
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_020_frame_0048_jpg.rf.9c586716911abdb68c7edeb1c79b894b.jpg": {
+   "sha256": "ad8d29b8e3dbb19705ae09357543fdc25b5dfbe31e526c793af2cb3550bf20d2",
+   "size": 27870
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_021_frame_0018_jpeg.rf.7fe6293c9aae17b05b35f5f01f761bbd.jpg": {
+   "sha256": "f8973a1236a60dbdd1dcdc4e40753a354fe3b2f6901e8bcdc50363f1168408a8",
+   "size": 25335
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_021_frame_0046_jpeg.rf.6fe372502c4f65959354f2c57fa5eb08.jpg": {
+   "sha256": "ebff342a1f7c49c3f8210b89c37f73b4e16fd001ae3e211d992bc0999a0ede4a",
+   "size": 31302
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_021_frame_007_jpeg.rf.ce8a009d6c5258562e8034c8462c98f5.jpg": {
+   "sha256": "2052d4842b058360739a6fcf84ed6d186d3b6f24f141a3844a23260b8e808901",
+   "size": 28709
+  },
+  "zenodo/images/water__kso__mpa_cam2_110822_rec_021_frame_008_jpeg.rf.1d6f5e19b2e516f1d3b1f9024ab58e81.jpg": {
+   "sha256": "7e77e171b618c967c1dff9f37c9312b8c8d6a748601010c1b26a52389a76313a",
+   "size": 25846
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_001_frame_0018_jpeg.rf.b683b282b7baed8f10403595e2f4f256.jpg": {
+   "sha256": "a360559d7aa177dc19357ca067260d1d258546cc2848eb05f789d536a8df8613",
+   "size": 33233
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_001_frame_0027_jpeg.rf.e8220f01467ec6be9d2b63a1d0ba558a.jpg": {
+   "sha256": "a840ac361a5f7e49bad8f14ecc9a77a11bd28fc7facc89c5d1eff366fe82e13d",
+   "size": 33900
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_001_frame_0028_jpeg.rf.0f9a96280ffc457ab0c72d9f49a46975.jpg": {
+   "sha256": "296e49e7e6bc6fcd7f5e7bde4e1bb560c52ced96d12a0215476e621b8150eefb",
+   "size": 34606
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_001_frame_0029_jpeg.rf.e538091bd49d92a77167454c0cc5c736.jpg": {
+   "sha256": "8c1f6c33b86e710830815066d79fd1b2cb03221487389cb2e11670fa1afc490c",
+   "size": 31062
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_001_frame_0044_jpeg.rf.1d0c705d33ea4b3f5c14216a5a98b31c.jpg": {
+   "sha256": "9fbfde281becc29c0736cc05bff71df4c40a73d1a8be944f82e41f1423a90da7",
+   "size": 36982
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_002_frame_0002_jpeg.rf.86f44a595a81b0bb34ccd43ef1d085a7.jpg": {
+   "sha256": "b27887b9bbb30a8aecf1e8a41049ec614b8e92a556809ae0f2bd5ded0119cc91",
+   "size": 34726
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_002_frame_0006_jpeg.rf.a9cbcc34eb5da05472468eb9d1a00213.jpg": {
+   "sha256": "ec5330298477a6ccc3f7bc34455824173c56e3691301670b1fd19ae35d20dc06",
+   "size": 32268
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_002_frame_0013_jpeg.rf.09fc7a81685e8cca5356a874b22ea88d.jpg": {
+   "sha256": "cee49ece95be67a05728f9e2456b8db5fdac6e06aadf8e407264d77fc8a134b7",
+   "size": 31999
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_002_frame_0033_jpeg.rf.f71ff45930a2ec94a9ea1d624a888f50.jpg": {
+   "sha256": "ebeb274e90b1b490151c04d7d24c53bfac6909341fb8e574324b0fcda0a129b1",
+   "size": 32308
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_002_frame_0039_jpeg.rf.ae0706de88c6df3e8b38b4689892fe43.jpg": {
+   "sha256": "8389c5d9b02ebcdb8837ed57950f48e2b9c82f83e97f062cd4173b9427b16e34",
+   "size": 30469
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_003_frame_0043_jpeg.rf.1cfd5c94c20d7fc06cbdbe9124d61e41.jpg": {
+   "sha256": "a426e882d2fe878baf47e9dd5d13ae56e8d06d716162424d01ff56ca53b3e1d9",
+   "size": 32765
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_005_frame_0017_jpeg.rf.28e85a60c528946fcfb8308365bebea2.jpg": {
+   "sha256": "cee4167dfe561797206751469121460c5ef1f971dbc60668916da00f1012c8f9",
+   "size": 27082
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_005_frame_0021_jpeg.rf.8fff452066866b107a2752bf184b0bfc.jpg": {
+   "sha256": "965aa5dd1a290a7e7238ececeb468470f892e7dd90e7aa1d23016d61d1349b85",
+   "size": 23570
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_005_frame_0026_jpeg.rf.3ed50410e234faa0f558101764e77ad6.jpg": {
+   "sha256": "f09403e158796d608c6ceb3fb063ddaaaf050f30d94552e6d5070ee27e152999",
+   "size": 24567
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_005_frame_0030_jpeg.rf.e182427a187715ab988a41873caade93.jpg": {
+   "sha256": "a282046253a7addbaa972e743789e5fbaa18995ce7864140e7cd7caee95b97ba",
+   "size": 26329
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_005_frame_0033_jpeg.rf.6e954a401ba9b3907949484a71c764cd.jpg": {
+   "sha256": "4d0250be5b4d331545b83314161704a3e6e7b582e99a71f2106a84117394b092",
+   "size": 23564
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_010_frame_0009_jpeg.rf.0958ddce6dc72b655a352172b709b858.jpg": {
+   "sha256": "003d4edc32fe48f415db6391b48e05a3acef01f54c3dd7d47716ebc998706629",
+   "size": 16347
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_010_frame_0019_jpeg.rf.b35d6243ebb201c6d789b4a8e9ddd4c2.jpg": {
+   "sha256": "85b33fabce71d92dd37cd27c934d353e88444218843bce76a911d5d77979f167",
+   "size": 26814
+  },
+  "zenodo/images/water__kso__mpa_cam2_120822_rec_010_frame_0027_jpeg.rf.c48a2516c8e4b59ea4bc4be50e94c169.jpg": {
+   "sha256": "36de5f9cb51d233b8b256990bf7bc23380d8209e6ea846fe937723dc1adaa43e",
+   "size": 18181
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_001_frame_0049_jpg.rf.50257ec9b1a548a536a07532217b4cda.jpg": {
+   "sha256": "169554a6e1e1cbe8f4ef522ca712009a85e44a6e26827466dbf02997e082f118",
+   "size": 46520
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_002_frame_0020_jpeg.rf.daa030c23e8e1e9498a5cc405aa23f83.jpg": {
+   "sha256": "05097092396dbec7547b418bbfaa72d76204892ee03f24d1830992c72394ab23",
+   "size": 35178
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_002_frame_0047_jpeg.rf.785b52092a54d163af286639f407d06c.jpg": {
+   "sha256": "54e82ddb532c9967206fb2c4862d7402effd0665654807f7940b388dd45dee85",
+   "size": 33486
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_003_frame_0041_jpeg.rf.d1a2c88a3d86699a381cb98cd099025c.jpg": {
+   "sha256": "2445604511c9a9edc8cdac5cb2973ee1ade756295ebefeb58851c0e5dc214e7c",
+   "size": 37892
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_003_frame_0042_jpeg.rf.7533cb1771910cff7a5b58d1e30714a6.jpg": {
+   "sha256": "b2eb704a170cd66428b9bc5c3665f1048565fa3b4375fc388254f29053ac7e06",
+   "size": 38730
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_004_frame_0033_jpeg.rf.d15a3e489d5715a892d84f46815dd96c.jpg": {
+   "sha256": "e0853d65a3ccab7b05ed82deb06110fe20fd444c824644e7f906ccf8915e4086",
+   "size": 31428
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_005_frame_0014_jpeg.rf.270f0a40a5015fe8b25114ef8708f5be.jpg": {
+   "sha256": "2db6819054f202e171cbdc722493bd325b85e90d9f81a2afa4f76372abb358fc",
+   "size": 30674
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_005_frame_0035_jpeg.rf.fae55e0d499af8e22ce32f5334fff2c4.jpg": {
+   "sha256": "aa857c4c921c75b5204a676f08dce7aeac1ca8b27717f69f810b91388f660654",
+   "size": 27868
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_006_frame_0011_jpeg.rf.5ba085dde7e552006fae847f8700caf7.jpg": {
+   "sha256": "9421e44a047bf828492fc7efcb95cae8ae3bf790cef84460d4511851e65d28c7",
+   "size": 31106
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_011_frame_0015_jpeg.rf.46f10a9843a004312766e80786a4ad7f.jpg": {
+   "sha256": "bb412dfefd4fdf1aafbdd609dda339de6c6a0c9514ff8c381e606eb00c2f5e54",
+   "size": 32815
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_011_frame_0021_jpeg.rf.98166db5327538f3463414813e61dd37.jpg": {
+   "sha256": "7599404d10ebc89abf26999f8847aea2b3b811a896209937b6551ed2109c92b9",
+   "size": 34547
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_012_frame_0026_jpeg.rf.9a7d647c790537232ad0416219a64a3b.jpg": {
+   "sha256": "aa042c09194197eb7638997e637c75dd92e5c68483fb8d76a3b9837904e0aacf",
+   "size": 30133
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_012_frame_0044_jpeg.rf.d331849a32e28fa01a7f384a592e7362.jpg": {
+   "sha256": "9521d33ce570c0d33e3009714636dfce014419a207f5845567adb4cb7bfc56cc",
+   "size": 35219
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_014_frame_0015_jpeg.rf.5907a4a506089f00408a17a4abba873d.jpg": {
+   "sha256": "0ef9eb619fba4e7dd3b7fde8e65917d3e3385543211c527afb971bc2c36bf48f",
+   "size": 29310
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_021_frame_0024_jpeg.rf.cb17006996373d107162a2bdefec8b2f.jpg": {
+   "sha256": "90b9cf5ad04657b3eb3aaaa49a4f09452ca4a2e0d098c527eed3e64842727782",
+   "size": 40265
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_021_frame_0049_jpeg.rf.58e8381d968765fc4b631a5cd96c085e.jpg": {
+   "sha256": "473d0d14269ca387a351ef5da667d3930092c15e8b4b929e1cb74e24596dbe9c",
+   "size": 36918
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_022_frame_0001_jpeg.rf.9062d68772f47aee84e0700edb98c4b1.jpg": {
+   "sha256": "6551c6f86a99d93516814d6f0cec9398e9e20dfb845a79ee6d6520cf0fe75253",
+   "size": 32371
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_022_frame_0017_jpeg.rf.104e68ad05444d1e49ab66ffcd0d6865.jpg": {
+   "sha256": "1706a51d3197d5b1c95daf464b61ef5c7727439bb930088da40c12d6b49ccec5",
+   "size": 38442
+  },
+  "zenodo/images/water__kso__mpa_cam2_130822_rec_022_frame_0029_jpeg.rf.b0dcac8973a7288c5706fd123c354395.jpg": {
+   "sha256": "7d204c025772ca86409a7c2c9befbe632fcae46cb24616ec6b57cba65939c2ed",
+   "size": 27937
+  },
+  "zenodo/images/water__kso__mpa_cam2_170822_rec_001_frame_0036_jpeg.rf.3c1af16ec8a298b4c942720872e2046b.jpg": {
+   "sha256": "c2119f38f1bd8f4d9b65735102d5ccb723b21584f6e7725561080c6e1821fd1a",
+   "size": 23117
+  },
+  "zenodo/images/water__kso__mpa_cam2_170822_rec_002_frame_0029_jpeg.rf.bb5d4fda60ecfaf4b9c68f911036e766.jpg": {
+   "sha256": "084b44e6553094dd55cbf2b6464d0f15e0def92cf2ac8693338cc404d8e83592",
+   "size": 15055
+  },
+  "zenodo/images/water__kso__mpa_cam2_170822_rec_002_frame_0043_jpeg.rf.dcd107b4c5a08c3376b4ff324eddf7dc.jpg": {
+   "sha256": "7319564bfff658376e51281c26b8d903910a260c9fb5cd73187be2f7d13bfaa9",
+   "size": 19075
+  },
+  "zenodo/images/water__kso__mpa_cam2_170822_rec_004_frame_0033_jpeg.rf.dea572b0b2416e3aeafe8ad99c99a51e.jpg": {
+   "sha256": "ab5eab02a9f2d0a6b663d7bbeb9ba0e54cf735c93b92581a55c2cbdae3ffbb27",
+   "size": 17379
+  },
+  "zenodo/images/water__kso__mpa_cam2_170822_rec_010_frame_0032_jpeg.rf.b6d3042eccf99d1df9291071c2d712ef.jpg": {
+   "sha256": "f6f0f27149762736d100dbdb22e2729358d028b8d8f8f1c33f15046b35e2d1a6",
+   "size": 15740
+  },
+  "zenodo/images/water__kso__mpa_cam3_090822_rec008_frame_0007_jpeg.rf.68267bd9a62696b50e39f760a663c532.jpg": {
+   "sha256": "755ff67f8214208ade5a9e4ee330dbc1d70da81a48effe602c35a9a17cce6489",
+   "size": 24176
+  },
+  "zenodo/images/water__kso__mpa_cam3_090822_rec018_frame_0049_jpeg.rf.144d303b00e5901d98bc9eaca9a5a1fc.jpg": {
+   "sha256": "47bffd90402f1efde6ef4cf22d66eecacfc3ee1d93dc5e429e33ab7855b81d39",
+   "size": 26873
+  },
+  "zenodo/images/water__kso__mpa_cam3_160822_rec_002_frame_0038_jpeg.rf.eb6b794f28430d947ed91f03c052ad02.jpg": {
+   "sha256": "6ae40cc2796c612c250ddc21127ecfa243e43ec6cac5ac76c34019971e3984c6",
+   "size": 31296
+  },
+  "zenodo/images/water__kso__mpa_cam3_160822_rec_003_frame_0015_jpeg.rf.c1e863657d20c6d952bd383ba24dcc37.jpg": {
+   "sha256": "32051508763b16a8a5d47ce302ca411d8119c61e3268c412b62afea74a75490d",
+   "size": 27184
+  },
+  "zenodo/images/water__kso__mpa_cam3_160822_rec_003_frame_00_jpeg.rf.1f2311fa94435b319be94cb0b61b758f.jpg": {
+   "sha256": "c9cb3441f1ad94b0827ca338f3e05f75c1bd620ac5ed2254071333a672ed178d",
+   "size": 30255
+  },
+  "zenodo/images/water__kso__mpa_cam3_160822_rec_004_frame_0017_jpeg.rf.e17e1662d11aed79e84d0c8135fb4555.jpg": {
+   "sha256": "6041641a17d6b0ee8429fbada73d97afc4923f684afd902fc749061d9e4bf2f7",
+   "size": 32683
+  },
+  "zenodo/images/water__kso__mpa_cam3_160822_rec_005_frame_0004_jpeg.rf.db1e3c8a12208ebbfd9d24cd0d567406.jpg": {
+   "sha256": "bacd8e004e3220a790e99e2090b1bce4a57c8b06d6fab692961ee8606c6b686b",
+   "size": 25596
+  },
+  "zenodo/images/water__kso__mpa_cam3_170822_rec_002_frame_0045_jpeg.rf.dcc4324f49727c3e797fdb5e5054ae99.jpg": {
+   "sha256": "e3aa5b2959ca3424ce7c0a534d0618d5c71f454dee54aba69e5af1b4afc95f37",
+   "size": 25212
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec004_frame_0032_jpeg.rf.8126f6fafeabe8e5ad4f42c2c5275985.jpg": {
+   "sha256": "bc16513a58223227838a40c3fc8e8012faa6d2745d0dc36759ca50592188d0f6",
+   "size": 67674
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec004_frame_0038_jpeg.rf.8411d00a21673f0310aaf4415d4a5abc.jpg": {
+   "sha256": "6ccf57f9d0aedc4a740dc2b485671739c68fad1876d5e12bfa3333d1ff12586f",
+   "size": 75016
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec005_frame_0022_jpeg.rf.acc8b51a418803286d75d6eb5a19dcbc.jpg": {
+   "sha256": "57dbc17852d7a9f075691c479b597399bf741e15a6a924ed1e1eee7ee797531a",
+   "size": 63856
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec007_frame_0026_jpeg.rf.97b52465153987176667b09342d06018.jpg": {
+   "sha256": "29973b40f45e4299289577d26297579d2b5bfdcd8b261c5b9a42081a63db2aae",
+   "size": 70948
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec007_frame_0028_jpeg.rf.14d7fc5af7877903a13cbbe53d46e719.jpg": {
+   "sha256": "1fb2ccbf88bfbee12ddc20d7a6eb3e73857277ed1d72418988819ad3cb8f0b06",
+   "size": 69526
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec007_frame_0030_jpeg.rf.faecd88321b2dd336461f200ecdd4474.jpg": {
+   "sha256": "1c0c828eb0bad0f829b6b35e52da73a2ea533ac6db60dc6ec7df4386ba519c75",
+   "size": 63460
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec038_frame_0004_jpeg.rf.396ccd8640a725705651d0b9f997e081.jpg": {
+   "sha256": "1351543f2e0e384a98db196acb16a62b639fd7a08966fbbdab88731dca363640",
+   "size": 58616
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec038_frame_0037_jpeg.rf.b283c080616cb02b375862d619f5b788.jpg": {
+   "sha256": "98483f89179f80a7124cf2b2f719771a881e55bc484dd80147950d1c2379e6ea",
+   "size": 62689
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec057_frame_0009_jpeg.rf.8eee04f46a4e75c36f02706c7f48d6ce.jpg": {
+   "sha256": "97fee3c09831443a34fe60c5f4a9ad36cb986d81db55e60f134434efaf422e1b",
+   "size": 37717
+  },
+  "zenodo/images/water__kso__sk_cam1_120824_rec058_frame_0033_jpeg.rf.c1e06e657c1b785d607a5a3ed1ecdb07.jpg": {
+   "sha256": "4655a123f37ea0b687a75143f31b344d91e4e99041d584bdd66e28d7739fcd5c",
+   "size": 51676
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec003_frame_0002_jpeg.rf.af12763d49a1ce02821392b431fc499b.jpg": {
+   "sha256": "72d6ec06d118ecdd76137b8bc0eb3fe2f7f2003396d28e319a03daf0a7176f3d",
+   "size": 54567
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec003_frame_0028_jpeg.rf.17504aed1bdc74cce13bb5b53c6781b7.jpg": {
+   "sha256": "621a44e81c25eddc1ec5e14738f7187d334254362d4f4886bed0657bf7ceb666",
+   "size": 68112
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec003_frame_0031_jpeg.rf.9a75e3551a0bd09cb0e5ef16715406fb.jpg": {
+   "sha256": "36017158b589f5db4df09be25663bcf55951a56e751febc160222fbd5d1f3604",
+   "size": 56893
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec018_frame_0005_jpeg.rf.540498e09660696e1e0418532468f3e5.jpg": {
+   "sha256": "4823545c8c3ac17f3d62218453cf7fc24433ba532001178a7a0eede983eead37",
+   "size": 60030
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec034_frame_0005_jpeg.rf.376f292969b994a151fb6929aaedcd83.jpg": {
+   "sha256": "a6cd6301ec18318b4166abb5881eda67dee377a2a906f90f8406833cb03091f5",
+   "size": 44950
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec036_frame_0006_jpeg.rf.a0f30708170d0f23fb55ba8a0f3a9616.jpg": {
+   "sha256": "a1c9aed109123888719de903a87ce336fe048b562c1050a962c9cf95656f51b8",
+   "size": 44940
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec037_frame_0004_jpeg.rf.769a8ec7face006e74e4989cb5bc23e0.jpg": {
+   "sha256": "bd61fd129c7660f235e185f2e7b630ef462b009bcf1ffa2ddf0a92feb7b14d07",
+   "size": 56474
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec037_frame_0010_jpeg.rf.d7eb6f6d15569d0c82bd8aa45c045f57.jpg": {
+   "sha256": "8da365ef8d2d7bc38034b5f1cd099bbea706b66a09b170024084e080a5c10900",
+   "size": 46922
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec037_frame_0011_jpeg.rf.7bcb2f7574d1953dccbf600937215049.jpg": {
+   "sha256": "c2d19f76dea76f4d5b5cc8ab09aee66fb37f8f7cb8358ad7d688870595de5b97",
+   "size": 42594
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec037_frame_0016_jpeg.rf.3966a5fb9b1c8f47d6f4d678ed3329b3.jpg": {
+   "sha256": "7cb29632d29c7e48a99be0f82cfd37737d5451fcd8dd6e7c8804c9795c966284",
+   "size": 42305
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec037_frame_0017_jpeg.rf.095912013837e64471e25961064b8bbc.jpg": {
+   "sha256": "4684242d57b05ed1aa2943cfad32c839727039a5d69ddb0a6c0bd1417c511276",
+   "size": 38437
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec037_frame_0025_jpeg.rf.f132847bbfb8ecc3c6a6612f7bc6af89.jpg": {
+   "sha256": "2b70008aef007068348341d77b02dcf1904518f5d5ed7b8333f29260a01dda06",
+   "size": 37608
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec037_frame_0047_jpeg.rf.ca44f1a655cb904b2f50040b6bb77723.jpg": {
+   "sha256": "7fd7c34ea91dec9fd7cb6ab17f33bc97f8715a8eb1f3a42b4c5ffa42c845b947",
+   "size": 49163
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec038_frame_0000_jpeg.rf.cc00960d1f571e45084e800a85a7dd67.jpg": {
+   "sha256": "a4f7763abc50d18476c2ab30e94d98b8df6f5c60813ef1aec4830b38c0ca64b6",
+   "size": 51184
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec039_frame_0015_jpeg.rf.a86a2353a54cdd8462a3e5284a0e675d.jpg": {
+   "sha256": "b1fb31812bb7f3ba27a597ee32ab35a935e6fef0d5c5acb7151fb05a28484df7",
+   "size": 38390
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec042_frame_0008_jpeg.rf.b6c97dde4a0d8f38bf425d335507bf70.jpg": {
+   "sha256": "c2981dede4d580f7fa979f3ee1f4c0ca34abc4a464fd32ff72da384da8147059",
+   "size": 34529
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec042_frame_0015_jpeg.rf.a34587010d1e48d5c41b6054718e36e3.jpg": {
+   "sha256": "c1e01aecfba6d3d1bae803ede22c00e0518db52cab5aab90b9040a26ae24ba55",
+   "size": 32130
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec042_frame_0036_jpeg.rf.f9fd8cb86bdefa31087f1c0c44aa7381.jpg": {
+   "sha256": "5ecc64900c73e2a29159cae912317359cb1bb1ff2b318aac5ea7c9b9c5269c63",
+   "size": 35547
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec042_frame_0037_jpeg.rf.59fed3fdc4fbd0c168569ea318f468c3.jpg": {
+   "sha256": "52e5fc081b6f362d117f21361b767f092397b368e3080b80c88543e957318cb2",
+   "size": 29878
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec051_frame_0019_jpeg.rf.0de23b708fc02ae7489309c8cf6d56ec.jpg": {
+   "sha256": "013e450b6c1487b7af9575ae500c1e59d779feaf87ef3b01a9d21715de3711f4",
+   "size": 34468
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec051_frame_0028_jpeg.rf.a0cf92261edd18803981bd7cba617e9d.jpg": {
+   "sha256": "079476b676fef9b61297fdb5d760feb0ee8c1dbc269d135457e53aa1d89a2e9e",
+   "size": 31796
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec052_frame_0012_jpeg.rf.f4c02968023739eb41d1ded498af88c4.jpg": {
+   "sha256": "07f8cbce4dd3a15c91b890c3966a5403ad13011aa317e17768b56886cd007a9b",
+   "size": 30097
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec052_frame_0013_jpeg.rf.556cf6c369792090d6affad3e7013468.jpg": {
+   "sha256": "45e1bc1b3e93987ef5768a1eee563b9803f0572b4b8d2ede447a51af7be19659",
+   "size": 31099
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec052_frame_0016_jpeg.rf.58976ef13e6e220967b9f04c5b3ad066.jpg": {
+   "sha256": "8668e2b1437c3dd9c250ff6da58e935dcb85aa89e4e50615595e7b2a6f5033c2",
+   "size": 26334
+  },
+  "zenodo/images/water__kso__sk_cam2_120824_rec058_frame_0023_jpeg.rf.d18d0ea875838208b914c1c28ec5004a.jpg": {
+   "sha256": "f771c89d1f9aa6aa462d09c6e74b4671b76ec1e7b0906ea10bed9d9f83aa6041",
+   "size": 25859
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec003_frame_0005_jpeg.rf.5a675c1e769bd8354d744a2d216f5b5e.jpg": {
+   "sha256": "3e473996ed0f7b65ebee4cc740b6df617ca8379a331010e19711234830f94bb0",
+   "size": 34850
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec003_frame_0011_jpeg.rf.6c77daae839f50ca8783846f80c6248d.jpg": {
+   "sha256": "99afe8568e91be2b5cf14c2dff932c79e1ad423ca917dd41ea9d60df0260bb55",
+   "size": 35971
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec007_frame_0009_jpeg.rf.8685cc434be2f803d9e1fc00667bfe65.jpg": {
+   "sha256": "d68e742f9ead1d54f41988773bfe9ae83a069ada002360e6aef2e809c34c0090",
+   "size": 29155
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec007_frame_0042_jpeg.rf.64f63af7d9ced855d293a016396d3b77.jpg": {
+   "sha256": "4a66268981864aeea5008337989697ab351fc6a51fcfc45b6ea0aea6617286b3",
+   "size": 27977
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec017_frame_0047_jpeg.rf.396ffde17e3188e2c8a98dac6f72276b.jpg": {
+   "sha256": "e3f0a29c3e12b53bba803c8ffde6229fa96284ba231e90f7566e49f983f7522e",
+   "size": 36368
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec023_frame_0025_jpeg.rf.191bcdfeffa0330a7ff02098f0de5944.jpg": {
+   "sha256": "da4786d0ed4710f09a66bd8d26fbae847c715dffe16e4b85579a905196e534a8",
+   "size": 32497
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec023_frame_0027_jpeg.rf.8297161aa3b882970a90bbf6ecf12635.jpg": {
+   "sha256": "43d9f7497036ca2d722daa6b52b20948f511b4c2b76751c604e73e29bd1d3d57",
+   "size": 31756
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec023_frame_0028_jpeg.rf.e9f97f5447942a10370f21777b3f8f18.jpg": {
+   "sha256": "736d3fcd98701375f6848307465b433dd358969dd2153c8cdd066339d3e3548f",
+   "size": 31698
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec023_frame_0030_jpeg.rf.f74769d2111de7ad33f6b724627d2782.jpg": {
+   "sha256": "7912dca855cf87a1e39929c4238e2a66a0c1fcc1311a66458d3686c0cfaef50c",
+   "size": 35406
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec023_frame_0033_jpeg.rf.7b486aa91fc8bf4e9168af1b53547cc8.jpg": {
+   "sha256": "b0fcc3c200b0f3b2b84c12d07d4fbb4570a91e75225cd5cecb6c899f910b10d1",
+   "size": 34540
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec024_frame_0017_jpeg.rf.56ff4baf19ba59e9a5091f58fc03f17c.jpg": {
+   "sha256": "92177b05fc0f5a36cf5e6cd8217cd317327535197f1f795be165710d2fcf0946",
+   "size": 32025
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec024_frame_0022_jpeg.rf.4a189c19b1b67a57998da9725f6ed074.jpg": {
+   "sha256": "e4662eeebef3a212f62b7c01cfc15cb7e8663f2d304817e790a58eb3c07df567",
+   "size": 28896
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec024_frame_0025_jpeg.rf.e386046609d002c38eafe701446cbd2e.jpg": {
+   "sha256": "70082b25d0f125524bb7b3120c0acf90201df6ef1a9971a060550991303f0895",
+   "size": 39736
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec038_frame_0031_jpeg.rf.f628210b8dd30c4c19046ef1662b7b3d.jpg": {
+   "sha256": "da39fa9772fd088d9be480b390b878f773b24cf1b5fb8e8729a43af9088d4cdc",
+   "size": 31393
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec055_frame_0009_jpeg.rf.11ccf59b7c19c6dd4d7facc1b6d46ce0.jpg": {
+   "sha256": "cfa7a6e51a6aa01110ab000b8e1b61956b3da2188b2acfa005d800c5ab573fd3",
+   "size": 30440
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec055_frame_0012_jpeg.rf.abcb75f059a40fd0cf4f4fadb9d4a903.jpg": {
+   "sha256": "c1884cbe9ecd2d29be57d9418c5fa67d81d7cd4d80440535100d162b8cd8e3d0",
+   "size": 27188
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec055_frame_0045_jpeg.rf.936c77fbd95457bba0b3871bfe914793.jpg": {
+   "sha256": "4a9c81a2bededa2a3bc4fb9be170e4a18e3af2a621c30a952ef1bd09d5ef2fbd",
+   "size": 23035
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec056_frame_0023_jpeg.rf.f14eb108756b43125fc2936fda8965c5.jpg": {
+   "sha256": "e60b58a1c0736625e68a1e8f7ab44b3273c259faf2f5862a3c97b59662599fef",
+   "size": 25736
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec056_frame_0025_jpeg.rf.9d2a61ba7b74d3c5923ffab93564e299.jpg": {
+   "sha256": "0751ad3c91ec2c909dea72ebc2e086b1df7189db0ecacdeeac44da4ed477d463",
+   "size": 39961
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec071_frame_0033_jpeg.rf.625369fe5a06a2be98f3f9b7ced2d757.jpg": {
+   "sha256": "f324480f746aca6d3aa7f9c7cebb7d3322a2a054f25c6d696619d64e5ff14f15",
+   "size": 24042
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec072_frame_0015_jpeg.rf.031f81da3fee2cc3f1769f69f352f3cb.jpg": {
+   "sha256": "847da410dc4abbe443902a2fa5323153c6b5aa93798032227d52e77b6b9e3edd",
+   "size": 19893
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec073_frame_0047_jpeg.rf.d85285ba18129f5d15bedfeb1f6e8b0d.jpg": {
+   "sha256": "33280e619a5be1b52377b5041c6bf707cafbafb4d66e854bf97974fd79959402",
+   "size": 19395
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec087_frame_0030_jpeg.rf.8f9184515ee2a98c7514c5c209b955cd.jpg": {
+   "sha256": "cb6aab88105e0eec91ec79374f8a85ace176841d41d61415a3ce5299e29478c7",
+   "size": 23187
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec087_frame_0031_jpeg.rf.8ad71b3537d2a52baf98a80e9dc6ba93.jpg": {
+   "sha256": "edef40a33c6971b60b68f62f2bba67d039a059f5899289aaadb551702ba71b69",
+   "size": 25423
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec087_frame_0034_jpeg.rf.4c83e9237cf99bf92b4dd0c0e4745f40.jpg": {
+   "sha256": "eaadd21303bd2e1003f851a2a6769ec1620b4930ca34c17f9c3e5eb598748532",
+   "size": 28186
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec087_frame_0036_jpeg.rf.1e9d106a76afb051be4ddb046feae25a.jpg": {
+   "sha256": "d205d2a05f7eba286ba55302b154a166855351c0b25f4294c2e5efd821bd0374",
+   "size": 26389
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec087_frame_0041_jpeg.rf.bfbece8d9ad780c6fcdcb5342d333b3a.jpg": {
+   "sha256": "05fccd1aae5be0a9a7d2485601a6ddf4d91f9735b77018ba2785b5efcf532d84",
+   "size": 27292
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec087_frame_0044_jpeg.rf.037494f82386821c1d53afec97398bec.jpg": {
+   "sha256": "d1b6678a842c8f6a694f068ef07024595878917f5ca149967b2087297f087dab",
+   "size": 28417
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec087_frame_0046_jpeg.rf.8b9883a962ab53145bee16ee7cb66368.jpg": {
+   "sha256": "ae1e730adca36d571caf4d67e54b0253b277ace85d1e3220a58efdfeca8b71f3",
+   "size": 32959
+  },
+  "zenodo/images/water__kso__sk_cam3_120824_rec087_frame_0047_jpeg.rf.6eaa03f65dd0bad1c48e3252df363975.jpg": {
+   "sha256": "a54c031de2c02447f98999c92953b0a5b40ab3fa50f9921b89c112f125bd60a0",
+   "size": 25511
+  },
+  "zenodo/images/water__kso__sk_cam4_190824_rec052_frame_0046_jpeg.rf.81f689cd8609a126010ec6e3141b4f87.jpg": {
+   "sha256": "3806d49581eb06898881a1cbd0790b93fb0c3f6b7e56e4392b31b382fcea7dc7",
+   "size": 29787
+  },
+  "zenodo/images/water__kso__sk_cam4_190824_rec072_frame_0011_jpeg.rf.6b1a0a4cb49292a173861766ba435d9a.jpg": {
+   "sha256": "04827bfe257cc6c4881ff9200d1c15be7cb1da3a81f44f29f4c8e04beaa1e7c4",
+   "size": 30872
+  },
+  "zenodo/images/water__kso__sk_cam5_190824_rec040_frame_0028_jpeg.rf.373fc880ca84585824837d2b67813387.jpg": {
+   "sha256": "bd217cdb65b2bb7e54b0b652ea1c5a5381a18a68bac28441cd64e73746411f90",
+   "size": 41355
+  },
+  "zenodo/images/water__kso__sk_cam5_190824_rec041_frame_0027_jpeg.rf.281ad1562cd251711484abac6912fdcf.jpg": {
+   "sha256": "ee3d98373ff548fe408ef8f153fa8d9e45b20722238865df7d6c647b87b84d64",
+   "size": 30028
+  },
+  "zenodo/images/water__kso__sk_cam5_190824_rec049_frame_0037_jpeg.rf.f08bcd231d292736c82a780c1cfb8d34.jpg": {
+   "sha256": "63997f3d1fccf543e0608621d0fad120fba68d5892ce56126d906fcd8ec7a2ca",
+   "size": 42268
+  },
+  "zenodo/images/water__kso__sk_cam5_190824_rec051_frame_0035_jpeg.rf.b9f41dae60562a4e7012f012c21ee32f.jpg": {
+   "sha256": "8e4958255c08b5749f9acb6b5b83d396dfaa084bf96361592480eb4f70f314b5",
+   "size": 48841
+  },
+  "zenodo/images/water__kso__sk_cam5_190824_rec091_frame_0030_jpeg.rf.87da901478fb2bc32051e50dc277f54a.jpg": {
+   "sha256": "3fe72f18c4a2e2b8090a6eb0d117d53d4f8a286e87f16d59f03b07727666dfdc",
+   "size": 45269
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec001_frame_0006_jpeg.rf.42bddcd625bf79276bf3914a37b5462e.jpg": {
+   "sha256": "218ba1213bc99f14aba7af2b351f136c2375000e1caf4e33baf22cf477b9ada2",
+   "size": 29904
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec001_frame_0023_jpeg.rf.601e93c5fdc3a0d3f7f689927dcacd98.jpg": {
+   "sha256": "f96437b49ae21245bb4a649ba1782ed2d63f9d01150e2bfb4dcf1abbc8c1d75e",
+   "size": 35966
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec001_frame_0025_jpeg.rf.eedc3170240b7d239ee99dcaef31f9a7.jpg": {
+   "sha256": "ef6db2f19e53e8ac1591ec8f48f7156aa278a57def92639cb28004f627b71ec9",
+   "size": 34135
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec003_frame_0012_jpeg.rf.0265b4467aaf6b457eaa2e8dc84cc005.jpg": {
+   "sha256": "06b5bf4a3fd655a419f7f83699768dbef40cdb1c9f9d3da70a866b670238570e",
+   "size": 43323
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec020_frame_0027_jpeg.rf.77c72278290b8b0a6447dafef9cc35a7.jpg": {
+   "sha256": "f021e97886c0b763326d826b8fe7152bf02bf9cafef9d7de3d9d6f7ca5567e1f",
+   "size": 28439
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec032_frame_0035_jpeg.rf.f67f3d758f0169f086436a435aef2497.jpg": {
+   "sha256": "35cc0fc0a9878860f21e4f887e53eee6e32928d4dc5029f8121a9c836d66b141",
+   "size": 28605
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec032_frame_0036_jpeg.rf.1a0e80303b43e52d7d021424868c6320.jpg": {
+   "sha256": "b318ed75d3af4ca3f67a66adf626a307c60a2c9ea00675b00800e3e9e3ce79e4",
+   "size": 33703
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec032_frame_0041_jpeg.rf.8cec76108b260a9a1b4b9e9bd511c552.jpg": {
+   "sha256": "e0dd4cd315cbc5ab947d9784e38d4d0649945e997e793c13975c98ddd90a96e6",
+   "size": 27606
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec033_frame_0041_jpeg.rf.625050c5c3f95e7d704ab522b4ea8984.jpg": {
+   "sha256": "02f1b8d1df351ba898f5f4f6ba74e4ff1c4a7f73a1a2d512a9b1d58a2011b897",
+   "size": 39075
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec033_frame_0045_jpeg.rf.2b29ee14e44c1f6b876a47cf8194039a.jpg": {
+   "sha256": "0ec350544101485809e2b13ffd02482578728ef0c0e00c95a52a6f6ae3fb146e",
+   "size": 35464
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec033_frame_0049_jpeg.rf.d48a0cb5582b1abab06e321f988b7fba.jpg": {
+   "sha256": "cfb4e0f387a15fa77863eb0eceddbceaa4f3792e56cf74cc874295d25fb86852",
+   "size": 38835
+  },
+  "zenodo/images/water__kso__sk_cam8_120924_rec035_frame_0010_jpeg.rf.57bf913835bb3c60941396d01ab657b1.jpg": {
+   "sha256": "131b76edb72b3eaa89c265a8524bf71a4c381d149e070a2f27b1812ecc7e354d",
+   "size": 41193
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec001_frame_0045_jpeg.rf.1b84101b485505b143d80ec130b78f23.jpg": {
+   "sha256": "31246104c5511d1476555bbb69017d098139303a02199bf9ff58cc44ae20fb77",
+   "size": 49117
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec003_frame_0007_jpeg.rf.33a9dea24da84bda1331d7277390ca50.jpg": {
+   "sha256": "47db78fd101e0f252a30f4863233f24b416095bc6e891c98cf0bc1a3e321ab5a",
+   "size": 50863
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec003_frame_0008_jpeg.rf.aabac3e263887fbc822935bd4d5695c4.jpg": {
+   "sha256": "70305553fe1092238d1885b84f8df46d1df685ce865c6164212faf8bc0cccc3b",
+   "size": 52396
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec003_frame_0023_jpeg.rf.8f4579873ef099597b5e56f6d8b53848.jpg": {
+   "sha256": "51df56a7e62ea4d3f1756c36922263c61e9bd921cca81d8ff0ded11538d0122c",
+   "size": 49430
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec004_frame_0007_jpeg.rf.a3814b0e85d7d937322b4c58fc1663cb.jpg": {
+   "sha256": "b9b9354ecce4f0580c3aaa43f185d243fb6f70931549fcc5c0506b5c19816e41",
+   "size": 39501
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec005_frame_0042_jpeg.rf.061c78d36a6dc6b751b2286c7036b38f.jpg": {
+   "sha256": "888b3ced3ad6e30bef0b48cc1088e2d9a7191451486253df40c96afe331c549c",
+   "size": 42924
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec016_frame_0016_jpeg.rf.b93f980143b1b18301d387c0f1153525.jpg": {
+   "sha256": "1db41f011c6b0bc87c47f3baf2c8616ec191d79dd82027cd048b54423b7407ae",
+   "size": 31492
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec022_frame_0044_jpeg.rf.3c5d4607270c50b1b86039407e8b31d0.jpg": {
+   "sha256": "19d47d757561931227d68e8c59be2cb20b0634da777b97f17bcfd62a825d79ed",
+   "size": 42290
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec022_frame_0047_jpeg.rf.db98fbe51a0179d26d32bda4071013f0.jpg": {
+   "sha256": "300c32a706034f1477436f64550e65f2cacb94d328dda8753e2205e23ace0d7b",
+   "size": 29727
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec033_frame_0002_jpeg.rf.de04fc35f9d82609431798823b1643ed.jpg": {
+   "sha256": "bd701c19d340509e041ea7ed0936a36e3890168451fb984872e818dd0885547e",
+   "size": 39597
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec035_frame_0010_jpeg.rf.ed7824c8ab8de1bd417d08cb5cc5f463.jpg": {
+   "sha256": "5dc8d91826660a343ed8ca38744f4594074d1ed827131c0725eeebea8b95e5db",
+   "size": 41914
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec035_frame_0014_jpeg.rf.b2f9d43a12228f41e7faa3d8fecb824b.jpg": {
+   "sha256": "5309499d1e2a93a36a00b524310f11b166639cbd6f3a0e7130d6988b9e21c20f",
+   "size": 40680
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec035_frame_0015_jpeg.rf.4ab7a055dc858bf6aed56285de82aa36.jpg": {
+   "sha256": "08e47aa53072cd7d5262fcc0b4f5ae1be57b013f5715e79e435bfa2449b13e37",
+   "size": 52506
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec036_frame_0004_jpeg.rf.47001c20270d2848da8f4210723259fb.jpg": {
+   "sha256": "808fce424ac7f068c937e94011ffe3c22beecbc4988b7252e946dc500db8a9a1",
+   "size": 51853
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec036_frame_0034_jpeg.rf.65530d42b8e894aa14f4100cf3a89946.jpg": {
+   "sha256": "1d4ae6647ab43fdb12a47b0d6f1e1613057abba89712726bd9529a705f5078d6",
+   "size": 54262
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec037_frame_0033_jpeg.rf.106c1a09ee2b6e75bb15ee2a1f7b26f8.jpg": {
+   "sha256": "399d7089097d3a5ba9ff7cf84844eedc8d7edb93b6d79fc8a82f4312f85dc5b2",
+   "size": 49562
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec037_frame_0048_jpeg.rf.4369dc6290cfc786166b20a4359a686b.jpg": {
+   "sha256": "1704b7effc6b39123d4a08bfa9e74848a618e6425d8e95023fc25a8d3066ba27",
+   "size": 44606
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec038_frame_0012_jpeg.rf.3992a28c79654f54bf48097e9f0e6e50.jpg": {
+   "sha256": "a071b8541b1223a537fc218b1f5b6213b732dfe20e16e0e3e417b807962e878b",
+   "size": 42808
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec055_frame_0006_jpeg.rf.1c97a12b6db2f19073f8316f021e13e3.jpg": {
+   "sha256": "14b8765deea79633903eb8e79045399cead163b33850587c6489230733c8a0cc",
+   "size": 32629
+  },
+  "zenodo/images/water__kso__sk_cam9_120924_rec055_frame_0029_jpeg.rf.1331539161494b70b770a2bc77f51557.jpg": {
+   "sha256": "f1ffd90c3c6b58cc733ee225dfa7eabe54b24582418586baf6d60294a3514fd7",
+   "size": 32809
+  },
+  "zenodo/labels/water__kso__REC_001_frame_0023_jpeg.rf.cb7ea51c5cdf70039566c0f0de46fa45.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__REC_001_frame_0031_jpg.rf.614dc6836af266e7f5a54c86c1d0a156.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__REC_002_frame_00_jpeg.rf.d8fe09a96e8f4a93eef861187a5dc509.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_002_frame_0040_jpeg.rf.d662fecede64e33591a9c130f8fffe7e.txt": {
+   "sha256": "0cccad987d96ed3396e08158c4ae4c79a5db67b5f043ff4338102aae2c7258ea",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_003_frame_0009_jpeg.rf.8f1f414a90c2b81f4769ba11ae2b9f0b.txt": {
+   "sha256": "e3c3f3c23ccce633163c304dae21b11d9b0472d397a370c12b3153d07b7d15a4",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_003_frame_0012_jpeg.rf.df4ba0645595bab492ccaa5995b09475.txt": {
+   "sha256": "afd917f0d14e02f9788e3d63b13bf51f9e4654c67c6082534c84e98be063d958",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_003_frame_0014_jpeg.rf.361bdcdaaef514f58412a42f215de52a.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_004_frame_0040_jpeg.rf.a04ae8e03522081905da78718f436598.txt": {
+   "sha256": "202c1672af2c2eb3bb6100c4985ac6006d64bbfe865b8e7e6228552fa381e12c",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_005_frame_0015_jpeg.rf.ea2ea4af6f784e1cb68e87b4cfd23c52.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_005_frame_0032_jpeg.rf.b275f7653d114683e9d7b209d6cd935c.txt": {
+   "sha256": "ff160d9720c4965fe93017cc2b7610c9161762c7b3fede55104cbfa7f724e2ea",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_010_frame_0033_jpeg.rf.8b8daed3529a3ca160175e270a21eefe.txt": {
+   "sha256": "4fb93213099614db06292d45b3fd225404c36414ed260ae5b94af6e4f92a2487",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_010_frame_00_jpeg.rf.b1043fc559ad4ac7e5daf26aebccfe0d.txt": {
+   "sha256": "1b9cae509fe58452504a46e68bb5bb310f03222f8d4b894b162957335c482317",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam1_110822_rec_011_frame_0003_jpeg.rf.8e8b35a9e41698d66a38c40adb751737.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_100822_rec005_frame_0047_jpeg.rf.36d082af48500f5cb14e997a4c49d010.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_100822_rec010_frame_0040_jpeg.rf.d59879a675f6b99248ce55b3c0c0b218.txt": {
+   "sha256": "4a41680b2ed81fdf395a28d7db32f0edd354dff07395305241af4d23e672e98b",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_012_frame_0017_jpeg.rf.196cc350f0634735b89c09ce099a6d3c.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_012_frame_0017_jpg.rf.51d9bfc8750024448e378ce0affc15e9.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_012_frame_0032_jpeg.rf.fae210a9a9c885efd845b923f5003280.txt": {
+   "sha256": "cfa47c61bddd86d19576ea54e40d2f2f525290ec699437e26ef7d0f3f0bf1f7b",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_012_frame_0037_jpeg.rf.eeae524e1c448317ca95ce1d21e06fa2.txt": {
+   "sha256": "98f92be6934629da6de8ee6a936a78ae896b1e9f026bf1180005e5e13c4f8b32",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_012_frame_0038_jpeg.rf.9f696a15889a344a8516ad3bfcf9f1de.txt": {
+   "sha256": "22c92b87a5e2e4be221c61613f0b94052ec1250dea3126fc61f26969dad16ea5",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_012_frame_0042_jpeg.rf.9bffd636b80ec1d8ed08d5a8c8f31a23.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_012_frame_0046_jpeg.rf.be7079b76f8df219c713925e6e69a426.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_012_frame_008_jpeg.rf.42ab4adea42545d6862b0ae3227cca1f.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_012_frame_009_jpeg.rf.b0d1f266a658eac13ffb1cd8ac2e7d68.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_013_frame_0016_jpeg.rf.0c3cca900b1ac685cb13ece0c750473e.txt": {
+   "sha256": "bed2a2b622b9a4b4675dc1ebe083e417ab9f1da02efdceda83c6c6f9d2c488d6",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_013_frame_0021_jpeg.rf.6787299c163faf43c79e3f4e8be8efdb.txt": {
+   "sha256": "7e9ea91d695e3cc3eaa801a00fee73df37b4d65d1a242058b02bf41f25adb8ac",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_013_frame_0045_jpeg.rf.1af4711ae5553056a90a6d64bbe39d47.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_013_frame_007_jpeg.rf.83283add3b72b483b31d8aab5af4c552.txt": {
+   "sha256": "acb2e90fca5f61ed6490e0c9b1e9ee647df813888643f73695b0795cbcdaae57",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_014_frame_0031_jpg.rf.62da3e33985e2bc0fb44e635ca32d1cf.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_014_frame_0047_jpeg.rf.8ce5b896d5a2c2f8c8ddff40fc9ffedd.txt": {
+   "sha256": "1c641e18264316f4988e054d25dd2a026f41153814152df0dc1df3e9d29eda5b",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_014_frame_0048_jpeg.rf.a633a6a0cfb55f0d96eb3e9fbec600ca.txt": {
+   "sha256": "6573e1333a62b64ce61bd48af1d73496968e30807607e27653b8fd872e3cd7be",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_015_frame_0038_jpeg.rf.c9307a1ea8e00b0e7e18f678c7963724.txt": {
+   "sha256": "205948e6f96f06f58f5a12273b383c3929ad8784005f3680eae7824417334370",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_020_frame_0004_jpeg.rf.cb9c089eb389e15bbdda6322fc7e2f0b.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_020_frame_0008_jpeg.rf.e80ecd60ad8afedc08383e722531c7d4.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_020_frame_0012_jpeg.rf.709b48e71624267c15ae97719621a342.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_020_frame_0015_jpeg.rf.39cf663b664cd9378feb9ee8ea4ee75f.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_020_frame_0019_jpg.rf.bc983a53a3a6e55502dc4ccae5047927.txt": {
+   "sha256": "bce3a77e1545e66cfb12234905b1f5633055a4f44d05ec532dbcad11d1eb3adf",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_020_frame_0020_jpeg.rf.daea01406257eafcc4258d83c08f5147.txt": {
+   "sha256": "2756c50ea2d9f93808cb9f5b87c8c18ff4c86aa6d40e070181b4167e6364e1a6",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_020_frame_0029_jpeg.rf.b8c3a128832e197cfad213ffcb6a831f.txt": {
+   "sha256": "3a3a4580d4a703d8da61703721bfbfff4de171a99e0f2faf7ecc7415f916160f",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_020_frame_0035_jpeg.rf.6ba188f18467819729f78ceae9462365.txt": {
+   "sha256": "9dd7eee4bc5713c05de645f9289dfe18bdd4164f8c52a67ab0fda7a4e05f4590",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_020_frame_0048_jpg.rf.9c586716911abdb68c7edeb1c79b894b.txt": {
+   "sha256": "c2415b3b480dbf90132d65b6c8f4bdf42cddf4c4f30b4903511c131abbc3eeb1",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_021_frame_0018_jpeg.rf.7fe6293c9aae17b05b35f5f01f761bbd.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_021_frame_0046_jpeg.rf.6fe372502c4f65959354f2c57fa5eb08.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_021_frame_007_jpeg.rf.ce8a009d6c5258562e8034c8462c98f5.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_110822_rec_021_frame_008_jpeg.rf.1d6f5e19b2e516f1d3b1f9024ab58e81.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_001_frame_0018_jpeg.rf.b683b282b7baed8f10403595e2f4f256.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_001_frame_0027_jpeg.rf.e8220f01467ec6be9d2b63a1d0ba558a.txt": {
+   "sha256": "79910d09fa570a20ade6aca4962be8f375725dba1269267c58e14b740c224ddc",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_001_frame_0028_jpeg.rf.0f9a96280ffc457ab0c72d9f49a46975.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_001_frame_0029_jpeg.rf.e538091bd49d92a77167454c0cc5c736.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_001_frame_0044_jpeg.rf.1d0c705d33ea4b3f5c14216a5a98b31c.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_002_frame_0002_jpeg.rf.86f44a595a81b0bb34ccd43ef1d085a7.txt": {
+   "sha256": "d3394749d306e75464bc1018a69a8332bdbbea0a11a568566061cf49fc569dd2",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_002_frame_0006_jpeg.rf.a9cbcc34eb5da05472468eb9d1a00213.txt": {
+   "sha256": "0f883ce3405369a73781ca589eeb2a228fd7e16f2029c54bb495a9df204c55e2",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_002_frame_0013_jpeg.rf.09fc7a81685e8cca5356a874b22ea88d.txt": {
+   "sha256": "06ab926da55da2a8604246baa4f96e38f224bf8ffa39d3d39ff0a75d87a49fe7",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_002_frame_0033_jpeg.rf.f71ff45930a2ec94a9ea1d624a888f50.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_002_frame_0039_jpeg.rf.ae0706de88c6df3e8b38b4689892fe43.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_003_frame_0043_jpeg.rf.1cfd5c94c20d7fc06cbdbe9124d61e41.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_005_frame_0017_jpeg.rf.28e85a60c528946fcfb8308365bebea2.txt": {
+   "sha256": "02d3c7ac4002f25d04495804745c793fc379398a3e1c30277d13292b18e46dd9",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_005_frame_0021_jpeg.rf.8fff452066866b107a2752bf184b0bfc.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_005_frame_0026_jpeg.rf.3ed50410e234faa0f558101764e77ad6.txt": {
+   "sha256": "11f7a2e23385a8d17091dd14bc4f27308dea13b6549c87457e315a1a44e1e159",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_005_frame_0030_jpeg.rf.e182427a187715ab988a41873caade93.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_005_frame_0033_jpeg.rf.6e954a401ba9b3907949484a71c764cd.txt": {
+   "sha256": "45e26a7a1309b9e2b4bfbc0bc8b1f2f32ea567799fd51d8ef2e58afa0964af97",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_010_frame_0009_jpeg.rf.0958ddce6dc72b655a352172b709b858.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_010_frame_0019_jpeg.rf.b35d6243ebb201c6d789b4a8e9ddd4c2.txt": {
+   "sha256": "c942cbcdd8ee6b5a782e37d222d2ee042f6ea7c038e26beac392ea6607d7c51d",
+   "size": 76
+  },
+  "zenodo/labels/water__kso__mpa_cam2_120822_rec_010_frame_0027_jpeg.rf.c48a2516c8e4b59ea4bc4be50e94c169.txt": {
+   "sha256": "b86cd4335d0255ad946ebe89e5f6d40042442beae04a69162e894a70fe208237",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_001_frame_0049_jpg.rf.50257ec9b1a548a536a07532217b4cda.txt": {
+   "sha256": "750d71ae8b458bf5c44a33f724d2530b3fb6771bbf2eaf005a212ece7319f33f",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_002_frame_0020_jpeg.rf.daa030c23e8e1e9498a5cc405aa23f83.txt": {
+   "sha256": "beae06f17437ff0b8d5d5e55989b9081da4815be6dc6b40d0083c443d40179a7",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_002_frame_0047_jpeg.rf.785b52092a54d163af286639f407d06c.txt": {
+   "sha256": "830c9a8d060d66c1bc24e2637816b456d0651219fa40d8bf769e10e97e8ea2d9",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_003_frame_0041_jpeg.rf.d1a2c88a3d86699a381cb98cd099025c.txt": {
+   "sha256": "9ca2eaf41cdf5d631df8292f2caa0dba188f1840119977347ddbace5a4382fe9",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_003_frame_0042_jpeg.rf.7533cb1771910cff7a5b58d1e30714a6.txt": {
+   "sha256": "7ec4e6fc2e4c55c94b2a6ef76f7fa6eed35c0f182513c9d38666f9eee16e880d",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_004_frame_0033_jpeg.rf.d15a3e489d5715a892d84f46815dd96c.txt": {
+   "sha256": "34a67ca767812b765a8939fd0dbc625024eb4581f7091a1ead5409ebfeb54189",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_005_frame_0014_jpeg.rf.270f0a40a5015fe8b25114ef8708f5be.txt": {
+   "sha256": "9384a931bf028bc2a3c5b08ea8ae1b77072c5b2fb869abb9abb8f349aacb48d6",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_005_frame_0035_jpeg.rf.fae55e0d499af8e22ce32f5334fff2c4.txt": {
+   "sha256": "15d5ff19e682fb9a7d2ec711e40420abe7417e9cede83947741a0784a18ccb9c",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_006_frame_0011_jpeg.rf.5ba085dde7e552006fae847f8700caf7.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_011_frame_0015_jpeg.rf.46f10a9843a004312766e80786a4ad7f.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_011_frame_0021_jpeg.rf.98166db5327538f3463414813e61dd37.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_012_frame_0026_jpeg.rf.9a7d647c790537232ad0416219a64a3b.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_012_frame_0044_jpeg.rf.d331849a32e28fa01a7f384a592e7362.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_014_frame_0015_jpeg.rf.5907a4a506089f00408a17a4abba873d.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_021_frame_0024_jpeg.rf.cb17006996373d107162a2bdefec8b2f.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_021_frame_0049_jpeg.rf.58e8381d968765fc4b631a5cd96c085e.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_022_frame_0001_jpeg.rf.9062d68772f47aee84e0700edb98c4b1.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_022_frame_0017_jpeg.rf.104e68ad05444d1e49ab66ffcd0d6865.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_130822_rec_022_frame_0029_jpeg.rf.b0dcac8973a7288c5706fd123c354395.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_170822_rec_001_frame_0036_jpeg.rf.3c1af16ec8a298b4c942720872e2046b.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_170822_rec_002_frame_0029_jpeg.rf.bb5d4fda60ecfaf4b9c68f911036e766.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_170822_rec_002_frame_0043_jpeg.rf.dcd107b4c5a08c3376b4ff324eddf7dc.txt": {
+   "sha256": "7bcafff7673ac2ff46bed93f668b3f1de107fa7196ad79d027eea7a4adafad90",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam2_170822_rec_004_frame_0033_jpeg.rf.dea572b0b2416e3aeafe8ad99c99a51e.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam2_170822_rec_010_frame_0032_jpeg.rf.b6d3042eccf99d1df9291071c2d712ef.txt": {
+   "sha256": "8714c394a860b1fa943f5cad2755ba53cab33cde3fc8cd37823e017a583e90d1",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam3_090822_rec008_frame_0007_jpeg.rf.68267bd9a62696b50e39f760a663c532.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam3_090822_rec018_frame_0049_jpeg.rf.144d303b00e5901d98bc9eaca9a5a1fc.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam3_160822_rec_002_frame_0038_jpeg.rf.eb6b794f28430d947ed91f03c052ad02.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam3_160822_rec_003_frame_0015_jpeg.rf.c1e863657d20c6d952bd383ba24dcc37.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam3_160822_rec_003_frame_00_jpeg.rf.1f2311fa94435b319be94cb0b61b758f.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__mpa_cam3_160822_rec_004_frame_0017_jpeg.rf.e17e1662d11aed79e84d0c8135fb4555.txt": {
+   "sha256": "4e8ec21d72e3f23211c25195e5afdb9ac046b6c146ab17dd5b0ca3c3f5085b88",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam3_160822_rec_005_frame_0004_jpeg.rf.db1e3c8a12208ebbfd9d24cd0d567406.txt": {
+   "sha256": "5404bf6c3d63327d0fd9c0f50d524fdd671e75f22f0c32fe7c0f350e0b3b7513",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__mpa_cam3_170822_rec_002_frame_0045_jpeg.rf.dcc4324f49727c3e797fdb5e5054ae99.txt": {
+   "sha256": "bd56be2384794a4ea9d905212504b3369fc661a6e1063b49e175062cdf25ec6a",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec004_frame_0032_jpeg.rf.8126f6fafeabe8e5ad4f42c2c5275985.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec004_frame_0038_jpeg.rf.8411d00a21673f0310aaf4415d4a5abc.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec005_frame_0022_jpeg.rf.acc8b51a418803286d75d6eb5a19dcbc.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec007_frame_0026_jpeg.rf.97b52465153987176667b09342d06018.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec007_frame_0028_jpeg.rf.14d7fc5af7877903a13cbbe53d46e719.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec007_frame_0030_jpeg.rf.faecd88321b2dd336461f200ecdd4474.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec038_frame_0004_jpeg.rf.396ccd8640a725705651d0b9f997e081.txt": {
+   "sha256": "d6d732ea58d3b17e53ee4401fcbe49d23ccf3774f008df24ab191ff0056f8484",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec038_frame_0037_jpeg.rf.b283c080616cb02b375862d619f5b788.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec057_frame_0009_jpeg.rf.8eee04f46a4e75c36f02706c7f48d6ce.txt": {
+   "sha256": "e857104b11567c9bbecd518a3d33d1dee53a6f9a03b0246cfc52916bce06a19f",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam1_120824_rec058_frame_0033_jpeg.rf.c1e06e657c1b785d607a5a3ed1ecdb07.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec003_frame_0002_jpeg.rf.af12763d49a1ce02821392b431fc499b.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec003_frame_0028_jpeg.rf.17504aed1bdc74cce13bb5b53c6781b7.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec003_frame_0031_jpeg.rf.9a75e3551a0bd09cb0e5ef16715406fb.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec018_frame_0005_jpeg.rf.540498e09660696e1e0418532468f3e5.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec034_frame_0005_jpeg.rf.376f292969b994a151fb6929aaedcd83.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec036_frame_0006_jpeg.rf.a0f30708170d0f23fb55ba8a0f3a9616.txt": {
+   "sha256": "5977dab75bd54960c8bee2dbadf4fd6e048fe30c0ff51a042703c9f13e886b4c",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec037_frame_0004_jpeg.rf.769a8ec7face006e74e4989cb5bc23e0.txt": {
+   "sha256": "2d66bc38996befb2c0940d7ccfe6eb768d601f822c1bbea36a48c78942de684e",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec037_frame_0010_jpeg.rf.d7eb6f6d15569d0c82bd8aa45c045f57.txt": {
+   "sha256": "eeee1b7c19d60488e5ecb916d959aa33ac46236f4ae19ac4614d31dd41e767a9",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec037_frame_0011_jpeg.rf.7bcb2f7574d1953dccbf600937215049.txt": {
+   "sha256": "849569682c7f684385809b926296be8152ee47ee2b80d7b0fd99f7c4bf59b2a4",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec037_frame_0016_jpeg.rf.3966a5fb9b1c8f47d6f4d678ed3329b3.txt": {
+   "sha256": "90696f675018a0f06eea63ae4b1591677190a287c3d419c44f0414fd1e43573e",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec037_frame_0017_jpeg.rf.095912013837e64471e25961064b8bbc.txt": {
+   "sha256": "6111248c26347275f86dc621e544b5f0cde69d84f67a062b79531f2e0f22d4f8",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec037_frame_0025_jpeg.rf.f132847bbfb8ecc3c6a6612f7bc6af89.txt": {
+   "sha256": "0b7c006e823d51ea9066e0a50b5e266df495d4d176b132ec3ce7b7a4e34ac070",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec037_frame_0047_jpeg.rf.ca44f1a655cb904b2f50040b6bb77723.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec038_frame_0000_jpeg.rf.cc00960d1f571e45084e800a85a7dd67.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec039_frame_0015_jpeg.rf.a86a2353a54cdd8462a3e5284a0e675d.txt": {
+   "sha256": "22d7ea20e04dbd22be2dfe9084c74e2f6a084a57fd3ce0a2add7958e157b58e7",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec042_frame_0008_jpeg.rf.b6c97dde4a0d8f38bf425d335507bf70.txt": {
+   "sha256": "4d431275b5bda0d2dd1842126b2f5c710360815e8343360b6203680bcaa15d7d",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec042_frame_0015_jpeg.rf.a34587010d1e48d5c41b6054718e36e3.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec042_frame_0036_jpeg.rf.f9fd8cb86bdefa31087f1c0c44aa7381.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec042_frame_0037_jpeg.rf.59fed3fdc4fbd0c168569ea318f468c3.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec051_frame_0019_jpeg.rf.0de23b708fc02ae7489309c8cf6d56ec.txt": {
+   "sha256": "7d13b86a8421151c7a38046a7baa46d578664e4eb3578145ca01620e35fae649",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec051_frame_0028_jpeg.rf.a0cf92261edd18803981bd7cba617e9d.txt": {
+   "sha256": "3d5096581d813e47b36ffb2a8c74090fabedbdf949217c61da35e19609c1bad0",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec052_frame_0012_jpeg.rf.f4c02968023739eb41d1ded498af88c4.txt": {
+   "sha256": "32c16fd668c22727971ce41ad2ac8bf46427f722cf5ebe44636f0be13a2a46db",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec052_frame_0013_jpeg.rf.556cf6c369792090d6affad3e7013468.txt": {
+   "sha256": "ece91d931c4c41def3758d8eca0cd5a1516ba51d8d641c705fee553d107aad20",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec052_frame_0016_jpeg.rf.58976ef13e6e220967b9f04c5b3ad066.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam2_120824_rec058_frame_0023_jpeg.rf.d18d0ea875838208b914c1c28ec5004a.txt": {
+   "sha256": "ad659526db88d8439f56a8c470a9ff20b8449db29e4e7ee0a60c79db522c3579",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec003_frame_0005_jpeg.rf.5a675c1e769bd8354d744a2d216f5b5e.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec003_frame_0011_jpeg.rf.6c77daae839f50ca8783846f80c6248d.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec007_frame_0009_jpeg.rf.8685cc434be2f803d9e1fc00667bfe65.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec007_frame_0042_jpeg.rf.64f63af7d9ced855d293a016396d3b77.txt": {
+   "sha256": "b15125bc928e35115c2c94a6dd831a557000ceb6995fcb2f4c78e848d6d8bfde",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec017_frame_0047_jpeg.rf.396ffde17e3188e2c8a98dac6f72276b.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec023_frame_0025_jpeg.rf.191bcdfeffa0330a7ff02098f0de5944.txt": {
+   "sha256": "ffb8b9a33586b1d6bac6b33bfe4126b2fcb6b9eeb82816e87160c769bc55b661",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec023_frame_0027_jpeg.rf.8297161aa3b882970a90bbf6ecf12635.txt": {
+   "sha256": "7595f1f7793e26c797d731e7f03ab084509c716ab41a794b51776de791ac0014",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec023_frame_0028_jpeg.rf.e9f97f5447942a10370f21777b3f8f18.txt": {
+   "sha256": "a74e8d56071f93bba409a8dabe386558a555c1331d0f0e3e6e9990e9b3a0c4a2",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec023_frame_0030_jpeg.rf.f74769d2111de7ad33f6b724627d2782.txt": {
+   "sha256": "3b9cc62a383230735c9d8221b83083e16477dda1ff44c10da72a7dc4efb06545",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec023_frame_0033_jpeg.rf.7b486aa91fc8bf4e9168af1b53547cc8.txt": {
+   "sha256": "de3bfb7c3a6e23d88d2670f61994a65aa25fb1a4a1f71ad984a884c4c71ab392",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec024_frame_0017_jpeg.rf.56ff4baf19ba59e9a5091f58fc03f17c.txt": {
+   "sha256": "d1748de7ba82336f68bdce518aec5d7db9f2cbd025ee713072641502b9d54c2e",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec024_frame_0022_jpeg.rf.4a189c19b1b67a57998da9725f6ed074.txt": {
+   "sha256": "59aad8b0c28e9af5f1e85440b9894b9027312c490ecad1ac00a9dd8cc642ff4a",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec024_frame_0025_jpeg.rf.e386046609d002c38eafe701446cbd2e.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec038_frame_0031_jpeg.rf.f628210b8dd30c4c19046ef1662b7b3d.txt": {
+   "sha256": "d4add5a8dfe13b81f8bb316ac890b9bfa6600d168d59ff2f945bf8481f67c260",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec055_frame_0009_jpeg.rf.11ccf59b7c19c6dd4d7facc1b6d46ce0.txt": {
+   "sha256": "ef66f9a7212c309e5dd79d5f3254f46b7521c56e024f2f1575dde16c663da444",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec055_frame_0012_jpeg.rf.abcb75f059a40fd0cf4f4fadb9d4a903.txt": {
+   "sha256": "97314593efe83f5fe3de24faa5b2e95878a2d42079e40fcc1de7536ac736e8ed",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec055_frame_0045_jpeg.rf.936c77fbd95457bba0b3871bfe914793.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec056_frame_0023_jpeg.rf.f14eb108756b43125fc2936fda8965c5.txt": {
+   "sha256": "bbf0fe5c767799acb8cd72cea4f8893855f4aa5e728c259835e2855a5a7a120a",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec056_frame_0025_jpeg.rf.9d2a61ba7b74d3c5923ffab93564e299.txt": {
+   "sha256": "c1a15ef04453d7482ed3b8d2f04b83d17a38bbdd3def8c3bb88ef6849a7257ec",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec071_frame_0033_jpeg.rf.625369fe5a06a2be98f3f9b7ced2d757.txt": {
+   "sha256": "12c00cdb2041af0118dfeec29850a218517a064450e5068d0b44e5d32b5a81f4",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec072_frame_0015_jpeg.rf.031f81da3fee2cc3f1769f69f352f3cb.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec073_frame_0047_jpeg.rf.d85285ba18129f5d15bedfeb1f6e8b0d.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec087_frame_0030_jpeg.rf.8f9184515ee2a98c7514c5c209b955cd.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec087_frame_0031_jpeg.rf.8ad71b3537d2a52baf98a80e9dc6ba93.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec087_frame_0034_jpeg.rf.4c83e9237cf99bf92b4dd0c0e4745f40.txt": {
+   "sha256": "1eb70c91800f27b8b3197a4e8b2c62ca0eaf3e4825d870a79661bee91e9ae65e",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec087_frame_0036_jpeg.rf.1e9d106a76afb051be4ddb046feae25a.txt": {
+   "sha256": "ce59226616c1ce6f71e1b91eef8d5b5421df3e2ea2288b1dbdd1afd02bc56204",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec087_frame_0041_jpeg.rf.bfbece8d9ad780c6fcdcb5342d333b3a.txt": {
+   "sha256": "7252996dc5ba745db9cd448efd20188710722fad5c07ea18635919f11edf6842",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec087_frame_0044_jpeg.rf.037494f82386821c1d53afec97398bec.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec087_frame_0046_jpeg.rf.8b9883a962ab53145bee16ee7cb66368.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam3_120824_rec087_frame_0047_jpeg.rf.6eaa03f65dd0bad1c48e3252df363975.txt": {
+   "sha256": "94ae933ff9567126f001c49825416845f34e0571dfd461a35870d0d9b831d919",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam4_190824_rec052_frame_0046_jpeg.rf.81f689cd8609a126010ec6e3141b4f87.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam4_190824_rec072_frame_0011_jpeg.rf.6b1a0a4cb49292a173861766ba435d9a.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam5_190824_rec040_frame_0028_jpeg.rf.373fc880ca84585824837d2b67813387.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam5_190824_rec041_frame_0027_jpeg.rf.281ad1562cd251711484abac6912fdcf.txt": {
+   "sha256": "181014fa22f7cd190e2f15a2754bd8aa02a80d14417ca8c41373346c06733e23",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam5_190824_rec049_frame_0037_jpeg.rf.f08bcd231d292736c82a780c1cfb8d34.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam5_190824_rec051_frame_0035_jpeg.rf.b9f41dae60562a4e7012f012c21ee32f.txt": {
+   "sha256": "8ba26db0ddde789dca1bafb8710afe33bc10edafcdfd16af34d1d21ee532686b",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam5_190824_rec091_frame_0030_jpeg.rf.87da901478fb2bc32051e50dc277f54a.txt": {
+   "sha256": "40aaa7ff5c6b39337871880ff3490eac689f1a5737e78f0383f0a1abbe1d8d42",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec001_frame_0006_jpeg.rf.42bddcd625bf79276bf3914a37b5462e.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec001_frame_0023_jpeg.rf.601e93c5fdc3a0d3f7f689927dcacd98.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec001_frame_0025_jpeg.rf.eedc3170240b7d239ee99dcaef31f9a7.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec003_frame_0012_jpeg.rf.0265b4467aaf6b457eaa2e8dc84cc005.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec020_frame_0027_jpeg.rf.77c72278290b8b0a6447dafef9cc35a7.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec032_frame_0035_jpeg.rf.f67f3d758f0169f086436a435aef2497.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec032_frame_0036_jpeg.rf.1a0e80303b43e52d7d021424868c6320.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec032_frame_0041_jpeg.rf.8cec76108b260a9a1b4b9e9bd511c552.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec033_frame_0041_jpeg.rf.625050c5c3f95e7d704ab522b4ea8984.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec033_frame_0045_jpeg.rf.2b29ee14e44c1f6b876a47cf8194039a.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec033_frame_0049_jpeg.rf.d48a0cb5582b1abab06e321f988b7fba.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam8_120924_rec035_frame_0010_jpeg.rf.57bf913835bb3c60941396d01ab657b1.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec001_frame_0045_jpeg.rf.1b84101b485505b143d80ec130b78f23.txt": {
+   "sha256": "ade238832c228e4a2191cd0339104dee3f005c803317e518b50ceae962a69308",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec003_frame_0007_jpeg.rf.33a9dea24da84bda1331d7277390ca50.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec003_frame_0008_jpeg.rf.aabac3e263887fbc822935bd4d5695c4.txt": {
+   "sha256": "3650d782cff25c8a4ca374fb38de64d07856e5c3173be07ecde6509b754b5fcd",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec003_frame_0023_jpeg.rf.8f4579873ef099597b5e56f6d8b53848.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec004_frame_0007_jpeg.rf.a3814b0e85d7d937322b4c58fc1663cb.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec005_frame_0042_jpeg.rf.061c78d36a6dc6b751b2286c7036b38f.txt": {
+   "sha256": "d892574626a5c4ad6b87a24135b421b118477475fcd9c7f37d51ec93e8bd9338",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec016_frame_0016_jpeg.rf.b93f980143b1b18301d387c0f1153525.txt": {
+   "sha256": "8a4c52ca5760eef309b20ef819a2a8bb08ae5af81d5a8422b21682c8312c4227",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec022_frame_0044_jpeg.rf.3c5d4607270c50b1b86039407e8b31d0.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec022_frame_0047_jpeg.rf.db98fbe51a0179d26d32bda4071013f0.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec033_frame_0002_jpeg.rf.de04fc35f9d82609431798823b1643ed.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec035_frame_0010_jpeg.rf.ed7824c8ab8de1bd417d08cb5cc5f463.txt": {
+   "sha256": "0f5078e748b63883bb8159fd24426f86ad7df86dc2a2c54b15783ec1c14bc9bf",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec035_frame_0014_jpeg.rf.b2f9d43a12228f41e7faa3d8fecb824b.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec035_frame_0015_jpeg.rf.4ab7a055dc858bf6aed56285de82aa36.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec036_frame_0004_jpeg.rf.47001c20270d2848da8f4210723259fb.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec036_frame_0034_jpeg.rf.65530d42b8e894aa14f4100cf3a89946.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec037_frame_0033_jpeg.rf.106c1a09ee2b6e75bb15ee2a1f7b26f8.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec037_frame_0048_jpeg.rf.4369dc6290cfc786166b20a4359a686b.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec038_frame_0012_jpeg.rf.3992a28c79654f54bf48097e9f0e6e50.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec055_frame_0006_jpeg.rf.1c97a12b6db2f19073f8316f021e13e3.txt": {
+   "sha256": "3aa17872c24a2adb825956aa068937ce53929a37bd5033b70717cd7753aee076",
+   "size": 38
+  },
+  "zenodo/labels/water__kso__sk_cam9_120924_rec055_frame_0029_jpeg.rf.1331539161494b70b770a2bc77f51557.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size": 0
+  },
+  "zenodo/manifest.json": {
+   "sha256": "5e66d711614850bd77e1f718c3423cfbd4f7c2616922ebe5b436181935ea8740",
+   "size": 48651
+  }
+ },
+ "kind": "full",
+ "n_files": 677
+}

@@ -750,3 +750,151 @@ Short, dated records of project decisions. New dataset versions must reference a
   non-lobster `dataset_kind`); `experiment.default_dataset_dir` / `dataset_kind`; class names and
   limitations taken from the dataset in `train.py`, `run_record.py`, `verify_yolo_dataset.py`.
   No change to v1, v2, E001–E005 or their records.
+
+## D-031 — Model A: Harsh's mixed training data on the UWCT v1 split, with a mandatory leakage check (2026-11-03, proposed)
+- **Numbering note (2026-11-04):** drafted as D-029 / dataset v3 / E006 onwards; renumbered to
+  D-031 / v4 / E007 onwards because PR #16 (merged first) uses D-029, D-030, v3 and E006 for the
+  Tritonia sea slug work. Content otherwise unchanged.
+- **Status: proposed; points 1, 5 and 6 user-approved 2026-11-03** (the split and evaluation plan:
+  "yes"; label handling: no hand check). The draft manifest of v4 was built for the leakage check
+  (user: "yes go ahead with the next phase", 2026-11-03). Open points are listed at the end;
+  nothing is trained, built as a YOLO dataset or frozen under this entry until it is accepted as a whole.
+- **Context (stated by Harsh in `data/raw/harsh_readme_2026-11/README.md` and his answers of
+  2026-11-03; checked against the final delivery below):** a Kaggle delivery (~9.5 GB, 11,356 files listed in
+  `SHA256SUMS.txt`) for a final lobster model ("Model A"): Set 100 + Set 2000 originals with
+  AI-reviewed labels, 400 colour-change images (200 ours, 200 Zenodo), 986 copy-paste images
+  (587 ours, 399 Zenodo), 932 Zenodo originals (record 15755673, western Sweden, CC BY 4.0, credit
+  required: Fiorina, Obst, Sundelöf, Ljungberg and Sande 2025) and 1,371 DM_underwater diffusion
+  copies. `derived_images_index.csv` (2,757 derived images) and `pasted_lobsters_index.csv`
+  (1,903 pasted lobsters) name the source image and session of every background and pasted lobster.
+- **Split conflict (OBSERVED, comparison of the README's session lists with
+  `data/processed/split_manifest.csv`):** Harsh's own split ("canonical-v2", seed 42) puts 21 of
+  the 45 labelled sessions in a different split from UWCT v1. 9 sessions that are train for him
+  are val or test in v1, including 5 of the 6 v1 test sessions (06_HERR_04, 06_HERR_11, 21_MACK_09,
+  21_SUB6_03 in his train; 06_HERR_08 in his val). Harsh counts 757 derived images that use one of
+  those 9 sessions (65 colour change, 229 copy-paste, 463 diffusion). 10 v1 train sessions are
+  val/test for him and have no colour-change or copy-paste images yet.
+- **Label review (stated by Harsh):** 331 frames reviewed by an AI model (Claude), with a 5-epoch
+  YOLO model's detections drawn on as hints; no person checked any frame. 123 frames excluded
+  (86 "empty" Set 2000 frames showing lobsters, 33 unclear, 4 wrong boxes); of 122 frames kept as
+  "confirmed empty", 15 are high, 76 medium and 31 low confidence.
+- **ZIP check (OBSERVED, 2026-11-03, read without extracting):** `DeepSight Model A data.zip.zip`
+  (9,549,815,408 B, sha256 `b70823f8a722509eb0c6234e83d3a3efdf63a69dea743a941b564245ac75f547`),
+  11,352 files, no unsafe paths, symlinks or macOS files. It is an earlier package than Harsh's
+  answers describe: its README is 2,263 B, and `SHA256SUMS.txt`, `derived_images_index.csv`,
+  `pasted_lobsters_index.csv`, `originals_index.csv` and `data_original_only.yaml` are missing.
+  - Ancestors from `sources - ours.csv` (background and every pasted lobster) and diffusion file
+    names, mapped through the v1 `image_manifest.csv`: 65 of 200 colour-change, 229 of 587
+    copy-paste and 463 of 1,371 diffusion images use a v1 val/test session, which reproduces
+    Harsh's 757. Usable for v1 train: 135, 358 and 908.
+  - All 1,982 original label files equal the raw labels up to 6-decimal rounding (largest
+    coordinate change ≤ 1e-6, all class 0): no box was edited. The cleaning is the exclusion of
+    123 frames: 119 negatives (87 train, 20 val, 12 test) and 4 positives (3 train, 1 val).
+  - Zenodo: two sites, `mpa` (2022; 478 images, 226 with a lobster) and `sk` (2024; 428 images,
+    143 with a lobster), in 17 site-camera-date groups; 26 images (`REC_00NN` and two odd names)
+    have no site in their name.
+- **Lab data (OBSERVED, `split_manifest.csv`):** 45 labelled sessions in 29 site-date groups and
+  11 site codes (2020–2022); 6 site codes have a single session. ASSUMPTION (the data provider
+  cannot be asked): the site is the second name field, so `06_HERR`, `16_HERR` and `19_HERR` are one
+  site. If they are different places, this is only stricter than needed.
+- **Final delivery (OBSERVED, 2026-11-03):** three ZIPs, each matching the sha256 Harsh stated
+  (`DeepSight Model A data.zip` `92d4d51c…`, `DeepSight UWCT v1 extra - 10 sessions.zip`
+  `828a330c…`, `DeepSight UWCT v1 colour change.zip` `1fa5cf0f…`), unpacked to
+  `data/raw/harsh_model_a_2026-11/` (11,358 files), `data/raw/harsh_v1_extra_2026-11/` (1,374) and
+  `data/raw/harsh_v1_colour_2026-11/` (676). Every file matches its `SHA256SUMS.txt` on disk; full
+  fingerprints: `data/processed/raw_fingerprint_harsh_*_2026-11.json`. The ZIPs were deleted after
+  the check (user-approved; Harsh's Kaggle copy remains).
+  - **Colour change redone (Harsh's option (a)):** zip 1's colour images took water colours from
+    canonical-v2 train frames, which include v1 val/test sessions. `harsh_v1_colour_2026-11`
+    replaces that folder: the same 135 + 200 base frames, colours from the 1,343 v1 train frames
+    (stated by Harsh). Zip 2's 63 colour images already use v1 train colours (its README).
+  - Zenodo, from file names: `mpa` 480 images (237 boxes, 10 groups), `sk` 428 (143 boxes,
+    8 groups), 24 `REC_` frames with no boxes, as Harsh stated.
+  - The 123 label-review exclusions are exactly the v1 frames missing from Harsh's originals
+    (v1 has 2,105 labelled frames, Harsh 1,982).
+- **v4 draft (OBSERVED, `scripts/build_model_a_manifest.py`):** `data/processed/v4/` = a copy of
+  v1 plus `mixed_manifest.csv` (6,413 rows), `zenodo_groups.csv` and `model_a_report.json`. Our
+  originals and their labels come from the raw biology files and v1; Harsh's original copies are
+  not used. Label checks passed for every derived image: colour change and diffusion boxes equal
+  the original's, copy-paste boxes are the background's plus one per pasted lobster (tolerance 1e-6).
+
+  | Split | Ours: originals | colour | copy-paste | diffusion | Zenodo: originals | colour | copy-paste |
+  |---|---:|---:|---:|---:|---:|---:|---:|
+  | train | 1,312 | 192 | 516 | 1,312 | 480 (`mpa`) | 93 | 206 |
+  | val | 324 | – | – | – | – | – | – |
+  | test | 348 (v1) | – | – | – | 428 (`sk`) | – | – |
+  | excluded | 121 | 6 | 257 | 494 | 24 | 107 | 193 |
+
+  Excluded: 90 train frames Harsh's review excluded and 31 low-confidence "empty" train frames;
+  992 derived images with a val/test or no-site ancestor; 65 derived images built on one of the
+  31 low-confidence frames. `check_leakage.py`, rules 1–5: PASSED (Harsh's flag agrees on every row).
+- **Proposed decision:**
+  1. **Split:** UWCT v1 sessions keep their v1 splits (CLAUDE.md §10: a split shipped with the data
+     is never used). Harsh's split, `data.yaml` and `data_original_only.yaml` are not used.
+  2. **Raw sources:** the delivery is unpacked into new read-only folders under `data/raw/`
+     (Zenodo JPGs built with `--link-mode copy`, rule 2), checked against `SHA256SUMS.txt` and the
+     ZIP hash, and fingerprinted. They are listed in `MODEL_A_ROOTS` (`src/dataset_audit/config.py`),
+     not `DATASET_SOURCES`, which drives the v1 audit and the default raw check. Label policy: every
+     image has a label file of the same stem; an empty file is a negative, a missing one an error.
+  3. **Dataset version v4** (draft, parent v1) with one mixed manifest: one row per image with its
+     origin, kind, group, split and ancestors (schema: `src/dataset_audit/leakage.py`).
+  4. **Leakage rules**, enforced by `scripts/check_leakage.py`, which must print
+     `LEAKAGE CHECK: PASSED` (with `--image-root`, on the training machine) before any Model A run,
+     next to the raw check and `verify_yolo_dataset.py`:
+     - a derived image is in train only if every ancestor (background and every pasted lobster's
+       source) is in a train group; an original excluded by the label review still counts as held
+       out; all other derived images are left out;
+     - val and test hold real, unmodified originals only;
+     - Harsh's `uses_uwct_v1_val_or_test_session` flag must agree with the computed answer;
+     - no identical file (sha256) and no near-duplicate (dHash distance ≤ 4) across train, val and
+       test. A flagged pair is reviewed by a person and the outcome recorded before training.
+  5. **Labels:** boxes come from the raw label files (unchanged, see the ZIP check). Harsh's 123
+     exclusions apply to train only. No frame is checked by hand (user choice), so val and test keep
+     every v1 frame and label: they stay identical to the frames E001–E005 were scored on. In train,
+     the "confirmed empty" frames marked low confidence in `label_review_verdicts.csv` are also left
+     out, never used as negatives.
+  6. **Evaluation:** three results, each reported with its own meaning:
+     - **v1 test (locked):** new sessions at known sites. Only pre-declared final candidates are
+       evaluated there, once, and logged (rule 7). Its frames and labels are unchanged from v1
+       (point 5), so E001, E004 and E005 results stay directly comparable.
+     - **Leave-site-out cross-validation** over the train + val sessions (about 4 folds, whole
+       sites per fold, derived images filtered per fold), for the final configuration: new sites.
+       The test sessions are never part of it.
+     - **Zenodo `sk` (held out):** an external new site (other country, camera setup and image
+       size). Training uses `mpa` only; derived Zenodo images with an `sk` ancestor and the 24
+       `REC_` images without a site (no lobsters, per Harsh) are left out.
+     A new site-held-out test split is not made: with 11 sites, mostly one session each, the score
+     would depend on which sites were picked, and E001–E005 could not be compared on it.
+  7. **Runs** go on one lab GPU, one at a time, in stages: (1) a data ladder (originals only, then
+     one new source at a time, then all) with E001's settings; (2) model choice on the best data
+     mix; (3) hyperparameter tuning in a pre-declared search space and budget; (4) the final
+     configuration with 3 seeds; (5) leave-site-out cross-validation (point 6). Each stage gets its
+     own experiment configs (E007 onwards) and, where it changes more than one variable (tuning), a
+     decision.
+  8. **Delivered model:** the evaluated model (trained on train + val) is the one the report
+     describes. Retraining on all lab data including test, for a product, would break rule 7 and
+     needs explicit user approval and its own decision; such a model would have no held-out score.
+- **Open points (UNKNOWN — requires confirmation before acceptance):**
+  - rule 6 (identical files and near-duplicates across splits): run 2026-11-03 on 5,211 images: no identical files across splits; 2 near-duplicate flags at
+    the threshold (dHash distance 4), both the same Zenodo `mpa` frame
+    (`mpa_cam2_120822_rec_001_frame_0021`, train) and its copy-paste image against one `sk` test frame
+    (`sk_cam3_120824_rec087_frame_0038`). Checked 2026-11-04 by Claude at the user's request
+    (visual comparison of the two originals): **different scenes**. OBSERVED: the burnt-in timestamps
+    are 2022/08/11 10:19:23 vs 2024/08/11 13:19:04, and the trap shape and angle, seabed, rope and
+    lobster position all differ; both are top-down views of a trap on green water, which explains the
+    hash similarity. All three images are kept; rule 6 counts as passed;
+  - the 29 train frames the review kept as `positive_incomplete` (a lobster without a box) stay in
+    train, as in E001–E005; leaving them out (and their derived images) is the alternative;
+  - the selection metric: the project's is val mAP50 (docs/EXPERIMENTS.md); keep it or declare
+    another one before stage 1;
+  - lab GPU model and time per run, which set how many tuning trials and folds fit.
+- **LIMITATIONS (expected):** train labels rest on an unverified AI review; the README states
+  that other frames may also be missing boxes; test sessions share sites with train (§3); we have
+  seen E001/E004 test results, so choices are made from validation numbers only; Zenodo images are
+  640 × 360 and show pots and timestamps, unlike ours; the site definition is an ASSUMPTION; the
+  v1 test is concentrated (2 sessions hold 1,135 of 1,512 boxes); zExtra stays unlabelled and
+  excluded.
+- **Consequence so far:** `src/dataset_audit/leakage.py`, `scripts/check_leakage.py`,
+  `src/dataset_audit/model_a.py`, `scripts/build_model_a_manifest.py` and their tests added;
+  `MODEL_A_ROOTS` in `config.py` (also write-protected through `RAW_ROOTS`); three raw folders and
+  their fingerprints; the v4 draft. No v1/v2, split, label or biology raw file changes.

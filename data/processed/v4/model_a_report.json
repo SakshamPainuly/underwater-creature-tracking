@@ -1,0 +1,91 @@
+{
+  "version": "v4",
+  "parent": "v1",
+  "rows": 6413,
+  "by_delivery": {
+    "biology/Set100": {
+      "train": 105
+    },
+    "biology/Set2000": {
+      "excluded:label_review_excluded": 90,
+      "excluded:label_review_low_confidence_empty": 31,
+      "test": 348,
+      "train": 1207,
+      "val": 324
+    },
+    "harsh_model_a_2026-11/3 Synthetic - copy-paste/ours": {
+      "excluded:ancestor_label_excluded": 27,
+      "excluded:ancestor_not_train": 229,
+      "train": 331
+    },
+    "harsh_model_a_2026-11/3 Synthetic - copy-paste/zenodo": {
+      "excluded:ancestor_not_train": 193,
+      "train": 206
+    },
+    "harsh_model_a_2026-11/4 Zenodo originals": {
+      "excluded:zenodo_no_site": 24,
+      "test": 428,
+      "train": 480
+    },
+    "harsh_model_a_2026-11/5 Diffusion - DM_underwater (train only)": {
+      "excluded:ancestor_label_excluded": 30,
+      "excluded:ancestor_not_train": 463,
+      "train": 878
+    },
+    "harsh_v1_colour_2026-11/ours": {
+      "excluded:ancestor_label_excluded": 6,
+      "train": 129
+    },
+    "harsh_v1_colour_2026-11/zenodo": {
+      "excluded:ancestor_not_train": 107,
+      "train": 93
+    },
+    "harsh_v1_extra_2026-11/2 Augmented - colour change": {
+      "train": 63
+    },
+    "harsh_v1_extra_2026-11/3 Synthetic - copy-paste": {
+      "excluded:ancestor_label_excluded": 1,
+      "train": 185
+    },
+    "harsh_v1_extra_2026-11/5 Diffusion - DM_underwater (10 sessions)": {
+      "excluded:ancestor_label_excluded": 1,
+      "train": 434
+    }
+  },
+  "excluded_by_reason": {
+    "ancestor_label_excluded": 65,
+    "ancestor_not_train": 992,
+    "label_review_excluded": 90,
+    "label_review_low_confidence_empty": 31,
+    "zenodo_no_site": 24
+  },
+  "zenodo_boxes_by_site": {
+    "mpa": 237,
+    "sk": 143,
+    "REC": 0
+  },
+  "unused_folders": {
+    "harsh_model_a_2026-11/1 Original - our lobsters": "originals come from the raw biology files and v1",
+    "harsh_model_a_2026-11/2 Augmented - colour change": "replaced by harsh_v1_colour_2026-11 (water colours from v1 train only)"
+  },
+  "label_checks": "colour change and diffusion boxes equal the original's; copy-paste boxes = background boxes + one per pasted lobster (tolerance 1e-06)",
+  "boxes_by_split": {
+    "excluded/ours/colour_change": 0,
+    "excluded/ours/copy_paste": 1281,
+    "excluded/ours/diffusion": 1808,
+    "excluded/ours/original": 8,
+    "excluded/zenodo/colour_change": 43,
+    "excluded/zenodo/copy_paste": 383,
+    "excluded/zenodo/original": 0,
+    "test/ours/original": 1512,
+    "test/zenodo/original": 143,
+    "train/ours/colour_change": 619,
+    "train/ours/copy_paste": 2518,
+    "train/ours/diffusion": 3992,
+    "train/ours/original": 3992,
+    "train/zenodo/colour_change": 45,
+    "train/zenodo/copy_paste": 381,
+    "train/zenodo/original": 237,
+    "val/ours/original": 1010
+  }
+}
