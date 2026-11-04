@@ -26,11 +26,16 @@ makesense.ai runs in the browser; per its own description images are not uploade
 UNKNOWN — confirm before using it if Dr. Wyeth's data must not leave the PC.
 
 ## 3. Rules (the same for every frame, so the labels mean one thing)
-- Slugs appear as bright shapes. A cross is where the annotator clicked, often beside or at the edge
-  of the slug rather than its centre: box the slug the cross belongs to, not the cross.
-- **Box every visible slug**, including ones without a cross: a frame you finish is fully labelled,
-  so a missing box later means "no slug there".
-- Tight box around the visible body, not the shadow or trail.
+- What a slug looks like (OBSERVED 2026-11-03, crops following 4 tracks over 20 min in
+  `20130519` frame 454): a **small, faint, light smudge, about 10–25 px**, right beside the cross,
+  moving slowly with it. Not the dark patches (they do not move: seabed or shadow) and not a large area.
+- **Box the slug of every cross, and nothing without a cross.** Dr. Wyeth's note says the whole
+  data set was tracked by hand, so bright specks without a cross are INFERRED not to be slugs
+  (debris, reflections). A finished frame is complete in that sense: a missing box means "no
+  tracked slug there". UNKNOWN — requires confirmation: whether every slug was tracked.
+- Tight box around the smudge (about 15–25 px), not the shadow, trail or surrounding seabed.
+- Use the labeller (`scripts/label_tritonia.py`): **h** shows the crosses, **c** contrast (on by
+  default, display only), **z** zoom. A box across a camera border is refused as you draw it.
 - The frame is a montage of 6 cameras. Never draw a box across a camera border; a slug cut by a
   border gets one box per camera, around the part visible in each.
 - A cross with no slug you can see (too dark, blurred, hidden): no box, and a `note` line in

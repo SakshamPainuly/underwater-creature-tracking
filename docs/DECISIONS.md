@@ -662,9 +662,13 @@ Short, dated records of project decisions. New dataset versions must reference a
   - **Labels for detection (user-approved 2026-11-03):** boxes drawn by hand. Batch 1 = 150 frames
     (seed 0), spread evenly over the 16 labelled days, only frames with at least one MDF point, at
     least 40 frames (10 min) apart within a day (`scripts/make_tritonia_label_batch.py`), labelled by
-    Anu under the rules in docs/TRITONIA_LABELLING.md. Every visible slug in a labelled frame is
-    boxed, so within batch 1 a frame's missing box means "no slug" (policy `negative` for the labelled
-    frames only; unlabelled frames stay `pending`). MDF points serve only as hints for finding slugs.
+    Anu under the rules in docs/TRITONIA_LABELLING.md. The slug of every MDF cross in a labelled frame
+    is boxed, and nothing without a cross (amended 2026-11-03 before any frame was kept: the first
+    trial frame showed crisp bright specks without crosses, while tracked slugs are faint 10-25 px
+    smudges; the Info file says the whole set was tracked by hand, so untracked specks are INFERRED
+    not to be slugs). Within batch 1 a frame's missing box therefore means "no tracked slug"
+    (policy `negative` for the labelled frames only; unlabelled frames stay `pending`). MDF points
+    locate the slugs; their boxes are still drawn by hand around the visible smudge.
     Rejected: a point-based detector (new model code) and postponing detection. Not allowed: boxes of
     an assumed size placed around points (rule 8).
   - **Model:** YOLO26s (`yolo26s.pt`, E001's settings) trained on a separate sea-slug-only dataset

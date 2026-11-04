@@ -149,7 +149,7 @@ def ingest_boxes(zip_path: Path, notes_path: Path, batch_dir: Path, out_dir: Pat
         raise TritoniaError(f"{out_dir} already exists; a label source is written once")
     rows, meta, width, height = _batch(batch_dir)
     stems = {stem_of(r["image"]) for r in rows}
-    notes = parse_notes(notes_path.read_text(encoding="utf-8"), stems)
+    notes = parse_notes(notes_path.read_text(encoding="utf-8-sig"), stems)  # Notepad may add a BOM
     excluded = {s for s, ns in notes.items() if any(n["kind"] == "exclude" for n in ns)}
 
     problems, labels = [], {}

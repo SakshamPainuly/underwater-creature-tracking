@@ -58,7 +58,8 @@ class TritoniaChainTest(unittest.TestCase):
         self.stems = make_batch(self.batch)
         self.notes = self.t / "notes.txt"
         self.notes.write_text(f"# comments are fine\n{self.stems[1]} | exclude | too dark to label\n"
-                              f"{self.stems[2]}.png | note | cross without a visible slug\n", encoding="utf-8")
+                              f"{self.stems[2]}.png | note | cross without a visible slug\n",
+                              encoding="utf-8-sig")  # with a BOM, as Windows Notepad may save it
         labels = {f"{s}.txt": SLUG for s in self.stems if s != self.stems[1]}
         labels[f"{self.stems[3]}.txt"] = ""  # labelled, no slug: confirmed negative
         labels[f"{self.stems[4]}.txt"] = SLUG + "1 0.600000 0.700000 0.040000 0.080000\n"
