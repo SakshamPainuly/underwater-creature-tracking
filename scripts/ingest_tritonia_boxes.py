@@ -26,9 +26,11 @@ def main():
     parser.add_argument("--notes", type=Path, required=True, help="notes.txt (may hold only comments)")
     parser.add_argument("--batch", type=Path, required=True, help="the labelling batch folder (manifest.csv)")
     parser.add_argument("--out", type=Path, required=True, help="new label source folder (must not exist)")
+    parser.add_argument("--extra", type=Path, nargs="*", default=[],
+                        help="files copied in unchanged as extra/<name> (e.g. suggestions.csv, auto_label_report.json)")
     args = parser.parse_args()
     try:
-        report = ingest_boxes(args.zip, args.notes, args.batch, args.out)
+        report = ingest_boxes(args.zip, args.notes, args.batch, args.out, tuple(args.extra))
     except (TritoniaError, OSError, ValueError, KeyError) as e:
         sys.exit(f"INGEST REFUSED: {e}")
     print(json.dumps(report["counts"], indent=2))
