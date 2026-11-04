@@ -37,7 +37,7 @@ def main():
                         help="persistent run storage outside the repo, e.g. /content/drive/MyDrive/uwct/runs")
     parser.add_argument("--weights-dir", type=Path, required=True,
                         help="where Ultralytics downloads pretrained checkpoints, outside the repo")
-    parser.add_argument("--dataset", type=Path, help="default: data/yolo/lobster_<dataset_version>")
+    parser.add_argument("--dataset", type=Path, help="default: data/yolo/<lobster|tritonia>_<dataset_version>")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--preflight-only", dest="mode", action="store_const", const="preflight")
     mode.add_argument("--smoke", dest="mode", action="store_const", const="smoke")

@@ -32,6 +32,19 @@ V1_LIMITATIONS = (
     "negative images come from the evaluation step.",
 )
 
+TRITONIA_LIMITATIONS = (
+    "Tritonia v3 (D-030): 150 hand-boxed frames from one setup over 16 days, split by day; val and "
+    "test measure new days, not new sites or cameras (docs/DATASET_TRITONIA.md).",
+    "Frames are 15 s apart: sparse-frame/timelapse analysis, not video tracking. No calibration: no "
+    "physical units.",
+    "Boxes were drawn by one labeller (batch 1); MTrackJ points were hints only.",
+    "This record holds overall val metrics only; per-class results come from a separate evaluation.",
+)
+
+
+def limitations_for(dataset: dict) -> list:
+    return list(TRITONIA_LIMITATIONS if dataset.get("dataset_kind") == "tritonia" else V1_LIMITATIONS)
+
 
 class RecordError(ValueError):
     pass
@@ -110,7 +123,7 @@ def build_record(*, kind: str, experiment: dict, run_name: str, run_dir: Path, g
         "outputs": outputs,
         "val_metrics": val_metrics,
         "test_metrics": None,  # only declared final evaluations produce test metrics (CLAUDE.md rule 7)
-        "limitations": list(V1_LIMITATIONS),
+        "limitations": limitations_for(dataset),
     }
     problems = validate_record(record)
     if problems:

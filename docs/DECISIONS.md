@@ -633,3 +633,120 @@ Short, dated records of project decisions. New dataset versions must reference a
   stores both the registered and the evaluated sha256 and the val differences. E005's `last.pt` and
   100-epoch `results.csv` are lost (only 98 epochs survive); this is a LIMITATION of every E005
   report. Training code is unchanged.
+
+## D-029 — Tritonia (sea slug) timelapse data as a new source; class 1 and label approach (2026-11-03, proposed)
+- **Status:** proposed by Anu on `anu/sea-slug-detection` (draft PR #16). The choices marked
+  "user-approved" below were made by Anu on 2026-11-03 (Saksham did not know the data). The entry is
+  accepted when the PR is reviewed and merged. D-028 is intentionally unused: it was a tracking
+  proposal (PR #15) that Anu withdrew on 2026-11-03 before merge; the PR is closed and its branches
+  deleted.
+- **Context (OBSERVED, 2026-11-03; details in docs/DATASET_TRITONIA.md):** Dr. Wyeth's Tritonia data
+  is on an external drive (`E:\Tritonia\`): 17 grayscale TIFF stacks (one per day, 2013-05-18 to
+  2013-06-03, 37,170 frames of 1056 × 480 px, 15 s per frame, each frame a 6-camera montage) and 16
+  MTrackJ `.mdf` files with 956 manually clicked tracks (117,969 points, no boxes, no class field).
+  `20130518` has no MDF. The lobster pipeline accepts only class `0` (`CLASS_NAMES` in
+  `src/yolo_prep/build.py`; `image_manifest.py` flags any other class ID).
+- **Proposed decision:**
+  - **Class (user-approved 2026-11-03):** `1: sea_slug` (appended; `0: lobster` unchanged, CLAUDE.md
+    §4). A general name: other sea slug species may join this class later, each with its own decision.
+  - **Raw source:** a new read-only source `tritonia` holding the 17 TIFF stacks, the 16 MDF files and
+    `Tritonia Info.txt` byte for byte, with a content fingerprint (all files hashed) before use.
+    **Location (user-approved 2026-11-03):** `D:\uwct_raw\tritonia\` on the PC's internal D: drive
+    (917 GB free; C: had 17 GB, too little for a ~18.9 GB copy), copied from the external drive with
+    SHA-256 checked on both sides, set via `UWCT_TRITONIA_ROOT`. Read-only (rule 1); nothing writes
+    there. Colab never receives the stacks, only extracted frames and labels.
+  - **Missing-label policy:** `pending`. A frame without points is excluded, never treated as negative,
+    until Dr. Wyeth confirms every visible slug was clicked (rule 6).
+  - **Split unit:** the recording day (one stack = one session), so all frames of a day stay in one
+    split (rule 5). The split itself is a later step with its own seed and decision.
+  - **Labels for detection (user-approved 2026-11-03):** boxes drawn by hand. Batch 1 = 150 frames
+    (seed 0), spread evenly over the 16 labelled days, only frames with at least one MDF point, at
+    least 40 frames (10 min) apart within a day (`scripts/make_tritonia_label_batch.py`), labelled by
+    Anu under the rules in docs/TRITONIA_LABELLING.md. The slug of every MDF cross in a labelled frame
+    is boxed, and nothing without a cross (amended 2026-11-03 before any frame was kept: the first
+    trial frame showed crisp bright specks without crosses, while tracked slugs are faint 10-25 px
+    smudges; the Info file says the whole set was tracked by hand, so untracked specks are INFERRED
+    not to be slugs). Within batch 1 a frame's missing box therefore means "no tracked slug"
+    (policy `negative` for the labelled frames only; unlabelled frames stay `pending`). MDF points
+    locate the slugs; their boxes are still drawn by hand around the visible smudge.
+    Rejected: a point-based detector (new model code) and postponing detection. Not allowed: boxes of
+    an assumed size placed around points (rule 8).
+  - **Model:** YOLO26s (`yolo26s.pt`, E001's settings) trained on a separate sea-slug-only dataset
+    version; one config per run (§5). A combined lobster + sea slug model is a later decision: the
+    lobster images were never checked for sea slugs.
+  - **Reporting:** frames are 15 s apart, so all results are "sparse-frame/timelapse analysis", never
+    "video tracking"; px and frames only (seconds via the stated 15 s); no physical units.
+    The MDF tracks carry hand-assigned track IDs, so IDF1/HOTA/MOTA become possible on this data
+    once a detector and tracker produce tracks (rule 9), per camera, since slugs are tracked per camera.
+- **LIMITATIONS:** the 6-camera layout (INFERRED 3 × 2 tiles of 352 × 240 px) is not recorded in the
+  files read; the MDF track flag (`true`/`false`) and the one `Reference` line are not yet understood;
+  2 points sit on or just past the frame edge; site and setting are UNKNOWN; the 17 days are
+  INFERRED to be one setup, so a day split measures new-day, not new-site, generalization.
+- **Consequences:** an MTrackJ reader, a TIFF-stack frame extractor and the batch builder in `src/`
+  and `scripts/` with tests (no pixel library needed: the stacks are uncompressed). After labelling:
+  the box ZIP becomes a new read-only label source, a new draft dataset version with its own
+  decision and split, and a Colab notebook plus experiment config for YOLO26s. No change to v1, v2,
+  their splits, labels or experiments. A local 50-frame inspection sample exists at
+  `C:\sample_data\Tritonia\` (outside the repository, not a dataset).
+
+## D-030 — Tritonia dataset v3, day split and the E006 YOLO26s run (2026-11-03, proposed)
+- **Status:** proposed by Anu on `anu/sea-slug-detection` (PR #16). The split counts and building the
+  whole chain before labelling are user-approved (Anu, 2026-11-03). v3 does not exist yet: it is
+  created after labelling batch 1 is ingested, and freezing it needs Anu's explicit approval.
+- **Context:** D-029 chose hand-drawn boxes on a 150-frame batch (16 labelled days, 9–10 frames each)
+  and YOLO26s on a sea-slug-only dataset. The lobster pipeline (version registry, YOLO view, training
+  checks) assumed one dataset with one class; this entry extends it without changing any lobster
+  version, view, config or run.
+- **Decision:**
+  - **Label source:** `scripts/ingest_tritonia_boxes.py` checks the makesense.ai YOLO export against
+    the batch manifest and writes `D:\uwct_raw\tritonia_boxes_batch1\` (labels byte for byte, the ZIP,
+    `notes.txt`, `ingest_report.json` with every label's sha256). Read-only (rule 1;
+    `UWCT_TRITONIA_BOXES_ROOT`). Refused on any problem: a frame with no label file and no
+    `exclude` note, a class other than 0/1, a box outside the frame or across a camera border
+    (3 px tolerance).
+  - **Dataset v3:** a new lineage with no parent (`dataset_kind: tritonia`, classes `0: lobster`,
+    `1: sea_slug`), made by `scripts/make_tritonia_version.py`. Frames marked `exclude` are
+    `excluded`; a label file with boxes is `positive`; an empty one is `negative_confirmed` (D-029:
+    every visible slug in a labelled frame is boxed). Images and labels are named by sha256.
+  - **Split (user-approved counts):** unit = recording day (rule 5); the 16 days, sorted and shuffled
+    with seed 0, give 3 val and 3 test days, the other 10 train. Computed now from the day names
+    alone, before any box exists (checked by `tests/test_tritonia_dataset.py`):
+    - val: 2013-05-24, 2013-05-29, 2013-06-02
+    - test: 2013-05-20, 2013-05-21, 2013-05-28
+    - train: 2013-05-19, 05-22, 05-23, 05-25, 05-26, 05-27, 05-30, 05-31, 06-01, 06-03
+  - **YOLO view:** `scripts/prepare_tritonia_yolo.py` (Colab) builds `data/yolo/tritonia_v3/` from the
+    frozen v3, copying each frame and label only if its sha256 matches; same layout and fingerprint
+    rule as the lobster views. Training (`train.py`) verifies it through `tritonia_dataset.verify_view`
+    and reads the class names from the dataset; lobster views are checked exactly as before.
+  - **E006** (`configs/experiments/E006_yolo_seaslug.yaml`, committed once v3 is built, with the
+    fingerprint the notebook prints):
+    ```
+    id: E006
+    slug: yolo_seaslug
+    parent: E001
+    changed: "dataset v1 (lobster) -> v3 (Tritonia sea slugs, classes lobster + sea_slug; D-030)"
+    dataset_version: v3
+    dataset_fingerprint: "<printed by notebooks/colab_train_tritonia.ipynb cell 9>"
+    model: yolo26s.pt
+    ultralytics_version: "8.4.155"
+    seed: 0
+    train_args:
+      imgsz: 640
+      epochs: 100
+      patience: 30
+      batch: 16
+      deterministic: true
+    ```
+    Everything except the dataset is E001's. Selection metric: val mAP50 of class `sea_slug`.
+  - **Notebook:** `notebooks/colab_train_tritonia.ipynb` copies the label source and the 150 clean
+    frames from Drive, builds and verifies the view, then preflight, smoke test and full run like the
+    lobster notebook. No val-eval or final-test cell yet: those scripts are lobster-specific, and the
+    3 test days stay untouched until a sea slug final-test procedure is declared (rule 7).
+- **LIMITATIONS:** 150 frames from one setup; 3 val and 3 test days, so val/test numbers are noisy
+  and measure new days, not new sites. One labeller. Run records of v3 carry these Tritonia
+  limitations instead of v1's (`run_record.TRITONIA_LIMITATIONS`).
+- **Consequences:** new `src/dataset_audit/tritonia_dataset.py`, three scripts, tests;
+  `versioning.open_new_lineage` (a draft with no parent; `freeze` skips the parent check only for a
+  non-lobster `dataset_kind`); `experiment.default_dataset_dir` / `dataset_kind`; class names and
+  limitations taken from the dataset in `train.py`, `run_record.py`, `verify_yolo_dataset.py`.
+  No change to v1, v2, E001–E005 or their records.

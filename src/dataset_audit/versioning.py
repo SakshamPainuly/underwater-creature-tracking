@@ -167,6 +167,30 @@ def open_draft(name: str, parent: str | None, decision: str | None,
     return d
 
 
+def open_new_lineage(name: str, decision: str, dataset_kind: str, extra: dict | None = None,
+                     root: Path = PROCESSED_ROOT, decisions_path: Path = DECISIONS_PATH) -> Path:
+    """Create an empty draft version with no parent: a different dataset, not a lobster extension.
+
+    Used for the Tritonia sea slug data (D-029/D-030). VERSION.json records `parent: null` and its
+    `dataset_kind`; freeze() then skips the parent-extension check, which has no parent to compare
+    with. The caller writes the manifests into the returned directory before freezing.
+    """
+    if is_frozen(name, root):
+        raise VersionError(f"dataset version {name} is frozen and immutable ({REGISTRY_NAME}); no override")
+    if not dataset_kind or dataset_kind == "lobster":
+        raise VersionError("a new lineage needs a dataset_kind other than the lobster data")
+    if not decision_exists(decision, decisions_path):
+        raise VersionError(f"decision {decision} not found in {decisions_path}; record it first")
+    d = version_dir(name, root)
+    if d.exists():
+        raise VersionError(f"{d} already exists; a new lineage starts in a new version folder")
+    d.mkdir(parents=True)
+    meta = {"name": name, "parent": None, "decision": decision, "status": "draft",
+            "created": date.today().isoformat(), "dataset_kind": dataset_kind, **(extra or {})}
+    (d / VERSION_FILE).write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
+    return d
+
+
 def _csv_map(path: Path, key: str, value: str) -> dict:
     with open(path, newline="", encoding="utf-8") as f:
         return {r[key]: r[value] for r in csv.DictReader(f)}
@@ -177,6 +201,8 @@ def check_extends_parent(name: str, root: Path = PROCESSED_ROOT) -> list:
     meta = read_version_meta(name, root)
     if meta is None:
         return [f"{name} has no {VERSION_FILE}"]
+    if meta.get("parent") is None:  # a new lineage (open_new_lineage) has nothing to extend
+        return [] if meta.get("dataset_kind") not in (None, "lobster") else [f"{name} has no parent"]
     d, pd = version_dir(name, root), version_dir(meta["parent"], root)
     problems = []
 

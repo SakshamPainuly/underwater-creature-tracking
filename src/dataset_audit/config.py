@@ -57,7 +57,12 @@ IMAGE_SOURCES = {
     "enhanced_2026-09": ENHANCED_2026_09_ROOT,  # Harsh's enhanced Set 100 + Set 2000 (v2)
     "enhanced_zextra_2026-10": ENHANCED_ZEXTRA_2026_10_ROOT,  # Harsh's enhanced zExtra (D-024)
 }
-RAW_ROOTS = tuple(IMAGE_SOURCES.values())  # every one is read-only (CLAUDE.md rule 1)
+# Tritonia sea slug data (D-029): the TIFF stacks + MTrackJ tracks, and the hand-drawn boxes of
+# labelling batch 1 as ingested by scripts/ingest_tritonia_boxes.py. Not lobster image sources.
+TRITONIA_ROOT = Path(os.environ.get("UWCT_TRITONIA_ROOT", PROJECT_ROOT / "data" / "raw" / "tritonia"))
+TRITONIA_BOXES_ROOT = Path(os.environ.get("UWCT_TRITONIA_BOXES_ROOT",
+                                          PROJECT_ROOT / "data" / "raw" / "tritonia_boxes_batch1"))
+RAW_ROOTS = (*IMAGE_SOURCES.values(), TRITONIA_ROOT, TRITONIA_BOXES_ROOT)  # all read-only (CLAUDE.md rule 1)
 
 SPREADSHEET_PATH = BIOLOGY_ROOT / "What's been done.xlsx"
 

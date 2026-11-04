@@ -38,7 +38,8 @@ def main():
 
     data, seen = ultralytics_split_counts(args.dataset / "data.yaml", list(expected["splits"]))
     print(f"names: {data['names']}")
-    ok = data["names"] == {0: "lobster"}
+    expected_names = {int(i): n for i, n in expected.get("class_names", {"0": "lobster"}).items()}
+    ok = data["names"] == expected_names  # lobster views: {0: lobster}; Tritonia: {0: lobster, 1: sea_slug}
 
     for split, exp in expected["splits"].items():
         match = counts_match(exp, seen[split])
