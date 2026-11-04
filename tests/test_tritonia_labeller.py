@@ -31,6 +31,26 @@ class LabellerLogicTest(unittest.TestCase):
         self.assertEqual(L.check_new_box((340, 40, 354, 90), W, H), [])  # within the 3 px tolerance
         self.assertIn("smaller", L.check_new_box((100, 40, 101, 90), W, H)[0])
 
+    def test_find_handle_edges_corners_and_inside(self):
+        boxes = [(100, 40, 160, 100)]
+        self.assertEqual(L.find_handle(boxes, 100, 70, 6), (0, "l"))
+        self.assertEqual(L.find_handle(boxes, 163, 70, 6), (0, "r"))  # just outside still grabs
+        self.assertEqual(L.find_handle(boxes, 130, 40, 6), (0, "t"))
+        self.assertEqual(L.find_handle(boxes, 159, 101, 6), (0, "rb"))
+        self.assertIsNone(L.find_handle(boxes, 130, 70, 6))  # inside: free for drawing a new box
+        self.assertIsNone(L.find_handle(boxes, 200, 70, 6))
+        # a big old box around a small one: the small one wins, its inside stays free
+        nested = [(80, 20, 200, 140), (120, 60, 135, 75)]
+        self.assertEqual(L.find_handle(nested, 120, 67, 6), (1, "l"))
+        self.assertIsNone(L.find_handle(nested, 127.5, 67.5, 6))  # 15 px box: grab zone shrinks to 5 px
+
+    def test_resize_box(self):
+        box = (100, 40, 160, 100)
+        self.assertEqual(L.resize_box(box, "r", 120, 999, W, H), (100, 40, 120, 100))
+        self.assertEqual(L.resize_box(box, "lt", 110, 50, W, H), (110, 50, 160, 100))
+        self.assertEqual(L.resize_box(box, "l", 180, 0, W, H), (160, 40, 180, 100))  # dragged past: re-sorted
+        self.assertEqual(L.resize_box(box, "b", 0, 9999, W, H), (100, 40, 160, H))  # clipped to the frame
+
     def test_save_load_notes_progress(self):
         with tempfile.TemporaryDirectory() as d:
             d = Path(d)

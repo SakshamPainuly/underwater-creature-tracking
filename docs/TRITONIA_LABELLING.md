@@ -36,6 +36,16 @@ UNKNOWN — confirm before using it if Dr. Wyeth's data must not leave the PC.
 - Tight box around the smudge (about 15–25 px), not the shadow, trail or surrounding seabed.
 - Use the labeller (`scripts/label_tritonia.py`): **h** shows the crosses, **c** contrast (on by
   default, display only), **z** zoom. A box across a camera border is refused as you draw it.
+  Drag a box's edge or corner to resize it (refused the same way if it would cross a border);
+  **u** undoes the last change on the frame (a drawn, resized or deleted box).
+- Suggested boxes (D-031): a frame not yet labelled opens with orange boxes suggested from the
+  image next to each cross, and a red circle on each cross that got none. Check every one: delete
+  wrong ones (often faint texture in washed-out views), resize loose ones, draw missing ones (look
+  at every red circle). Leaving the frame saves what is on screen as your reviewed labels.
+  **s** replaces a frame's boxes with fresh suggestions (**u** undoes it).
+- Checking only the val and test frames (54 frames, D-030 day split):
+  `python scripts/label_tritonia.py --batch D:\uwct_work\tritonia_label_batch1 --split val,test`.
+  It starts at the first frame not yet checked against suggestions; **x** still exports all frames.
 - The frame is a montage of 6 cameras. Never draw a box across a camera border; a slug cut by a
   border gets one box per camera, around the part visible in each.
 - A cross with no slug you can see (too dark, blurred, hidden): no box, and a `note` line in
