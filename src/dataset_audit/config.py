@@ -62,7 +62,22 @@ IMAGE_SOURCES = {
 TRITONIA_ROOT = Path(os.environ.get("UWCT_TRITONIA_ROOT", PROJECT_ROOT / "data" / "raw" / "tritonia"))
 TRITONIA_BOXES_ROOT = Path(os.environ.get("UWCT_TRITONIA_BOXES_ROOT",
                                           PROJECT_ROOT / "data" / "raw" / "tritonia_boxes_batch1"))
-RAW_ROOTS = (*IMAGE_SOURCES.values(), TRITONIA_ROOT, TRITONIA_BOXES_ROOT)  # all read-only (CLAUDE.md rule 1)
+# Harsh's Model A deliveries (D-031). Not image sources of the D-017 kind: they add new images
+# (Zenodo originals and derived images), described by the v4 mixed manifest
+# (dataset_audit/model_a.py). Keys are the folder names under data/raw/, and the manifest's
+# path columns start with them, so on another machine these folders and "biology" sit side by side.
+# Label policy (all three): every image has a label file of the same stem; an empty file is a
+# negative, a missing file is an error.
+MODEL_A_ROOTS = {
+    "harsh_model_a_2026-11": Path(os.environ.get("UWCT_HARSH_MODEL_A_ROOT",
+                                                 PROJECT_ROOT / "data" / "raw" / "harsh_model_a_2026-11")),
+    "harsh_v1_extra_2026-11": Path(os.environ.get("UWCT_HARSH_V1_EXTRA_ROOT",
+                                                  PROJECT_ROOT / "data" / "raw" / "harsh_v1_extra_2026-11")),
+    "harsh_v1_colour_2026-11": Path(os.environ.get("UWCT_HARSH_V1_COLOUR_ROOT",
+                                                   PROJECT_ROOT / "data" / "raw" / "harsh_v1_colour_2026-11")),
+}
+RAW_ROOTS = (*IMAGE_SOURCES.values(), TRITONIA_ROOT, TRITONIA_BOXES_ROOT,
+             *MODEL_A_ROOTS.values())  # all read-only (CLAUDE.md rule 1)
 
 SPREADSHEET_PATH = BIOLOGY_ROOT / "What's been done.xlsx"
 
