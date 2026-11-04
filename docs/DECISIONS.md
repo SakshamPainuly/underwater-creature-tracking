@@ -751,14 +751,15 @@ Short, dated records of project decisions. New dataset versions must reference a
   limitations taken from the dataset in `train.py`, `run_record.py`, `verify_yolo_dataset.py`.
   No change to v1, v2, E001–E005 or their records.
 
-## D-031 — Model A: Harsh's mixed training data on the UWCT v1 split, with a mandatory leakage check (2026-11-03, proposed)
+## D-031 — Model A: Harsh's mixed training data on the UWCT v1 split, with a mandatory leakage check (2026-11-03, accepted 2026-11-04)
 - **Numbering note (2026-11-04):** drafted as D-029 / dataset v3 / E006 onwards; renumbered to
   D-031 / v4 / E007 onwards because PR #16 (merged first) uses D-029, D-030, v3 and E006 for the
   Tritonia sea slug work. Content otherwise unchanged.
-- **Status: proposed; points 1, 5 and 6 user-approved 2026-11-03** (the split and evaluation plan:
-  "yes"; label handling: no hand check). The draft manifest of v4 was built for the leakage check
-  (user: "yes go ahead with the next phase", 2026-11-03). Open points are listed at the end;
-  nothing is trained, built as a YOLO dataset or frozen under this entry until it is accepted as a whole.
+- **Status: accepted as a whole by the user on 2026-11-04 ("accpeted").** Points 1, 5 and 6 were
+  user-approved 2026-11-03 (the split and evaluation plan: "yes"; label handling: no hand check);
+  the draft manifest of v4 was built for the leakage check (user: "yes go ahead with the next
+  phase", 2026-11-03). Acceptance allows building v4's YOLO view and training E007 onwards on Kaggle.
+  It does not freeze v4: freezing needs its own explicit user approval (CLAUDE.md rule 4).
 - **Context (stated by Harsh in `data/raw/harsh_readme_2026-11/README.md` and his answers of
   2026-11-03; checked against the final delivery below):** a Kaggle delivery (~9.5 GB, 11,356 files listed in
   `SHA256SUMS.txt`) for a final lobster model ("Model A"): Set 100 + Set 2000 originals with
@@ -874,7 +875,7 @@ Short, dated records of project decisions. New dataset versions must reference a
   8. **Delivered model:** the evaluated model (trained on train + val) is the one the report
      describes. Retraining on all lab data including test, for a product, would break rule 7 and
      needs explicit user approval and its own decision; such a model would have no held-out score.
-- **Open points (UNKNOWN — requires confirmation before acceptance):**
+- **Points settled before acceptance (two items still measured in the first Kaggle session):**
   - rule 6 (identical files and near-duplicates across splits): run 2026-11-03 on 5,211 images: no identical files across splits; 2 near-duplicate flags at
     the threshold (dHash distance 4), both the same Zenodo `mpa` frame
     (`mpa_cam2_120822_rec_001_frame_0021`, train) and its copy-paste image against one `sk` test frame
