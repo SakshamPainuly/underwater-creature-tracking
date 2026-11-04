@@ -1,0 +1,20 @@
+# E006 -- first Tritonia sea slug detector (D-030; labels and scoring D-031). GPU only: see docs/COLAB.md.
+# Restricted YAML subset (src/training/experiment.py). Training boxes are automatic (D-031): the
+# val P/R/mAP Ultralytics prints are against them, not accuracy. Accuracy = point scores against the
+# MTrackJ crosses (scripts/tritonia_point_eval.py, notebook cell 17). Selection metric: val point AP.
+# The training data file has no test split (CLAUDE.md rule 7).
+id: E006
+slug: yolo_seaslug
+parent: E001
+changed: "dataset v1 (lobster) -> v3 (Tritonia sea slugs, classes lobster + sea_slug, automatic boxes; D-030, D-031)"
+dataset_version: v3
+dataset_fingerprint: "c1d42afae0cfc18e5747ec636d3c565d5b00d009b0da70d639ef58d5204ea7e0"
+model: yolo26s.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 640
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true

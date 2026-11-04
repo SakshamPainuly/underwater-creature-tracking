@@ -1,0 +1,26 @@
+{
+  "name": "v3",
+  "parent": null,
+  "decision": "D-030",
+  "status": "frozen",
+  "created": "2026-11-04",
+  "dataset_kind": "tritonia",
+  "class_names": [
+    "lobster",
+    "sea_slug"
+  ],
+  "label_source": "tritonia_boxes_batch1",
+  "label_source_report_sha256": "a23fd0d826fd133a56891a740598d489ba9681a7d2f6db15b6b0e0d44069a967",
+  "frame_batch": {
+    "manifest_sha256": "001133cc802deb27650ccb6d2f2b913c9a1e6fc152614237154a2e258c22af95",
+    "seed": 0,
+    "n": 150,
+    "min_gap": 40
+  },
+  "split_rule": {
+    "unit": "recording day",
+    "seed": 0,
+    "n_val": 3,
+    "n_test": 3
+  }
+}
