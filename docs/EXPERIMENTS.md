@@ -37,7 +37,7 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E004 | `configs/experiments/E004_yolo_enhanced.yaml` | E001 | images raw → enhanced only: dataset v1 → v2 (D-017) | completed; 81 epochs (early stop); registered; declared final candidate (D-022); evaluated on test once, 2026-10-12 |
 | E005 | `configs/experiments/E005_rtdetr_amp_off.yaml` | E001 | as E003 (model yolo26s.pt → rtdetr-l.pt) plus amp true → false; replaces the diverged E003 (D-025) | training finished: 100 epochs at commit 292d9ab, run_record.json finalized 2026-10-15 on Drive (OBSERVED in the RT-DETR notebook output); effective batch 8 after automatic OOM reduction (D-026); declared final candidate 2026-10-15; registered 2026-10-17 |
 | E006 | `configs/experiments/E006_yolo_seaslug.yaml` (committed once v3 is built; template in D-030) | E001 | dataset v1 (lobster) → v3 (Tritonia sea slugs; classes lobster + sea_slug) only; model and settings as E001 (D-030) | planned; waits for labelling batch 1 and the frozen v3 |
-| E007 | `configs/experiments/E007_yolo_model_a_all.yaml` | E001 | dataset v1 → v4 only: all safe Model A training data (4,111 images: our originals, Zenodo `mpa`, colour change, copy-paste, diffusion; D-031, D-032); model and settings as E001 | planned; Kaggle (2 × T4) |
+| E007 | `configs/experiments/E007_yolo_model_a_all.yaml` | E001 | dataset v1 → v4 only: all safe Model A training data (4,111 images: our originals, Zenodo `mpa`, colour change, copy-paste, diffusion; D-031, D-032); model and settings as E001 | completed 2026-11-08 on Kaggle (Tesla T4); 58 epochs (early stop); registered; not a final candidate |
 
 **E006 (Tritonia sea slugs, D-030), declared before any result:** selection metric val mAP50 of class
 `sea_slug`; also reported per class: P, R, mAP50-95 on val, and false positives on the confirmed-negative
@@ -96,6 +96,7 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | E001 | 2026-09-19 | none | initial baseline: yolo26s.pt, imgsz 640, ≤100 epochs, patience 30, batch 16, seed 0, deterministic | v1 | 0.8527 | 0.6115 | 100 epochs completed; best.pt recorded; final candidate |
 | E004 | 2026-09-30 | E001 | images raw → enhanced only (dataset v1 → v2, D-017) | v2 | 0.8385 | 0.5864 | 81 epochs (early stop, patience 30); best.pt recorded; not a final candidate (D-018) |
 | E005 | 2026-10-15 | E001 | rtdetr-l.pt, amp off (D-025); effective batch 8 (D-026) | v1 | 0.8359 | 0.5884 | 100 epochs completed over 5 launches; best.pt recorded, later lost on Drive (final test uses the recovered epoch-41 best.pt, D-027); final candidate |
+| E007 | 2026-11-08 | E001 | dataset v1 → v4 only: all 4,111 safe Model A training images (D-032) | v4 | 0.8423 | 0.5993 | 58 epochs (early stop at 28 + 30); best.pt recorded; Kaggle; not a final candidate |
 
 E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
 The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
@@ -147,6 +148,46 @@ matching the record). From these files (OBSERVED, 2026-10-01):
   next section). LIMITATION: E004 trained 81
   epochs and E001 trained 100. It is UNKNOWN whether E004 would have improved after epoch 81;
   E001 did not improve after its epoch-61 peak.
+
+### E007 training observations
+
+Registered in `experiments/registry.csv`; metadata archived in `experiments/records/E007/` (D-013):
+`run_record.json` (9,820 B, sha256 `b678ded4…`) and `results.csv` (7,096 B, sha256 `02768a40…`,
+matching the record). From these files and the Kaggle notebook output (OBSERVED, 2026-11-08 UTC):
+
+- One uninterrupted launch in an interactive Kaggle session on one Tesla T4 (2 × T4 attached, one
+  used): 6,498 s (1.81 h), about 112 s per epoch. Commit `428f5bd`, dataset v4 `bbd4a8b1…` (frozen,
+  D-032), the same `yolo26s.pt` checkpoint as E001 (`646f8bc3…`), torch 2.11.0+cu130, CUDA 13.0,
+  Ultralytics 8.4.155.
+- Before training, in the same notebook: archive sha256 checks and raw checks of all four raw folders
+  passed; the built view's fingerprint matched the config; `verify_yolo_dataset.py` printed VERIFIED
+  for train, val, test and test_zenodo_sk; `check_leakage.py` flagged only the near-duplicate pair
+  reviewed in D-031 (different scenes); smoke test passed.
+- The best epoch is **28**, on both val mAP50 (0.8420 in training) and val mAP50-95 (0.5985), so
+  it is the fitness peak whatever the weights. The registered val mAP50 0.8423 is the post-training
+  validation of `best.pt`. Training **stopped early at epoch 58** = 28 + 30 (`patience: 30`), never
+  resumed, as in E004.
+- From epoch 9 to 58, val mAP50 stayed between 0.776 and 0.842. Train losses fell throughout
+  (box 1.298 → 0.834, cls 1.768 → 0.469), while val losses were lowest near epoch 28 and rose after
+  (val box 1.158 at epoch 28 → 1.213 at epoch 58; val cls 1.039 → 1.085). INFERRED: the model
+  overfits the training data after about epoch 28.
+- **Val comparison with E001** (the same 324 frames; Ultralytics val defaults): mAP50 0.8423 vs
+  0.8527 (−0.010); mAP50-95 0.5993 vs 0.6115 (−0.012); precision 0.8021 vs 0.7998; recall
+  0.7783 vs 0.7901. OBSERVED: about 2.9 times the training images (4,111 vs E001's 1,433) did not raise any
+  val metric except precision (+0.002).
+- LIMITATIONS: one run per arm (seed 0), so gaps of about 0.01 may be run-to-run noise; E001 ran on
+  Colab and E007 on Kaggle (both Tesla T4; torch/CUDA builds differ: cu128 vs cu130); without the
+  data ladder (D-032) no single source can be blamed or credited. Val holds only UWCT v1 sessions,
+  while 2,319 of E007's train images are derived and 779 come from Zenodo: HYPOTHESIS, not tested,
+  that the added data helps on new sites (Zenodo `sk`) without helping on our own sessions; `sk` is
+  a test split, evaluated only for a declared final candidate (rule 7).
+- Off-repo outputs (referenced by path + sha256, CLAUDE.md §5): `best.pt` 20,289,541 B sha256
+  `f5f5a249…`, `last.pt` sha256 `9cbaefdf…`, in `E007_package.zip` (86 files: run folders of E007
+  and its smoke test, and every notebook log; 86,522,254 B, sha256 `8d57c662…`), downloaded to
+  `D:\uwct_runs\E007\` on the user's PC and checked (all four sha256 match). The Kaggle
+  `/kaggle/working` copy ends with the session.
+- The secondary metrics (recall at a val-chosen confidence, false positives on negative images,
+  per-condition results, D-020) are not computed yet for E007.
 
 ### Val secondary metrics: E001 vs E004 (D-020)
 
