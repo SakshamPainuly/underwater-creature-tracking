@@ -13,7 +13,12 @@ Draft versions build only with --allow-draft and are labeled "draft" in build_su
 Images come from the version's image source (VERSION.json "image_source", D-017): the raw images
 for v1, the enhanced images for v2 (root: UWCT_ENHANCED_ROOT). Labels always come from the raw
 data. Images are linked, not duplicated (symlink where the OS allows, else hardlink).
-Run it once per machine (Windows PC, Colab, lab GPU) -- it takes seconds.
+Run it once per machine (Windows PC, Colab, Kaggle) -- it takes seconds.
+
+Mixed versions (VERSION.json dataset_kind "lobster_mixed": v4, Model A, D-031/D-032) are built from
+<version dir>/mixed_manifest.csv by yolo_prep/mixed.py instead: images are always copied (JPGs,
+rule 2), raw roots come from UWCT_RAW_ROOT and the UWCT_HARSH_*_ROOT variables, and the default
+output is data/yolo/lobster_mixed_<version>. --link-mode does not apply to them.
 """
 
 import argparse
@@ -26,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from dataset_audit.config import BIOLOGY_ROOT, IMAGE_SOURCES, PROJECT_ROOT
 from dataset_audit.versioning import (VersionError, image_source_of, is_frozen, read_version_meta,
                                       verify_frozen, version_dir)
+from yolo_prep import mixed
 from yolo_prep.build import DATASET_BASENAME, BuildError, build_yolo_dataset
 
 
@@ -51,6 +57,13 @@ def main():
     print(f"raw data root: {BIOLOGY_ROOT}")
     try:
         vdir, status = resolve_version(args.version, args.allow_draft)
+        if (read_version_meta(args.version) or {}).get("dataset_kind") == mixed.DATASET_KIND:
+            for name, root in mixed.default_raw_roots().items():
+                print(f"raw root {name}: {root}")
+            out = args.out or PROJECT_ROOT / "data" / "yolo" / f"{mixed.DATASET_KIND}_{args.version}"
+            summary = mixed.build_mixed_dataset(vdir / mixed.MANIFEST_FILE, out, args.version, status)
+            print(json.dumps(summary, indent=2))
+            return
         image_source = image_source_of(args.version)
         print(f"image source: {image_source} ({IMAGE_SOURCES.get(image_source)})")
         out = args.out or PROJECT_ROOT / "data" / "yolo" / f"{DATASET_BASENAME}_{args.version}"
