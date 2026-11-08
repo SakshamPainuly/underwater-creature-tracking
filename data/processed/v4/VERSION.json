@@ -2,8 +2,9 @@
   "name": "v4",
   "parent": "v1",
   "decision": "D-031",
-  "status": "draft",
+  "status": "frozen",
   "created": "2026-11-04",
   "approved_split_changes": [],
-  "approved_label_changes": []
+  "approved_label_changes": [],
+  "dataset_kind": "lobster_mixed"
 }

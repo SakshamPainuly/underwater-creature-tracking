@@ -911,3 +911,44 @@ Short, dated records of project decisions. New dataset versions must reference a
   `src/dataset_audit/model_a.py`, `scripts/build_model_a_manifest.py` and their tests added;
   `MODEL_A_ROOTS` in `config.py` (also write-protected through `RAW_ROOTS`); three raw folders and
   their fingerprints; the v4 draft. No v1/v2, split, label or biology raw file changes.
+
+## D-032 — Model A, first run E007: all safe v4 training data at once (no data ladder); v4 frozen; YOLO view of v4 (2026-11-07)
+- **Status: accepted by the user on 2026-11-07 ("i approve").** The two choices below are the
+  user's (quoted).
+- **Context:** D-031 point 7 planned a data ladder as stage (1): originals only, then one new source
+  at a time, then all, with E001's settings. In the first Kaggle session (2026-11-07; Kaggle clock 2026-11-08 UTC) the four
+  archives (`biology`, `harsh_model_a_2026-11`, `harsh_v1_extra_2026-11`, `harsh_v1_colour_2026-11`)
+  matched their recorded sha256 and the raw checks against the committed fingerprints passed
+  (`biology` structural, Harsh's three full). OBSERVED, Kaggle environment: 2 × Tesla T4 (14.6 GB
+  each), Python 3.13, torch 2.11.0+cu130, Ultralytics 8.4.155, 20 GB `/kaggle/working`.
+- **User choices (2026-11-07):**
+  1. Data for the first run: "we'll use every thing we have and which is safe from the start and
+     we'll be tuning it afterwards".
+  2. Freezing v4 once the builder passes its tests: "Yes, freeze v4".
+- **Decision:**
+  1. **E007** (parent E001) trains on the whole v4 train split: 4,111 images (ours 1,312 originals,
+     192 colour change, 516 copy-paste, 1,312 diffusion; Zenodo `mpa` 480 originals, 93 colour
+     change, 206 copy-paste), validated on the 324 v1 val frames. Model and settings as E001; the
+     one variable changed is the dataset (v1 → v4). Stage (1) of D-031 point 7 is dropped; stages
+     (2)–(5) (model choice, tuning, final configuration with 3 seeds, leave-site-out CV) are unchanged
+     and start from E007.
+  2. **YOLO view of v4** (`src/yolo_prep/mixed.py`, `scripts/prepare_yolo_dataset.py --version v4`):
+     built from `mixed_manifest.csv`; images always copied (rule 2), named
+     `<origin>__<kind>__<file>` (a diffusion copy keeps its source's file name); splits `train`,
+     `val`, `test` (the 348 v1 test frames) and `test_zenodo_sk` (the 428 held-out Zenodo `sk`
+     frames, in its own data file `data_test_zenodo_sk.yaml`, so a v1 test score never mixes the
+     two). Each image's sha256 is in `build_manifest.csv`, so the dataset fingerprint covers image
+     bytes and labels. Training verifies the view through `verify_built_dataset` (dataset_kind
+     `lobster_mixed`, added to v4's `VERSION.json` before freezing).
+  3. **v4 frozen** with `scripts/freeze_dataset_version.py v4` after the builder's tests passed.
+- **Trial build (OBSERVED, local, draft, 2026-11-07):** train 4,111 images (3,721 with lobsters,
+  11,784 boxes), val 324 (269; 1,010), test 348 (321; 1,512), test_zenodo_sk 428 (143; 143); not
+  built: 1,202 (992 ancestor not train, 90 label review excluded, 65 ancestor excluded, 31
+  low-confidence empty, 24 Zenodo without site). Val and test equal v1's frames and boxes. Raw
+  checks of all four raw folders passed after the build.
+- **zExtra** (436 frames, 11 sessions in no split, no ground truth) stays out of v4 (rule 6). The
+  final model may be run on it for a qualitative demo only: images with predicted boxes and counts of
+  frames with detections, never precision, recall or mAP.
+- **LIMITATIONS:** without the ladder, a change between E001 and E007 cannot be attributed to any one
+  source (Zenodo, colour change, copy-paste, diffusion). E007 vs E001 compares v1 train with all
+  safe extra data, on the same 324 val frames; E001 ran on Colab, E007 on Kaggle (both Tesla T4).

@@ -47,6 +47,14 @@ def main():
         print(f"{split:5} seen={seen[split]} expected={ {k: exp[k] for k in COUNT_KEYS} } "
               f"{'OK' if match else 'MISMATCH'}")
 
+    # Mixed views (v4) keep held-out evaluation splits in their own data file (its `test` entry).
+    for split, exp in expected.get("eval_only_splits", {}).items():
+        _, seen_eval = ultralytics_split_counts(args.dataset / exp["data_file"], ["test"])
+        match = counts_match(exp, seen_eval["test"])
+        ok &= match
+        print(f"{split} seen={seen_eval['test']} expected={ {k: exp[k] for k in COUNT_KEYS} } "
+              f"{'OK' if match else 'MISMATCH'}")
+
     print("VERIFIED" if ok else "VERIFICATION FAILED")
     sys.exit(0 if ok else 1)
 
