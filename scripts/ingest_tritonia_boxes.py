@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """Ingest the hand-drawn Tritonia boxes (makesense.ai YOLO export) as a new read-only label source (D-029).
 
-    python scripts/ingest_tritonia_boxes.py --zip D:\\uwct_work\\tritonia_batch1_yolo.zip \\
-        --notes D:\\uwct_work\\tritonia_label_batch1\\notes.txt \\
-        --batch D:\\uwct_work\\tritonia_label_batch1 --out D:\\uwct_raw\\tritonia_boxes_batch1
+    python scripts/ingest_tritonia_boxes.py --zip D:\\uwct_tritonia\\work\\tritonia_batch1_yolo.zip \\
+        --notes D:\\uwct_tritonia\\work\\tritonia_label_batch1\\notes.txt \\
+        --batch D:\\uwct_tritonia\\work\\tritonia_label_batch1 --out D:\\uwct_tritonia\\raw\\tritonia_boxes_batch1
 
 Checks every label file against the batch manifest before writing anything: one file per frame
 (or the frame marked '| exclude |' in notes.txt), class ids 0/1 only, boxes inside the frame and

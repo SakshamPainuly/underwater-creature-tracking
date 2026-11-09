@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Draw sea slug boxes on the Tritonia labelling batch (D-029) -- a small window, standard library only.
 
-    python scripts/label_tritonia.py --batch D:\\uwct_work\\tritonia_label_batch1
+    python scripts/label_tritonia.py --batch D:\\uwct_tritonia\\work\\tritonia_label_batch1
 
 Mouse:  drag = draw a box (always sea_slug) | drag a box edge or corner = resize it
         right-click a box = delete it

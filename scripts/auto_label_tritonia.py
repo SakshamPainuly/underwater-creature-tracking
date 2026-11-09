@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 r"""Automatic sea slug labels for the Tritonia batch from the image next to each cross (D-031).
 
-    python scripts/auto_label_tritonia.py --batch D:\uwct_work\tritonia_label_batch1 --out D:\uwct_work\tritonia_auto_labels
+    python scripts/auto_label_tritonia.py --batch D:\uwct_tritonia\work\tritonia_label_batch1 --out D:\uwct_tritonia\work\tritonia_auto_labels
 
 Writes <out>/labels/, labels.zip, notes.txt (frames with no box excluded), suggestions.csv and
 auto_label_report.json. Hand it to scripts/ingest_tritonia_boxes.py as --zip/--notes.

@@ -2,7 +2,7 @@
 """Create the Tritonia sea slug dataset version as a draft (D-030); local PC, standard library.
 
     python scripts/make_tritonia_version.py --version v3 --decision D-030 \\
-        --boxes D:\\uwct_raw\\tritonia_boxes_batch1 --batch D:\\uwct_work\\tritonia_label_batch1 \\
+        --boxes D:\\uwct_tritonia\\raw\\tritonia_boxes_batch1 --batch D:\\uwct_tritonia\\work\\tritonia_label_batch1 \\
         --seed 0 --val-days 3 --test-days 3
 
 Writes data/processed/<version>/ (image_manifest.csv, split_manifest.csv, VERSION.json with

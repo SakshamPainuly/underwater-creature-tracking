@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Build a Tritonia box-labelling batch (D-029): frames to label, point hints, manifest. Read-only on the source.
 
-    python scripts/make_tritonia_label_batch.py --root D:\\uwct_raw\\tritonia \\
-        --out D:\\uwct_work\\tritonia_label_batch1 [--n 150 --seed 0 --min-gap 40]
+    python scripts/make_tritonia_label_batch.py --root D:\\uwct_tritonia\\raw\\tritonia \\
+        --out D:\\uwct_tritonia\\work\\tritonia_label_batch1 [--n 150 --seed 0 --min-gap 40]
 
 --root defaults to UWCT_TRITONIA_ROOT. --out must not exist and must be outside --root. Writes:
     images/<stack>_t<NNNN>.png   clean frame: the image that gets boxed

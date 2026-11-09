@@ -810,3 +810,30 @@ Short, dated records of project decisions. New dataset versions must reference a
   (`scripts/label_tritonia.py`) keeps the suggestion, resize, `s` and `--split` features from this
   work but is not needed for batch 1. Follow-up: a val point-evaluation cell in
   `notebooks/colab_train_tritonia.ipynb`. No change to v1, v2, E001–E005.
+
+## D-032 — Tritonia data on the local PC moved into one folder (2026-11-09, proposed)
+- **Context:** the Tritonia files on the PC's D: drive were split over `D:\uwct_raw\` (raw copy
+  `tritonia\`, D-029; label source `tritonia_boxes_batch1\`, D-030/D-031) and `D:\uwct_work\`
+  (labelling batch, automatic labels, unused hand labels, provenance CSVs, label ZIPs). The user
+  asked for one common folder. Moving raw roots is forbidden by CLAUDE.md rule 1 unless the user
+  approves an exception; the user approved this move on 2026-11-09 (exception to rule 1, location
+  only).
+- **Decision:** new layout, same drive (a rename; no file was opened for writing):
+  - `D:\uwct_raw\tritonia\` → `D:\uwct_tritonia\raw\tritonia\` (`UWCT_TRITONIA_ROOT`)
+  - `D:\uwct_raw\tritonia_boxes_batch1\` → `D:\uwct_tritonia\raw\tritonia_boxes_batch1\`
+    (`UWCT_TRITONIA_BOXES_ROOT`)
+  - everything in `D:\uwct_work\` → `D:\uwct_tritonia\work\`
+  Both `raw\` folders stay read-only (rule 1); `work\` stays writable.
+- **Verification (OBSERVED, 2026-11-09):** relative path, size and SHA-256 of all 875 files
+  (18,910,835,751 B) recorded before and after the move; the two records are identical.
+- **Not changed:** file contents; frozen v3 (`data/processed/v3/` holds no absolute paths);
+  `E:\Tritonia\` (not touched); Google Drive paths (`MyDrive/uwct/raw/…`, `MyDrive/uwct/work/…`).
+  `work\tritonia_label_batch1\batch.json` still records `"root": "D:\uwct_raw\tritonia"`: a
+  historical record of where the batch was made from, left as is.
+- **Leftovers:** the empty folder `D:\uwct_raw\` was not removed (the tool blocks removal); the
+  user may delete it.
+- **Consequences:** paths updated in `notebooks/colab_train_tritonia.ipynb` (plus a note on the
+  layout), `docs/DATASET_TRITONIA.md`, `docs/TRITONIA_LABELLING.md` and the usage examples of the
+  Tritonia scripts. Earlier decisions (D-029–D-031) keep their old paths as written; this entry
+  supersedes them for location only. Any lab-PC or user environment variable that pointed at the
+  old paths must be updated.
