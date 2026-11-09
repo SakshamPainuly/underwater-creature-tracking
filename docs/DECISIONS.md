@@ -952,3 +952,99 @@ Short, dated records of project decisions. New dataset versions must reference a
 - **LIMITATIONS:** without the ladder, a change between E001 and E007 cannot be attributed to any one
   source (Zenodo, colour change, copy-paste, diffusion). E007 vs E001 compares v1 train with all
   safe extra data, on the same 324 val frames; E001 ran on Colab, E007 on Kaggle (both Tesla T4).
+
+## D-033 — Tritonia batch 1: automatic boxes for training, accuracy against the crosses (2026-11-04, proposed)
+- **Numbering note (2026-11-09):** drafted and committed as D-031 on `anu/sea-slug-detection`;
+  renumbered to D-033 because `p4/colab-baseline` (PR #17, merged first) uses D-031 for Model A.
+  Content otherwise unchanged. Files written before the renumbering still say D-031 for this
+  decision and cannot be edited: `notes.txt` in the read-only label source
+  `D:\uwct_tritonia\raw\tritonia_boxes_batch1\` (and on Drive), and the automatic-label output
+  in `D:\uwct_tritonia\work\tritonia_auto_labels\`. In Tritonia files, "D-031" from before
+  2026-11-09 means this entry.
+- **Status:** proposed by Anu on `anu/sea-slug-detection`. The approach (the "crosses plan": boxes
+  made by code, no hand labelling, scores measured against Dr. Wyeth's crosses) and this text were
+  user-approved by Anu on 2026-11-04 (the `--extra` wording under "Label source" was added just
+  after, to match the ingest run). Accepted when the PR is reviewed and merged. Supersedes D-029's "boxes drawn by hand" and D-030's selection metric (val mAP50 of
+  `sea_slug`) for the Tritonia work; D-029's class, source and label rules and D-030's day split,
+  YOLO view and E006 setup stay.
+- **Context (OBSERVED, 2026-11-04):** hand labelling did not work out: 34 frames drawn by hand had
+  loose boxes (median 41 px wide, slugs about 12–20 px); in a review session with suggested boxes,
+  36 val/test frames were checked but the boxes drawn there were again loose (median 40 × 31 px).
+  Anu decided not to label further. The MTrackJ crosses are human labels (clicked by Dr. Wyeth's
+  group) but points, not boxes; turning them into boxes of an assumed size stays rejected (rule 8).
+- **Proposed decision:**
+  - **Training boxes from the image:** `scripts/auto_label_tritonia.py` boxes the bright blob next
+    to each cross (`src/dataset_audit/tritonia_prelabel.py`; standard library, deterministic, method
+    and parameters in its docstring and `PARAMS`). The box size comes from the pixels only. A cross
+    gets no box, and a flag in `suggestions.csv`, when the blob is too faint, not compact, a
+    duplicate, or looks like the on-screen timestamp. A frame where no cross got a box is marked
+    `exclude` (an empty label would claim "no slug"). Nobody reviews these boxes.
+  - **Label source:** the output (`labels.zip`, `notes.txt`, `suggestions.csv`,
+    `auto_label_report.json`) is ingested unchanged by `scripts/ingest_tritonia_boxes.py` into
+    `D:\uwct_raw\tritonia_boxes_batch1` (D-030; the last two via `--extra`, stored as `extra/<name>`
+    with their sha256 in `ingest_report.json`), and v3 is built from it. All 150 frames use the
+    automatic boxes, the 34 hand-labelled ones too, so the boxes follow one rule; the hand labels and
+    review records stay unused in `D:\uwct_work\tritonia_batch1_labels`.
+  - **Scores against the crosses:** `scripts/tritonia_point_eval.py`
+    (`src/dataset_audit/tritonia_point_eval.py`). A prediction matches the nearest unmatched cross
+    within 10 px of its box, one to one, highest confidence first. Reported: point precision, point
+    recall, F1 and point AP (all-point interpolated), overall and per day, on every frame of the
+    split (frames the automatic labels excluded too: their crosses are still ground truth).
+    Matching rule and 10 px declared here, before any run.
+  - **Threshold and selection:** the confidence threshold is the one with the best val F1 (grid
+    0.01–0.99); the selection metric for comparing Tritonia models is **val point AP**. Test is scored
+    only for a declared final candidate, with the val threshold, logged in docs/EXPERIMENTS.md; the
+    script refuses test without `--final` and `--conf` (rule 7).
+  - **Ultralytics' own val numbers** (P, R, mAP printed during training and used to keep `best.pt`)
+    are computed against the automatic boxes of the val days. They are not accuracy and are never
+    reported as such.
+- **Counts (OBSERVED, 2026-11-04, `auto_label_report.json`):** 853 crosses, 436 boxes (51%), 18 of
+  150 frames excluded. Train: 96 frames (10 excluded), 573 crosses, 292 boxes. Val: 27 (7), 153, 73.
+  Test: 27 (1), 127, 71. The real ingest accepted the ZIP in a dry run into a scratch folder
+  (132 label files, 436 boxes, 0 problems). Flags: no clear blob 365, same blob as another cross 25,
+  timestamp text 16, blob not compact 11; 11 boxes clipped at a camera border.
+- **Check of the method on the 34 hand-labelled frames (OBSERVED, zoomed crops):** boxes are tight
+  on clear blobs (median 21 × 17 px); some fall on faint texture in washed-out camera views; some
+  clear slugs get no box.
+- **LIMITATIONS:**
+  - About half of the crosses have no training box, so many real slugs are background in training;
+    some boxes are on texture, not slugs. The model learns from noisy labels; results show what
+    automatic labels give, not careful hand labels.
+  - Point scores are not mAP: box size and fit are not measured, and they cannot be compared with
+    the lobster mAP numbers (CLAUDE.md §5 asks for mAP50 and mAP50-95; not possible without boxes).
+  - Point precision is a lower bound: whether every slug was clicked is UNKNOWN (D-029).
+  - 3 val and 3 test days, 27 frames each: scores are noisy and measure new days, not new sites.
+- **Consequences:** new `tritonia_prelabel.py`, `tritonia_point_eval.py`,
+  `scripts/auto_label_tritonia.py`, `scripts/tritonia_point_eval.py`, tests; the labeller
+  (`scripts/label_tritonia.py`) keeps the suggestion, resize, `s` and `--split` features from this
+  work but is not needed for batch 1. Follow-up: a val point-evaluation cell in
+  `notebooks/colab_train_tritonia.ipynb`. No change to v1, v2, E001–E005.
+
+## D-034 — Tritonia data on the local PC moved into one folder (2026-11-09, proposed)
+- **Numbering note (2026-11-09):** committed as D-032 on `anu/sea-slug-detection` (5377078);
+  renumbered to D-034 because `p4/colab-baseline` (PR #18) uses D-032. Content otherwise unchanged.
+- **Context:** the Tritonia files on the PC's D: drive were split over `D:\uwct_raw\` (raw copy
+  `tritonia\`, D-029; label source `tritonia_boxes_batch1\`, D-030/D-033) and `D:\uwct_work\`
+  (labelling batch, automatic labels, unused hand labels, provenance CSVs, label ZIPs). The user
+  asked for one common folder. Moving raw roots is forbidden by CLAUDE.md rule 1 unless the user
+  approves an exception; the user approved this move on 2026-11-09 (exception to rule 1, location
+  only).
+- **Decision:** new layout, same drive (a rename; no file was opened for writing):
+  - `D:\uwct_raw\tritonia\` → `D:\uwct_tritonia\raw\tritonia\` (`UWCT_TRITONIA_ROOT`)
+  - `D:\uwct_raw\tritonia_boxes_batch1\` → `D:\uwct_tritonia\raw\tritonia_boxes_batch1\`
+    (`UWCT_TRITONIA_BOXES_ROOT`)
+  - everything in `D:\uwct_work\` → `D:\uwct_tritonia\work\`
+  Both `raw\` folders stay read-only (rule 1); `work\` stays writable.
+- **Verification (OBSERVED, 2026-11-09):** relative path, size and SHA-256 of all 875 files
+  (18,910,835,751 B) recorded before and after the move; the two records are identical.
+- **Not changed:** file contents; frozen v3 (`data/processed/v3/` holds no absolute paths);
+  `E:\Tritonia\` (not touched); Google Drive paths (`MyDrive/uwct/raw/…`, `MyDrive/uwct/work/…`).
+  `work\tritonia_label_batch1\batch.json` still records `"root": "D:\uwct_raw\tritonia"`: a
+  historical record of where the batch was made from, left as is.
+- **Leftovers:** the then-empty folder `D:\uwct_raw\` was deleted on 2026-11-09 at the user's
+  request, after the move was verified. `D:\uwct_work\` no longer exists (moved as a whole).
+- **Consequences:** paths updated in `notebooks/colab_train_tritonia.ipynb` (plus a note on the
+  layout), `docs/DATASET_TRITONIA.md`, `docs/TRITONIA_LABELLING.md` and the usage examples of the
+  Tritonia scripts. Earlier decisions (D-029, D-030, D-033) keep their old paths as written; this entry
+  supersedes them for location only. Any lab-PC or user environment variable that pointed at the
+  old paths must be updated.

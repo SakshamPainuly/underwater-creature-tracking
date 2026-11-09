@@ -7,7 +7,7 @@ Not yet a dataset version, not under `data/raw/`, not used by any experiment. Lo
 - Location (OBSERVED, 2026-11-03): external drive, folder `E:\Tritonia\` (17 `.tif`, 16 `.tif.mdf`;
   18,846,191,199 B of TIFF + 4,353,299 B of MDF), plus `E:\Tritonia Info.txt` (778 B, SHA-256
   `a6ec1db19a393acc12e87ca26d8789be2787a7d7c4fbe3f41b2409c90bcd0d26`). Read only; nothing on the
-  drive was changed. Project copy (D-029): `D:\uwct_raw\tritonia\` (`UWCT_TRITONIA_ROOT`), read-only,
+  drive was changed. Project copy (D-029): `D:\uwct_tritonia\raw\tritonia\` (`UWCT_TRITONIA_ROOT`), read-only,
   all 34 files with SHA-256 checked against the external drive.
 - Provenance (from `Tritonia Info.txt`, comments from Dr. Wyeth; not independently verified):
   - old, low-resolution grayscale video stored as TIFF stacks, one frame every 15 s;
@@ -62,16 +62,20 @@ A frame with no point is **not** a confirmed slug-free frame. The Info file says
 tracked, but whether every visible slug in every frame was clicked is UNKNOWN — requires
 confirmation. `missing_label_policy` for the MDF points: `pending` (excluded, never negative).
 
-Hand-drawn boxes (D-029, batch 1, docs/TRITONIA_LABELLING.md): 150 frames in which every visible slug
-is boxed, so in those frames only, a missing box means "no slug". Not yet delivered.
+Boxes of batch 1 (D-033, superseding D-029's hand-drawn boxes): made by code from the bright blob
+next to each cross (`scripts/auto_label_tritonia.py`), not reviewed, in the read-only label source
+`D:\uwct_tritonia\raw\tritonia_boxes_batch1` (436 boxes for 853 crosses; 18 of 150 frames excluded because no
+cross got a box). About half of the crosses have no box, so a missing box does **not** mean "no
+slug". Dataset v3 (frozen 2026-11-04) uses these boxes for training only; accuracy is measured
+against the crosses (`scripts/tritonia_point_eval.py`).
 
 ## Known limitations
 - Timelapse (15 s per frame), not video: results are "sparse-frame/timelapse analysis", never
   "video tracking" (CLAUDE.md rule 9). Speeds are px per frame, or px/s only via the stated 15 s.
 - No calibration: no physical units. Parallax from angled cameras makes px distances vary across
   the frame.
-- Points are not boxes. A YOLO detector needs boxes drawn by hand; boxes of an assumed size around
-  points would be invented labels (rule 8).
+- Points are not boxes. Boxes of an assumed size around points would be invented labels (rule 8);
+  v3's boxes come from the image instead (D-033) and are noisy: train on them, never score on them.
 - Track IDs are per file. Whether the same slug keeps one ID across days is UNKNOWN.
 - INFERRED from the consecutive dates and identical frame size: one setup recorded over 17 days.
   A split by day would then measure new-day generalization, not new sites or new cameras.

@@ -33,12 +33,14 @@ V1_LIMITATIONS = (
 )
 
 TRITONIA_LIMITATIONS = (
-    "Tritonia v3 (D-030): 150 hand-boxed frames from one setup over 16 days, split by day; val and "
-    "test measure new days, not new sites or cameras (docs/DATASET_TRITONIA.md).",
+    "Tritonia v3 (D-030): 150 frames from one setup over 16 days, split by day; val and test measure "
+    "new days, not new sites or cameras (docs/DATASET_TRITONIA.md).",
     "Frames are 15 s apart: sparse-frame/timelapse analysis, not video tracking. No calibration: no "
     "physical units.",
-    "Boxes were drawn by one labeller (batch 1); MTrackJ points were hints only.",
-    "This record holds overall val metrics only; per-class results come from a separate evaluation.",
+    "Boxes were made by code from the image next to each MTrackJ cross and not reviewed (D-033): "
+    "about half of the crosses have no box, some boxes are on texture.",
+    "The val metrics in this record (P, R, mAP) are against those automatic boxes, NOT accuracy. "
+    "Accuracy is point-based against the crosses (scripts/tritonia_point_eval.py, D-033).",
 )
 
 

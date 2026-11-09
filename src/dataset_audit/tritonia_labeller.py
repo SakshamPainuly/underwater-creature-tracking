@@ -46,6 +46,40 @@ def check_new_box(box: tuple[float, ...], width: int, height: int) -> list[str]:
     return [p.split(": ", 1)[-1] for p in box_problems([px_to_yolo(box, width, height)], width, height)]
 
 
+def find_handle(boxes_px: list[tuple[float, ...]], x: float, y: float, tol: float) -> tuple[int, str] | None:
+    """Box edge or corner under (x, y): (box index, edges) with edges a subset of "lrtb", or None.
+
+    tol is the grab distance in image px; it shrinks for a small box so its inside stays free for
+    drawing. The smallest box wins where boxes overlap. Inside a box (away from its edges) is None,
+    so a new box can still be drawn inside an old one.
+    """
+    best = None
+    for i, (xa, ya, xb, yb) in enumerate(boxes_px):
+        t = min(tol, (xb - xa) / 3, (yb - ya) / 3)
+        if not (xa - t <= x <= xb + t and ya - t <= y <= yb + t):
+            continue
+        edges = ("l" if abs(x - xa) <= t else "r" if abs(x - xb) <= t else "") + \
+                ("t" if abs(y - ya) <= t else "b" if abs(y - yb) <= t else "")
+        area = (xb - xa) * (yb - ya)
+        if edges and (best is None or area < best[0]):
+            best = (area, i, edges)
+    return None if best is None else (best[1], best[2])
+
+
+def resize_box(box: tuple[float, ...], edges: str, x: float, y: float, width: int, height: int) -> tuple[float, ...]:
+    """Move the grabbed edges of box to (x, y); corners re-sorted and clipped like a drawn box."""
+    xa, ya, xb, yb = box
+    if "l" in edges:
+        xa = x
+    if "r" in edges:
+        xb = x
+    if "t" in edges:
+        ya = y
+    if "b" in edges:
+        yb = y
+    return normalise_px(xa, ya, xb, yb, width, height)
+
+
 def format_label(boxes_px: list[tuple[float, ...]], width: int, height: int) -> str:
     lines = []
     for b in boxes_px:
@@ -165,3 +199,76 @@ def export_zip(labels_dir: Path, stems: list[str], zip_path: Path) -> int:
         for f in files:
             z.write(f, f.name)
     return len(files)
+
+
+# ---------------------------------------------------------------- suggested boxes (D-033 proposal)
+# Each box has an origin: "hand" (drawn by the user), "suggested" (from tritonia_prelabel, kept as
+# it was) or "suggested_resized" (from tritonia_prelabel, resized by the user). A frame that opened
+# with suggestions has <labels>/_provenance/<stem>.json; a frame without one was labelled by hand.
+ORIGINS = ("hand", "suggested", "suggested_resized")
+PROVENANCE_DIR = "_provenance"
+PROVENANCE_FIELDS = ["frame", "source", "boxes", "hand", "suggested_kept", "suggested_resized",
+                     "suggested_deleted", "suggested_total", "crosses_flagged"]
+
+
+def provenance_path(labels_dir: Path, stem: str) -> Path:
+    return Path(labels_dir) / PROVENANCE_DIR / f"{stem}.json"
+
+
+def save_provenance(labels_dir: Path, stem: str, origins: list[str], suggested_total: int,
+                    suggested_deleted: int, flags: list[dict], params: dict) -> None:
+    """Per-frame record of where each saved box came from (same order as the label file)."""
+    import json
+    if any(o not in ORIGINS for o in origins):
+        raise ValueError(f"unknown box origin in {origins}")
+    path = provenance_path(labels_dir, stem)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps({"frame": stem, "origins": origins, "suggested_total": suggested_total,
+                               "suggested_deleted": suggested_deleted, "flags": flags,
+                               "suggester": params}, indent=1, sort_keys=True), encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def load_provenance(labels_dir: Path, stem: str, n_boxes: int) -> dict | None:
+    """The frame's record, or None if it has none or it no longer matches the label file."""
+    import json
+    path = provenance_path(labels_dir, stem)
+    if not path.is_file():
+        return None
+    rec = json.loads(path.read_text(encoding="utf-8"))
+    return rec if len(rec.get("origins", [])) == n_boxes else None
+
+
+def provenance_rows(labels_dir: Path, stems: list[str], width: int, height: int) -> list[dict]:
+    """One row per labelled frame: how many boxes came from the user and from the suggester."""
+    rows = []
+    for s in stems:
+        label = Path(labels_dir) / f"{s}.txt"
+        if not label.is_file():
+            continue
+        n = len(load_label(label, width, height))
+        rec = load_provenance(labels_dir, s, n)
+        origins = rec["origins"] if rec else ["hand"] * n
+        rows.append({"frame": s, "source": "suggested+reviewed" if rec else "hand",
+                     "boxes": n, "hand": origins.count("hand"),
+                     "suggested_kept": origins.count("suggested"),
+                     "suggested_resized": origins.count("suggested_resized"),
+                     "suggested_deleted": rec["suggested_deleted"] if rec else 0,
+                     "suggested_total": rec["suggested_total"] if rec else 0,
+                     "crosses_flagged": len(rec["flags"]) if rec else 0})
+    return rows
+
+
+def export_provenance_csv(labels_dir: Path, stems: list[str], width: int, height: int, csv_path: Path) -> int:
+    """Write provenance_rows to a new CSV (never overwrites); return the row count."""
+    import csv
+    csv_path = Path(csv_path)
+    if csv_path.exists():
+        raise FileExistsError(f"{csv_path} already exists")
+    rows = provenance_rows(labels_dir, stems, width, height)
+    with open(csv_path, "x", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=PROVENANCE_FIELDS, lineterminator="\n")
+        w.writeheader()
+        w.writerows(rows)
+    return len(rows)

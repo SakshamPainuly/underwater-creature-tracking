@@ -142,11 +142,20 @@ def _batch(batch_dir: Path) -> tuple[list[dict], dict, int, int]:
     return rows, meta, w, h
 
 
-def ingest_boxes(zip_path: Path, notes_path: Path, batch_dir: Path, out_dir: Path) -> dict:
-    """Check a makesense.ai YOLO export against the batch and store it as a new read-only source."""
+def ingest_boxes(zip_path: Path, notes_path: Path, batch_dir: Path, out_dir: Path,
+                 extra_files: tuple[Path, ...] = ()) -> dict:
+    """Check a YOLO label export against the batch and store it as a new read-only source.
+
+    extra_files (e.g. the automatic labels' suggestions.csv and report, D-033) are copied in
+    unchanged as extra/<name>, with their sha256 in the report.
+    """
     zip_path, notes_path, batch_dir, out_dir = (Path(p).resolve() for p in (zip_path, notes_path, batch_dir, out_dir))
+    extra_files = tuple(Path(p).resolve() for p in extra_files)
     if out_dir.exists():
         raise TritoniaError(f"{out_dir} already exists; a label source is written once")
+    names = [p.name for p in extra_files]
+    if len(set(names)) != len(names) or any(not p.is_file() for p in extra_files):
+        raise TritoniaError(f"extra files must exist and have distinct names: {names}")
     rows, meta, width, height = _batch(batch_dir)
     stems = {stem_of(r["image"]) for r in rows}
     notes = parse_notes(notes_path.read_text(encoding="utf-8-sig"), stems)  # Notepad may add a BOM
@@ -203,11 +212,16 @@ def ingest_boxes(zip_path: Path, notes_path: Path, batch_dir: Path, out_dir: Pat
         (out_dir / "labels" / f"{stem}.txt").write_bytes(data)
     shutil.copyfile(zip_path, out_dir / "export.zip")
     shutil.copyfile(notes_path, out_dir / "notes.txt")
+    if extra_files:
+        (out_dir / "extra").mkdir()
+        for p in extra_files:
+            shutil.copyfile(p, out_dir / "extra" / p.name)
     report = {
         "dataset_kind": DATASET_KIND,
         "class_names": CLASS_NAMES,
         "zip": {"name": zip_path.name, "sha256": sha256_file(zip_path)},
         "notes_sha256": sha256_file(notes_path),
+        "extra_files": {p.name: sha256_file(p) for p in extra_files},
         "batch": {"manifest_sha256": sha256_file(batch_dir / "manifest.csv"),
                   "seed": meta["seed"], "n": meta["n"], "min_gap": meta["min_gap"]},
         "frame_size": [width, height],
