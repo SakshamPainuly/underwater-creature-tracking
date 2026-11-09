@@ -44,8 +44,24 @@ TRITONIA_LIMITATIONS = (
 )
 
 
+MODEL_A_LIMITATIONS = (
+    "v4 (D-031): val and the v1 test are UWCT v1 sessions at sites also in train: they measure new "
+    "sessions, not new sites. Only the held-out Zenodo sk site (final evaluation only) is a new site.",
+    "Train labels of our frames rest on Harsh's AI review (no person checked a frame); up to 29 train "
+    "frames hold unboxed lobsters (positive_incomplete, kept by user choice). Val/test labels are v1's.",
+    "Train mixes real frames with derived images (colour change, copy-paste, diffusion) built only from "
+    "train frames; Zenodo images are 640x360 JPGs from another country and camera setup.",
+    "Substrate/visibility metadata is mostly missing; zExtra is excluded (no ground truth).",
+    "This record holds overall val metrics only; per-condition results and false positives on "
+    "negative images come from the evaluation step.",
+)
+
+
 def limitations_for(dataset: dict) -> list:
-    return list(TRITONIA_LIMITATIONS if dataset.get("dataset_kind") == "tritonia" else V1_LIMITATIONS)
+    kind = dataset.get("dataset_kind")
+    if kind == "tritonia":
+        return list(TRITONIA_LIMITATIONS)
+    return list(MODEL_A_LIMITATIONS if kind == "lobster_mixed" else V1_LIMITATIONS)
 
 
 class RecordError(ValueError):

@@ -1,0 +1,21 @@
+# E007 -- first Model A run: the E001 baseline trained on all safe v4 training data (D-031, D-032).
+# Single variable changed vs E001: the dataset (v1 -> v4). v4 train = our 1,312 v1-train originals
+# (after Harsh's label-review exclusions) + 480 Zenodo mpa originals + 2,319 derived images built only
+# from train frames (colour change, copy-paste, diffusion). Val = the same 324 v1 val frames as E001.
+# The v1 test and the held-out Zenodo sk site are never seen by training (CLAUDE.md rule 7).
+# Model, imgsz, epochs, patience, batch, seed and ultralytics version are exactly as in E001.
+id: E007
+slug: yolo_model_a_all
+parent: E001
+changed: "dataset v1 -> v4 (all safe Model A training data, D-031/D-032)"
+dataset_version: v4
+dataset_fingerprint: "bbd4a8b172fd590b18d2e8c26be05c85cb3c3246a2e60a3b3513590b931cd13f"
+model: yolo26s.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 640
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true

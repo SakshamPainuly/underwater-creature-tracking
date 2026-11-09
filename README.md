@@ -44,7 +44,7 @@ docs/                  data card, decision log, experiment log
 ## Dependencies
 
 - Local development PC: Python ≥ 3.10, standard library only (`requirements.txt` is empty on purpose).
-- Colab / lab GPU: `pip install -r requirements-gpu.txt` (pins `ultralytics==8.4.155`).
+- Colab / Kaggle GPU: `pip install -r requirements-gpu.txt` (pins `ultralytics==8.4.155`).
   Never install it on the local PC.
 
 ## Dataset versions

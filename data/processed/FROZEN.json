@@ -37,6 +37,23 @@
         "split_manifest.csv": "f4200a3e1d37a37237bdca70f9e1ed60172bd606a5bf85d5eb85816a4882f3b0",
         "VERSION.json": "f6ae5a3db0d3d2ef578d4850cb5bee59d4a9ee06896a97fdd695faf5ed347c1d"
       }
+    },
+    "v4": {
+      "dir": "v4",
+      "parent": "v1",
+      "decision": "D-031",
+      "frozen_on": "2026-11-07",
+      "files": {
+        "dataset_consistency_report.json": "cbf54dc481f197752ca8bcbee0c27a72478c9f7444d700dcd405613d29a822ca",
+        "deployment_metadata.csv": "dd26fc1aa7655f89d877fc2c2fff69e8c5f511222771828dd0e6d1556a34034a",
+        "deployment_metadata.json": "a24c07c200a922308405db4db2e547fa5498ce9b682c2c662786dba416f8062d",
+        "image_manifest.csv": "368bdfa0d127480d119c81047fb155ed80e39da392d15b92edc169b1c7ab9e0d",
+        "mixed_manifest.csv": "578de534dbbbe7bff2e57608b79cef6363d45a376ba0538db2d5b274f33606c6",
+        "model_a_report.json": "7dd8d9f367d5e888d83e7dcaeec83e99734d39cbe0a10246fe4aa06fa5554027",
+        "split_manifest.csv": "fccb4050e4fcdc25d5647d7b6fc7e59662b75e41000f525769a3eb95fac6aa71",
+        "VERSION.json": "07510814a1dd3e1fbb4082d48fcf7cf905db52ca92f2a18dad5a4b732b567e82",
+        "zenodo_groups.csv": "c756abab24a9b37eb7d41b30a9630595806d77b15e2588e4c0264cecf56d5b52"
+      }
     }
   }
 }

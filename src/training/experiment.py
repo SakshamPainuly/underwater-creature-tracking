@@ -24,7 +24,9 @@ from dataset_audit.config import DEFAULT_IMAGE_SOURCE, MISSING_LABEL_POLICY, PRO
 from dataset_audit import tritonia_dataset as T
 from dataset_audit.versioning import (PROCESSED_ROOT, VersionError, image_source_of, is_frozen, read_version_meta,
                                       sha256_file, verify_frozen, version_dir)
-from yolo_prep.build import CLASS_NAMES, INCLUDED_STATUSES, SPLITS, TARGET_ULTRALYTICS_VERSION, dataset_fingerprint
+from yolo_prep import mixed as M
+from yolo_prep.build import (CLASS_NAMES, INCLUDED_STATUSES, SPLITS, TARGET_ULTRALYTICS_VERSION, BuildError,
+                             dataset_fingerprint)
 
 EXPERIMENTS_CONFIG_DIR = PROJECT_ROOT / "configs" / "experiments"
 TRAIN_SPLITS = ("train", "val")  # the only splits a training run can see
@@ -324,12 +326,18 @@ def verify_built_dataset(dataset_dir: Path, cfg: dict, processed_root: Path = PR
     built files. Returns the facts for the run record.
 
     Tritonia versions (dataset_kind 'tritonia', D-030) are checked by tritonia_dataset.verify_view
-    with the same guarantees; their result also carries the dataset's class_names.
+    with the same guarantees; their result also carries the dataset's class_names. Model A mixed
+    versions (dataset_kind 'lobster_mixed', v4) are checked by yolo_prep.mixed.verify_view.
     """
     if dataset_kind(cfg["dataset_version"], processed_root) == T.DATASET_KIND:
         try:
             return T.verify_view(dataset_dir, cfg, processed_root)
         except (T.TritoniaError, VersionError) as e:
+            raise ConfigError(str(e)) from None
+    if dataset_kind(cfg["dataset_version"], processed_root) == M.DATASET_KIND:
+        try:  # Model A mixed views (v4, D-031/D-032): the same guarantees, from mixed_manifest.csv
+            return M.verify_view(dataset_dir, cfg, processed_root)
+        except (BuildError, VersionError) as e:
             raise ConfigError(str(e)) from None
     d = Path(dataset_dir)
     summary_path = d / "build_summary.json"
