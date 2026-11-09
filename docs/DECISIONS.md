@@ -1041,8 +1041,8 @@ Short, dated records of project decisions. New dataset versions must reference a
   `E:\Tritonia\` (not touched); Google Drive paths (`MyDrive/uwct/raw/…`, `MyDrive/uwct/work/…`).
   `work\tritonia_label_batch1\batch.json` still records `"root": "D:\uwct_raw\tritonia"`: a
   historical record of where the batch was made from, left as is.
-- **Leftovers:** the empty folder `D:\uwct_raw\` was not removed (the tool blocks removal); the
-  user may delete it.
+- **Leftovers:** the then-empty folder `D:\uwct_raw\` was deleted on 2026-11-09 at the user's
+  request, after the move was verified. `D:\uwct_work\` no longer exists (moved as a whole).
 - **Consequences:** paths updated in `notebooks/colab_train_tritonia.ipynb` (plus a note on the
   layout), `docs/DATASET_TRITONIA.md`, `docs/TRITONIA_LABELLING.md` and the usage examples of the
   Tritonia scripts. Earlier decisions (D-029, D-030, D-033) keep their old paths as written; this entry
