@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-r"""Automatic sea slug labels for the Tritonia batch from the image next to each cross (D-031).
+r"""Automatic sea slug labels for the Tritonia batch from the image next to each cross (D-033).
 
     python scripts/auto_label_tritonia.py --batch D:\uwct_tritonia\work\tritonia_label_batch1 --out D:\uwct_tritonia\work\tritonia_auto_labels
 

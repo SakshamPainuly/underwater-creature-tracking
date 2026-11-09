@@ -62,7 +62,7 @@ A frame with no point is **not** a confirmed slug-free frame. The Info file says
 tracked, but whether every visible slug in every frame was clicked is UNKNOWN — requires
 confirmation. `missing_label_policy` for the MDF points: `pending` (excluded, never negative).
 
-Boxes of batch 1 (D-031, superseding D-029's hand-drawn boxes): made by code from the bright blob
+Boxes of batch 1 (D-033, superseding D-029's hand-drawn boxes): made by code from the bright blob
 next to each cross (`scripts/auto_label_tritonia.py`), not reviewed, in the read-only label source
 `D:\uwct_tritonia\raw\tritonia_boxes_batch1` (436 boxes for 853 crosses; 18 of 150 frames excluded because no
 cross got a box). About half of the crosses have no box, so a missing box does **not** mean "no
@@ -75,7 +75,7 @@ against the crosses (`scripts/tritonia_point_eval.py`).
 - No calibration: no physical units. Parallax from angled cameras makes px distances vary across
   the frame.
 - Points are not boxes. Boxes of an assumed size around points would be invented labels (rule 8);
-  v3's boxes come from the image instead (D-031) and are noisy: train on them, never score on them.
+  v3's boxes come from the image instead (D-033) and are noisy: train on them, never score on them.
 - Track IDs are per file. Whether the same slug keeps one ID across days is UNKNOWN.
 - INFERRED from the consecutive dates and identical frame size: one setup recorded over 17 days.
   A split by day would then measure new-day generalization, not new sites or new cameras.

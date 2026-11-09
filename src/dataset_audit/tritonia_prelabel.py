@@ -1,4 +1,4 @@
-"""Suggested sea slug boxes from the image near each MTrackJ cross (proposal, D-031 draft).
+"""Suggested sea slug boxes from the image near each MTrackJ cross (proposal, D-033 draft).
 
 A suggestion is a pre-label for the labeller, never a label by itself: the user reviews every frame.
 The box size comes from the pixels (the bright blob next to the cross), never from an assumed slug
@@ -204,14 +204,14 @@ def compare(suggested: list[dict], hand_boxes: list[tuple[float, ...]]) -> list[
     return rows
 
 
-# ---------------------------------------------------------------- automatic labels (D-031, crosses plan)
+# ---------------------------------------------------------------- automatic labels (D-033, crosses plan)
 
 def auto_label_batch(batch_dir: Path, out_dir: Path) -> dict:
     """Suggested boxes as the labels of every batch frame: <out>/labels/<stem>.txt, notes.txt,
     suggestions.csv (one row per cross) and labels.zip (the layout the ingest reads).
 
     A frame where no cross got a box is marked `exclude` in notes.txt: an empty label file would
-    say "no slug", which the crosses contradict. Nothing is reviewed by a person (D-031).
+    say "no slug", which the crosses contradict. Nothing is reviewed by a person (D-033).
     """
     import zipfile
 
@@ -239,7 +239,7 @@ def auto_label_batch(batch_dir: Path, out_dir: Path) -> dict:
             continue
         (out_dir / "labels" / f"{stem}.txt").write_text(format_label(boxes, w, h), encoding="utf-8", newline="\n")
     (out_dir / "notes.txt").write_text(
-        "# frame | note or exclude | reason   (automatic labels, D-031; see suggestions.csv)\n" + "".join(notes),
+        "# frame | note or exclude | reason   (automatic labels, D-033; see suggestions.csv)\n" + "".join(notes),
         encoding="utf-8", newline="\n")
     with open(out_dir / "suggestions.csv", "w", newline="", encoding="utf-8") as f:
         wr = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")

@@ -37,10 +37,10 @@ TRITONIA_LIMITATIONS = (
     "new days, not new sites or cameras (docs/DATASET_TRITONIA.md).",
     "Frames are 15 s apart: sparse-frame/timelapse analysis, not video tracking. No calibration: no "
     "physical units.",
-    "Boxes were made by code from the image next to each MTrackJ cross and not reviewed (D-031): "
+    "Boxes were made by code from the image next to each MTrackJ cross and not reviewed (D-033): "
     "about half of the crosses have no box, some boxes are on texture.",
     "The val metrics in this record (P, R, mAP) are against those automatic boxes, NOT accuracy. "
-    "Accuracy is point-based against the crosses (scripts/tritonia_point_eval.py, D-031).",
+    "Accuracy is point-based against the crosses (scripts/tritonia_point_eval.py, D-033).",
 )
 
 

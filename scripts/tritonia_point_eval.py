@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-r"""Point-based scores of a Tritonia detector against the MTrackJ crosses (D-031).
+r"""Point-based scores of a Tritonia detector against the MTrackJ crosses (D-033).
 
 Validation (choose the confidence threshold here, never on test):
     python scripts/tritonia_point_eval.py --batch <batch> --split val --weights best.pt --pred-dir <new dir> --out val_points.json

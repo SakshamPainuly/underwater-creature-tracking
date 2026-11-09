@@ -201,7 +201,7 @@ def export_zip(labels_dir: Path, stems: list[str], zip_path: Path) -> int:
     return len(files)
 
 
-# ---------------------------------------------------------------- suggested boxes (D-031 proposal)
+# ---------------------------------------------------------------- suggested boxes (D-033 proposal)
 # Each box has an origin: "hand" (drawn by the user), "suggested" (from tritonia_prelabel, kept as
 # it was) or "suggested_resized" (from tritonia_prelabel, resized by the user). A frame that opened
 # with suggestions has <labels>/_provenance/<stem>.json; a frame without one was labelled by hand.

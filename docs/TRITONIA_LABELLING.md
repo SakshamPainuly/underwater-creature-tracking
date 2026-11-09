@@ -38,7 +38,7 @@ UNKNOWN — confirm before using it if Dr. Wyeth's data must not leave the PC.
   default, display only), **z** zoom. A box across a camera border is refused as you draw it.
   Drag a box's edge or corner to resize it (refused the same way if it would cross a border);
   **u** undoes the last change on the frame (a drawn, resized or deleted box).
-- Suggested boxes (D-031): a frame not yet labelled opens with orange boxes suggested from the
+- Suggested boxes (D-033): a frame not yet labelled opens with orange boxes suggested from the
   image next to each cross, and a red circle on each cross that got none. Check every one: delete
   wrong ones (often faint texture in washed-out views), resize loose ones, draw missing ones (look
   at every red circle). Leaving the frame saves what is on screen as your reviewed labels.

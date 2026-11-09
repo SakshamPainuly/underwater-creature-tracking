@@ -1,10 +1,10 @@
-"""Point-based detection scores for Tritonia: predicted boxes against the MTrackJ crosses (D-031).
+"""Point-based detection scores for Tritonia: predicted boxes against the MTrackJ crosses (D-033).
 
 The crosses were clicked by Dr. Wyeth's group; they are the ground truth. The training boxes come
 from code (tritonia_prelabel) and are never used for scoring. Box-based metrics (mAP50, mAP50-95)
 need hand-drawn boxes and are not computed here.
 
-Matching (declared before any run, D-031): predictions sorted by confidence, highest first; each
+Matching (declared before any run, D-033): predictions sorted by confidence, highest first; each
 takes the nearest still-unmatched cross whose distance to the box (0 if the cross is inside it) is
 at most MATCH_PX. One prediction matches at most one cross and one cross at most one prediction.
 - point precision = matched predictions / predictions

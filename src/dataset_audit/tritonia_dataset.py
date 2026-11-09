@@ -146,7 +146,7 @@ def ingest_boxes(zip_path: Path, notes_path: Path, batch_dir: Path, out_dir: Pat
                  extra_files: tuple[Path, ...] = ()) -> dict:
     """Check a YOLO label export against the batch and store it as a new read-only source.
 
-    extra_files (e.g. the automatic labels' suggestions.csv and report, D-031) are copied in
+    extra_files (e.g. the automatic labels' suggestions.csv and report, D-033) are copied in
     unchanged as extra/<name>, with their sha256 in the report.
     """
     zip_path, notes_path, batch_dir, out_dir = (Path(p).resolve() for p in (zip_path, notes_path, batch_dir, out_dir))

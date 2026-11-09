@@ -12,7 +12,7 @@ Keys:   Right / n = next frame     Left / p = previous frame     h = show/hide t
 Every frame is saved when you leave it (labels/<frame>.txt next to the batch, see --labels).
 A box across a camera border is refused as you draw it. Rules: docs/TRITONIA_LABELLING.md.
 
-Suggested boxes (D-031 proposal; off with --no-suggest): a frame with no label file yet opens with
+Suggested boxes (D-033 proposal; off with --no-suggest): a frame with no label file yet opens with
 boxes suggested from the image next to each cross (orange), and a red circle on each cross that got
 no suggestion. Check every one: delete wrong ones, resize loose ones, draw missing ones. Leaving the
 frame saves what is on screen as your reviewed labels; labels/_provenance/<frame>.json records
