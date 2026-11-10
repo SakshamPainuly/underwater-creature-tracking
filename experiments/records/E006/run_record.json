@@ -1,0 +1,368 @@
+{
+  "schema": "uwct.run_record/1",
+  "created_utc": "2026-11-10T00:14:41+00:00",
+  "kind": "full",
+  "experiment": {
+    "id": "E006",
+    "slug": "yolo_seaslug",
+    "parent": "E001",
+    "changed": "dataset v1 (lobster) -> v3 (Tritonia sea slugs, classes lobster + sea_slug, automatic boxes; D-030, D-033)",
+    "config_path": "configs/experiments/E006_yolo_seaslug.yaml",
+    "config_sha256": "3beb28788074932896268f616f6f41c7fae32e1a8147d9ae0c24fe86cda4e1c0",
+    "config": {
+      "id": "E006",
+      "slug": "yolo_seaslug",
+      "parent": "E001",
+      "changed": "dataset v1 (lobster) -> v3 (Tritonia sea slugs, classes lobster + sea_slug, automatic boxes; D-030, D-033)",
+      "dataset_version": "v3",
+      "dataset_fingerprint": "c1d42afae0cfc18e5747ec636d3c565d5b00d009b0da70d639ef58d5204ea7e0",
+      "model": "yolo26s.pt",
+      "ultralytics_version": "8.4.155",
+      "seed": 0,
+      "train_args": {
+        "imgsz": 640,
+        "epochs": 100,
+        "patience": 30,
+        "batch": 16,
+        "deterministic": true
+      }
+    }
+  },
+  "run_name": "E006",
+  "run_dir": "/kaggle/working/runs/E006",
+  "git": {
+    "commit": "2d3b6cb7298c969f9955659b408d768eb574975b",
+    "branch": "HEAD",
+    "dirty": false,
+    "allow_dirty": false
+  },
+  "dataset": {
+    "version": "v3",
+    "dataset_kind": "tritonia",
+    "status": "frozen",
+    "frozen_registry_verified": true,
+    "fingerprint": "c1d42afae0cfc18e5747ec636d3c565d5b00d009b0da70d639ef58d5204ea7e0",
+    "image_source": "tritonia_label_batch1",
+    "image_manifest_sha256": "40eaa25dbac39409b0b5e4de91e845a49d3073cd347fedfef55dc866785f6d45",
+    "split_manifest_sha256": "f4200a3e1d37a37237bdca70f9e1ed60172bd606a5bf85d5eb85816a4882f3b0",
+    "dataset_dir": "/tmp/uwct/data/yolo/tritonia_v3",
+    "splits_used_for_training": [
+      "train",
+      "val"
+    ],
+    "counts": {
+      "train": {
+        "images": 86,
+        "positive": 86,
+        "negative": 0,
+        "instances": 292
+      },
+      "val": {
+        "images": 20,
+        "positive": 20,
+        "negative": 0,
+        "instances": 73
+      }
+    },
+    "class_names": [
+      "lobster",
+      "sea_slug"
+    ],
+    "ultralytics_verification": {
+      "train": {
+        "seen": {
+          "images": 86,
+          "negative": 0,
+          "instances": 292
+        },
+        "match": true
+      },
+      "val": {
+        "seen": {
+          "images": 20,
+          "negative": 0,
+          "instances": 73
+        },
+        "match": true
+      }
+    }
+  },
+  "model": {
+    "name": "yolo26s.pt",
+    "family": "yolo",
+    "checkpoint_path": "/tmp/weights/yolo26s.pt",
+    "checkpoint_sha256": "646f8bc3fe0a656803d95c294f7852321748cb29d13466a1af8862e2db384a1b",
+    "in_ultralytics_asset_list": true
+  },
+  "ultralytics_version": "8.4.155",
+  "seed": 0,
+  "train_args": {
+    "imgsz": 640,
+    "epochs": 100,
+    "patience": 30,
+    "batch": 16,
+    "deterministic": true,
+    "data": "/kaggle/working/runs/E006/data_trainval.yaml",
+    "project": "/kaggle/working/runs/E006",
+    "name": "train",
+    "seed": 0,
+    "exist_ok": false,
+    "val": true,
+    "save": true
+  },
+  "ultralytics_args": {
+    "task": "detect",
+    "mode": "train",
+    "model": "yolo26s.pt",
+    "data": "/kaggle/working/runs/E006/data_trainval.yaml",
+    "epochs": 100,
+    "time": null,
+    "patience": 30,
+    "batch": 16,
+    "imgsz": 640,
+    "save": true,
+    "save_period": -1,
+    "cache": false,
+    "device": "",
+    "workers": 8,
+    "project": "/kaggle/working/runs/E006",
+    "name": "train",
+    "exist_ok": false,
+    "pretrained": true,
+    "cls_remap": true,
+    "optimizer": "auto",
+    "verbose": true,
+    "seed": 0,
+    "deterministic": true,
+    "single_cls": false,
+    "rect": false,
+    "cos_lr": false,
+    "close_mosaic": 10,
+    "resume": false,
+    "amp": true,
+    "fraction": 1.0,
+    "profile": false,
+    "freeze": null,
+    "multi_scale": 0.0,
+    "compile": false,
+    "channels_last": null,
+    "overlap_mask": true,
+    "mask_ratio": 4,
+    "dropout": 0.0,
+    "val": true,
+    "split": "val",
+    "save_json": false,
+    "conf": null,
+    "iou": 0.7,
+    "max_det": 300,
+    "quantize": null,
+    "dnn": false,
+    "plots": true,
+    "nms": null,
+    "source": null,
+    "vid_stride": 1,
+    "stream_buffer": false,
+    "visualize": false,
+    "augment": false,
+    "agnostic_nms": false,
+    "classes": null,
+    "retina_masks": false,
+    "embed": null,
+    "show": false,
+    "save_frames": false,
+    "save_txt": false,
+    "save_conf": false,
+    "save_crop": false,
+    "show_labels": true,
+    "show_conf": true,
+    "show_boxes": true,
+    "line_width": null,
+    "format": "torchscript",
+    "keras": false,
+    "optimize": false,
+    "dynamic": false,
+    "simplify": true,
+    "opset": null,
+    "workspace": null,
+    "lr0": 0.01,
+    "lrf": 0.01,
+    "momentum": 0.937,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 3.0,
+    "warmup_momentum": 0.8,
+    "warmup_bias_lr": 0.1,
+    "distill_model": null,
+    "dis": 6.0,
+    "box": 7.5,
+    "cls": 0.5,
+    "cls_pw": 0.0,
+    "dfl": 1.5,
+    "pose": 12.0,
+    "kobj": 1.0,
+    "rle": 1.0,
+    "angle": 1.0,
+    "dlog": 1.0,
+    "dgrad": 0.5,
+    "dlam": 1.0,
+    "nbs": 64,
+    "hsv_h": 0.015,
+    "hsv_s": 0.7,
+    "hsv_v": 0.4,
+    "degrees": 0.0,
+    "translate": 0.1,
+    "scale": 0.5,
+    "shear": 0.0,
+    "perspective": 0.0,
+    "flipud": 0.0,
+    "fliplr": 0.5,
+    "bgr": 0.0,
+    "mosaic": 1.0,
+    "mixup": 0.0,
+    "cutmix": 0.0,
+    "copy_paste": 0.0,
+    "copy_paste_mode": "flip",
+    "auto_augment": "randaugment",
+    "erasing": 0.4,
+    "cfg": null,
+    "tracker": "tracktrack.yaml",
+    "save_dir": "/kaggle/working/runs/E006/train"
+  },
+  "environment": {
+    "timestamp_utc": "2026-11-10T00:08:20+00:00",
+    "os": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "python": "3.13.16",
+    "cpu_count": 4,
+    "torch": "2.11.0+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "cudnn_version": 92700,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      },
+      {
+        "index": 1,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      }
+    ],
+    "ultralytics": "8.4.155",
+    "nvidia_smi": [
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      },
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      }
+    ]
+  },
+  "duration": {
+    "launches": [
+      {
+        "mode": "full",
+        "started_utc": "2026-11-10T00:08:20+00:00",
+        "git_commit": "2d3b6cb7298c969f9955659b408d768eb574975b",
+        "ended_utc": "2026-11-10T00:12:11+00:00",
+        "seconds": 231.0,
+        "outcome": "completed"
+      },
+      {
+        "mode": "resume",
+        "started_utc": "2026-11-10T00:12:20+00:00",
+        "git_commit": "2d3b6cb7298c969f9955659b408d768eb574975b",
+        "ended_utc": "2026-11-10T00:14:37+00:00",
+        "seconds": 137.0,
+        "outcome": "completed"
+      }
+    ],
+    "train_seconds_recorded": 368.0,
+    "note": "Interrupted launches have no end time; their duration is not included."
+  },
+  "epochs_completed": 100,
+  "outputs": {
+    "best": {
+      "path": "/kaggle/working/runs/E006/train/weights/best.pt",
+      "size": 20291141,
+      "sha256": "6f6710d1ed2e10408a01012b43a2a7979f5d739b07a8e03f52ba3fa15a4d6c8c"
+    },
+    "last": {
+      "path": "/kaggle/working/runs/E006/train/weights/last.pt",
+      "size": 20291141,
+      "sha256": "6dfd76fb2059d30fec54dafa1539690251ec474a19159937d18606a4017fcc04"
+    },
+    "results_csv": {
+      "path": "/kaggle/working/runs/E006/train/results.csv",
+      "size": 12443,
+      "sha256": "4c7c812686ebca007df80ad7161c4476316b73480018bb7c3dec6b86fdd79497"
+    },
+    "ultralytics_args_yaml": {
+      "path": "/kaggle/working/runs/E006/train/args.yaml",
+      "size": 1702,
+      "sha256": "a38f137638133088c2c5e720e4cfaea1660ea0fc0ae4877bcaf98823fcb26ffe"
+    }
+  },
+  "val_metrics": {
+    "split": "val",
+    "weights": "best.pt",
+    "precision": 0.7308065452782434,
+    "recall": 0.557885077129671,
+    "map50": 0.6185579157740763,
+    "map50_95": 0.4165760823867399,
+    "ultralytics_results_dict": {
+      "metrics/precision(B)": 0.7308065452782434,
+      "metrics/recall(B)": 0.557885077129671,
+      "metrics/mAP50(B)": 0.6185579157740763,
+      "metrics/mAP50-95(B)": 0.4165760823867399,
+      "fitness": 0.4165760823867399
+    },
+    "note": "Ultralytics val defaults (conf=0.001, iou=0.7); operating threshold not chosen yet."
+  },
+  "test_metrics": null,
+  "limitations": [
+    "Tritonia v3 (D-030): 150 frames from one setup over 16 days, split by day; val and test measure new days, not new sites or cameras (docs/DATASET_TRITONIA.md).",
+    "Frames are 15 s apart: sparse-frame/timelapse analysis, not video tracking. No calibration: no physical units.",
+    "Boxes were made by code from the image next to each MTrackJ cross and not reviewed (D-033): about half of the crosses have no box, some boxes are on texture.",
+    "The val metrics in this record (P, R, mAP) are against those automatic boxes, NOT accuracy. Accuracy is point-based against the crosses (scripts/tritonia_point_eval.py, D-033)."
+  ],
+  "environment_at_finalize": {
+    "timestamp_utc": "2026-11-10T00:14:41+00:00",
+    "os": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "python": "3.13.16",
+    "cpu_count": 4,
+    "torch": "2.11.0+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "cudnn_version": 92700,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      },
+      {
+        "index": 1,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      }
+    ],
+    "ultralytics": "8.4.155",
+    "nvidia_smi": [
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      },
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      }
+    ]
+  }
+}
