@@ -39,6 +39,7 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E005 | `configs/experiments/E005_rtdetr_amp_off.yaml` | E001 | as E003 (model yolo26s.pt → rtdetr-l.pt) plus amp true → false; replaces the diverged E003 (D-025) | training finished: 100 epochs at commit 292d9ab, run_record.json finalized 2026-10-15 on Drive (OBSERVED in the RT-DETR notebook output); effective batch 8 after automatic OOM reduction (D-026); declared final candidate 2026-10-15; registered 2026-10-17 |
 | E006 | `configs/experiments/E006_yolo_seaslug.yaml` | E001 | dataset v1 (lobster) → v3 (Tritonia sea slugs; classes lobster + sea_slug, automatic boxes, D-033) only; model and settings as E001 (D-030) | completed 2026-11-10 on Kaggle (Tesla T4); 100 epochs; registered; val point-scored (D-033); declared final candidate 2026-11-10; test not run yet |
 | E007 | `configs/experiments/E007_yolo_model_a_all.yaml` | E001 | dataset v1 → v4 only: all safe Model A training data (4,111 images: our originals, Zenodo `mpa`, colour change, copy-paste, diffusion; D-031, D-032); model and settings as E001 | completed 2026-11-08 on Kaggle (Tesla T4); 58 epochs (early stop); registered; not a final candidate |
+| E008 | `configs/experiments/E008_yolo_seaslug_imgsz1280.yaml` | E006 | train_args.imgsz 640 → 1280 only (frames 1056 × 480 px, slugs about 12–20 px: at 640 they are shrunk to 0.61×); dataset v3, model and settings as E006 | planned 2026-11-10; not run |
 
 **E006 (Tritonia sea slugs, D-030), declared before any result:** selection metric val mAP50 of class
 `sea_slug`; also reported per class: P, R, mAP50-95 on val, and false positives on the confirmed-negative
@@ -58,6 +59,16 @@ accuracy. Test only for a declared final candidate, with the val threshold (`--f
 days (127 crosses), with the same 10 px one-to-one matching. Reported: point P, R, F1 at conf 0.06 and
 point AP, overall and per day, logged in the test-evaluation log below. The test result changes
 neither the model nor the threshold.
+
+**E008 vs E006 (Tritonia, imgsz 1280), declared 2026-11-10 before any E008 result:** E008 is E006
+with only `imgsz` 640 → 1280, so both see the same v3 frames, automatic boxes, day split and seed. They
+are compared on **val point AP** (D-033), then on val point P / R / F1 at each run's own val-best-F1
+threshold, overall and per day; the val point eval of E008 uses imgsz 1280 for inference, as trained.
+Ultralytics' val mAP of both is shown, labelled not accuracy (automatic boxes). E006 stays the declared
+final candidate. E008 is declared as a second final candidate only after it is registered and only if
+its val point AP is higher than E006's 0.403; its threshold is then its own val-best-F1 one. Test
+numbers of E006 and E008 are reported side by side and never used to choose. LIMITATION: one run per
+arm (seed 0) on 27 val frames: a small difference may be noise.
 
 E001–E003 and E005 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
 E004 uses dataset v2 (fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e`):
