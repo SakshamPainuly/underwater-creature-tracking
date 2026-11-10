@@ -20,7 +20,8 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
   - Test results never feed back into model or threshold choice.
   - Mechanism (D-012): a final candidate is declared by a committed row in
     `experiments/final_candidates.csv` (E001 declared; E005 declared 2026-10-15 while still training,
-    tested only after it is registered and reviewed). `scripts/final_test_eval.py` refuses
+    tested only after it is registered and reviewed; E006 declared 2026-11-10 after registration,
+    tested by `scripts/tritonia_point_eval.py --final`). `scripts/final_test_eval.py` refuses
     undeclared experiments, fixes the operating confidence on val, then evaluates once on test
     (docs/COLAB.md).
 
@@ -36,7 +37,7 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E003 | `configs/experiments/E003_rtdetr_baseline.yaml` | E001 | model yolo26s.pt → rtdetr-l.pt only (D-015) | diverged: NaN losses by epoch 46 with AMP on; not registered (D-025) |
 | E004 | `configs/experiments/E004_yolo_enhanced.yaml` | E001 | images raw → enhanced only: dataset v1 → v2 (D-017) | completed; 81 epochs (early stop); registered; declared final candidate (D-022); evaluated on test once, 2026-10-12 |
 | E005 | `configs/experiments/E005_rtdetr_amp_off.yaml` | E001 | as E003 (model yolo26s.pt → rtdetr-l.pt) plus amp true → false; replaces the diverged E003 (D-025) | training finished: 100 epochs at commit 292d9ab, run_record.json finalized 2026-10-15 on Drive (OBSERVED in the RT-DETR notebook output); effective batch 8 after automatic OOM reduction (D-026); declared final candidate 2026-10-15; registered 2026-10-17 |
-| E006 | `configs/experiments/E006_yolo_seaslug.yaml` | E001 | dataset v1 (lobster) → v3 (Tritonia sea slugs; classes lobster + sea_slug, automatic boxes, D-033) only; model and settings as E001 (D-030) | completed 2026-11-10 on Kaggle (Tesla T4); 100 epochs; registered; val point-scored (D-033); not a final candidate |
+| E006 | `configs/experiments/E006_yolo_seaslug.yaml` | E001 | dataset v1 (lobster) → v3 (Tritonia sea slugs; classes lobster + sea_slug, automatic boxes, D-033) only; model and settings as E001 (D-030) | completed 2026-11-10 on Kaggle (Tesla T4); 100 epochs; registered; val point-scored (D-033); declared final candidate 2026-11-10; test not run yet |
 | E007 | `configs/experiments/E007_yolo_model_a_all.yaml` | E001 | dataset v1 → v4 only: all safe Model A training data (4,111 images: our originals, Zenodo `mpa`, colour change, copy-paste, diffusion; D-031, D-032); model and settings as E001 | completed 2026-11-08 on Kaggle (Tesla T4); 58 epochs (early stop); registered; not a final candidate |
 
 **E006 (Tritonia sea slugs, D-030), declared before any result:** selection metric val mAP50 of class
@@ -48,6 +49,15 @@ Updated by D-033 (2026-11-04, declared before any E006 run): the selection metri
 against the MTrackJ crosses (10 px, one to one), with point precision, recall and F1 at the val-best-F1
 threshold, overall and per day. Ultralytics' P, R and mAP are against the automatic boxes and are not
 accuracy. Test only for a declared final candidate, with the val threshold (`--final`, `--conf`).
+
+**E006 final-test procedure, declared 2026-11-10 before any test result:** E006 is declared in
+`experiments/final_candidates.csv`. The test is run once, by cell 18 of
+`notebooks/colab_train_tritonia.ipynb` (GPU, no training): it checks the declaration, the registered
+`best.pt` (sha256 `6f6710d1…`) and the val threshold **conf 0.06**, then runs
+`scripts/tritonia_point_eval.py --split test --final E006 --conf 0.06` on all 27 frames of the 3 test
+days (127 crosses), with the same 10 px one-to-one matching. Reported: point P, R, F1 at conf 0.06 and
+point AP, overall and per day, logged in the test-evaluation log below. The test result changes
+neither the model nor the threshold.
 
 E001–E003 and E005 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
 E004 uses dataset v2 (fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e`):
@@ -101,7 +111,7 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | E004 | 2026-09-30 | E001 | images raw → enhanced only (dataset v1 → v2, D-017) | v2 | 0.8385 | 0.5864 | 81 epochs (early stop, patience 30); best.pt recorded; not a final candidate (D-018) |
 | E005 | 2026-10-15 | E001 | rtdetr-l.pt, amp off (D-025); effective batch 8 (D-026) | v1 | 0.8359 | 0.5884 | 100 epochs completed over 5 launches; best.pt recorded, later lost on Drive (final test uses the recovered epoch-41 best.pt, D-027); final candidate |
 | E007 | 2026-11-08 | E001 | dataset v1 → v4 only: all 4,111 safe Model A training images (D-032) | v4 | 0.8423 | 0.5993 | 58 epochs (early stop at 28 + 30); best.pt recorded; Kaggle; not a final candidate |
-| E006 | 2026-11-10 | E001 | dataset v1 → v3 only: Tritonia sea slugs, automatic boxes (D-030, D-033) | v3 | — | — | not mAP (D-033): val point AP 0.403; point P / R / F1 0.504 / 0.451 / 0.476 at conf 0.06; 100 epochs; best.pt recorded; Kaggle; not a final candidate |
+| E006 | 2026-11-10 | E001 | dataset v1 → v3 only: Tritonia sea slugs, automatic boxes (D-030, D-033) | v3 | — | — | not mAP (D-033): val point AP 0.403; point P / R / F1 0.504 / 0.451 / 0.476 at conf 0.06; 100 epochs; best.pt recorded; Kaggle; final candidate |
 
 E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
 The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
