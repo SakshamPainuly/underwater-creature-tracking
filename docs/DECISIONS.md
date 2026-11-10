@@ -1048,3 +1048,46 @@ Short, dated records of project decisions. New dataset versions must reference a
   Tritonia scripts. Earlier decisions (D-029, D-030, D-033) keep their old paths as written; this entry
   supersedes them for location only. Any lab-PC or user environment variable that pointed at the
   old paths must be updated.
+
+## D-035 — Tritonia batch 2: more training frames, kept only where every cross got a box; dataset v5 (2026-11-10, proposed)
+- **Status:** proposed by Anu on `anu/e006-results`; text and freezing v5 user-approved by Anu on
+  2026-11-10. Accepted when the PR is reviewed and merged. Extends D-033 (same automatic boxes, same scoring against the crosses); D-030's day split stays.
+- **Context (OBSERVED, 2026-11-10):** E006 (v3: 86 included training frames, 292 boxes) scored val point
+  F1 0.476 and test point F1 0.361. In v3 only about half of the crosses got a training box, so many
+  clicked slugs are background in training (D-033 LIMITATION). The MTrackJ files hold 117,969 points on
+  21,840 frames; v3 uses 150 frames. Only 35 of v3's 150 frames have a box for every cross.
+- **Decision:**
+  - **Batch 2** (`scripts/make_tritonia_batch2.py`, `pick_extra_frames`): the 150 batch 1 frames copied
+    unchanged (sha256 checked), plus frames from the **10 v3 training days only**: up to 500 per day,
+    frames with at least one cross, at least 5 frames (75 s) from each other and from every batch 1
+    frame, seed 0. Result: 2,662 added frames (fewer than 500 on every day because of the gap rule).
+    `D:\uwct_tritonia\work\tritonia_label_batch2\`.
+  - **Boxes:** `scripts/auto_label_tritonia.py` unchanged (D-033 method and parameters) on the whole
+    batch. The batch 1 frames give byte-identical label files and the same 18 exclusions as v3's label
+    source (OBSERVED: 132 of 132 label files identical).
+  - **Keep only complete added frames** (`scripts/tritonia_batch2_notes.py`, `incomplete_added_frames`):
+    an added frame where any cross got no box (any flag) is marked `exclude`, so no clicked slug is a
+    background example in an added frame. Batch 1 frames keep v3's treatment. OBSERVED: 536 of 2,662
+    added frames kept (1,186 boxes); kept per day 20130519 121, 20130522 83, 20130523 62, 20130525 71,
+    20130526 1, 20130527 27, 20130530 0, 20130531 85, 20130601 3, 20130603 83.
+  - **Label source:** ingested unchanged by `scripts/ingest_tritonia_boxes.py` into
+    `D:\uwct_tritonia\raw\tritonia_boxes_batch2\` (read-only, rule 1), with suggestions.csv,
+    auto_label_report.json and batch2_filter_report.json as `--extra`.
+  - **Dataset v5:** `make_tritonia_version.py --version v5 --decision D-035 --extends v3 --seed 0
+    --val-days 3 --test-days 3`. `--extends v3` refuses unless every v3 frame is in v5 with identical
+    manifest fields (split, status, boxes, hashes) and the split rule is v3's. So v5's val and test frames
+    are exactly v3's (27 + 27); only train grows. v5 is a new Tritonia lineage (`parent: null`, like v3)
+    recording `extends: v3`. Freezing needs explicit user approval.
+  - **Experiment:** E009 = E006 with dataset v3 → v5 only (docs/EXPERIMENTS.md, declared before any result).
+- **LIMITATIONS:**
+  - "Complete" means every **cross** got a box, not every slug: whether every visible slug was clicked is
+    UNKNOWN (D-029). Dr. Wyeth wrote that "the entire data set has been tracked manually"; many bright
+    shapes have no cross, and whether they are slugs is UNKNOWN — requires confirmation.
+  - The rule favours frames with few crosses and clear blobs: crowded days give almost nothing
+    (20130526, 20130530, 20130601), so training under-represents crowded scenes. Some boxes sit on faint
+    texture (D-033); nobody reviews them.
+  - Added frames 75 s apart are close in time and similar; the effective amount of new data is smaller
+    than the frame count.
+- **Consequences:** new scripts and functions above with tests; `make_version` takes `extends` and records
+  the label source folder name; the notebook picks its inputs by dataset version (cell 1). No change to
+  v1–v4, E001–E008. v3 and its label source are not touched.

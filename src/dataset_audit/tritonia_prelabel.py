@@ -257,3 +257,22 @@ def auto_label_batch(batch_dir: Path, out_dir: Path) -> dict:
     (out_dir / "auto_label_report.json").write_text(json.dumps(counts, indent=2, sort_keys=True) + "\n",
                                                     encoding="utf-8")
     return counts
+
+
+def incomplete_added_frames(suggestions: list[dict], added: list[str]) -> dict[str, int]:
+    """Batch 2 rule (D-035): {added frame: crosses without a box} for every added frame where at least one
+    cross got no box (any flag in suggestions.csv). Such a frame would show a clicked slug as background,
+    so it is excluded from training. Batch 1 frames are not judged here: they keep v3's treatment."""
+    added_set = set(added)
+    missing: dict[str, int] = {}
+    seen = set()
+    for r in suggestions:
+        f = r["frame"]
+        if f in added_set:
+            seen.add(f)
+            if r["flag"]:
+                missing[f] = missing.get(f, 0) + 1
+    unseen = added_set - seen
+    if unseen:
+        raise ValueError(f"{len(unseen)} added frames have no row in suggestions.csv, e.g. {sorted(unseen)[:3]}")
+    return dict(sorted(missing.items()))

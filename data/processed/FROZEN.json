@@ -54,6 +54,17 @@
         "VERSION.json": "07510814a1dd3e1fbb4082d48fcf7cf905db52ca92f2a18dad5a4b732b567e82",
         "zenodo_groups.csv": "c756abab24a9b37eb7d41b30a9630595806d77b15e2588e4c0264cecf56d5b52"
       }
+    },
+    "v5": {
+      "dir": "v5",
+      "parent": null,
+      "decision": "D-035",
+      "frozen_on": "2026-11-10",
+      "files": {
+        "image_manifest.csv": "2636522d34d4e11827289be760924b67e4be79f94aa2926c64885c43cf987513",
+        "split_manifest.csv": "f15449c09568ea686edb1db2fb172d0c7af84dabacdbf020594ee4e29243c426",
+        "VERSION.json": "7efc1d473bb5578f3c16dc5e25622fc4d0ab72489f2eb3ea602e84c2beafa6b3"
+      }
     }
   }
 }

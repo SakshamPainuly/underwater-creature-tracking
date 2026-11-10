@@ -246,8 +246,25 @@ def split_days(days: list[str], seed: int, n_val: int, n_test: int) -> dict[str,
     return {d: ("val" if i < n_val else "test" if i < n_val + n_test else "train") for i, d in enumerate(order)}
 
 
+def extension_problems(parent_rows: list[dict], rows: list[dict]) -> list[str]:
+    """Every frame of the parent version must be in the new one with identical manifest fields (D-035)."""
+    by_name = {r["filename"]: r for r in rows}
+    problems = []
+    for r in parent_rows:
+        new = by_name.get(r["filename"])
+        if new is None:
+            problems.append(f"{r['filename']}: in the parent version, missing here")
+        elif {k: str(v) for k, v in new.items()} != {k: str(v) for k, v in r.items()}:
+            diff = sorted(k for k in r if str(r[k]) != str(new.get(k)))
+            problems.append(f"{r['filename']}: differs from the parent version in {diff}")
+    return problems
+
+
 def make_version(version: str, decision: str, boxes_dir: Path, batch_dir: Path, seed: int,
-                 n_val: int, n_test: int, root: Path = PROCESSED_ROOT, decisions_path: Path | None = None) -> Path:
+                 n_val: int, n_test: int, root: Path = PROCESSED_ROOT, decisions_path: Path | None = None,
+                 extends: str | None = None) -> Path:
+    """Draft Tritonia version. With `extends` (D-035), every frame of that frozen Tritonia version must come
+    through unchanged (same split, label status, boxes and hashes) and its day split must be the same."""
     boxes_dir, batch_dir = Path(boxes_dir).resolve(), Path(batch_dir).resolve()
     report = json.loads((boxes_dir / "ingest_report.json").read_text(encoding="utf-8"))
     rows, meta, _, _ = _batch(batch_dir)
@@ -279,10 +296,21 @@ def make_version(version: str, decision: str, boxes_dir: Path, batch_dir: Path, 
                          "n_included": sum(i["label_status"] in INCLUDED for i in mine),
                          "n_instances": sum(i["n_instances"] for i in mine)})
 
-    extra = {"class_names": CLASS_NAMES, "label_source": "tritonia_boxes_batch1",
+    if extends is not None:
+        parent_meta = _tritonia_meta(extends, root)
+        if parent_meta["status"] != "frozen" or not is_frozen(extends, root):
+            raise TritoniaError(f"{extends} is not frozen; a version can only extend a frozen one")
+        verify_frozen(extends, root)
+        if parent_meta["split_rule"] != {"unit": "recording day", "seed": seed, "n_val": n_val, "n_test": n_test}:
+            raise TritoniaError(f"split rule differs from {extends}: {parent_meta['split_rule']}")
+        problems = extension_problems(_read_csv(version_dir(extends, root) / "image_manifest.csv"), images)
+        if problems:
+            raise TritoniaError(f"not an extension of {extends}:\n  - " + "\n  - ".join(problems[:20]))
+    extra = {"class_names": CLASS_NAMES, "label_source": boxes_dir.name,
              "label_source_report_sha256": sha256_file(boxes_dir / "ingest_report.json"),
              "frame_batch": report["batch"], "split_rule": {"unit": "recording day", "seed": seed,
-                                                            "n_val": n_val, "n_test": n_test}}
+                                                            "n_val": n_val, "n_test": n_test},
+             **({"extends": extends, "frame_batch_name": batch_dir.name} if extends else {})}
     kwargs = {"root": root} if decisions_path is None else {"root": root, "decisions_path": decisions_path}
     d = open_new_lineage(version, decision, DATASET_KIND, extra, **kwargs)
     _write_csv(d / "image_manifest.csv", images, list(images[0]))
@@ -356,7 +384,7 @@ def build_view(version: str, frames_dir: Path, boxes_dir: Path, out_dir: Path, u
         "dataset_fingerprint": view_fingerprint(out_dir),
         "class_names": {str(i): n for i, n in enumerate(meta["class_names"])},
         "target_ultralytics_version": ultralytics_version,
-        "image_source": "tritonia_label_batch1",
+        "image_source": meta.get("frame_batch_name", "tritonia_label_batch1"),
         "splits": counts,
     }
     (out_dir / "build_summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
