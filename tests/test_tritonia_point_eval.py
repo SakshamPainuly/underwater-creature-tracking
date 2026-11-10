@@ -50,6 +50,24 @@ class MatchTest(unittest.TestCase):
         self.assertGreaterEqual(best["conf"], 0.31)
         self.assertEqual(E.point_ap({"x": ([], [(1, 1)])}), 0.0)
 
+    def test_curves_and_frame_outcome(self):
+        frames = {"a": ([(0.9, (10, 10, 20, 20)), (0.3, (200, 200, 210, 210))], [(15, 15), (50, 50)]),
+                  "b": ([], [(100, 100)])}
+        pr = E.pr_curve(frames)
+        self.assertEqual([(p["precision"], round(p["recall"], 4)) for p in pr],
+                         [(1.0, 0.0), (1.0, 0.3333), (0.5, 0.3333)])
+        self.assertEqual(E.pr_curve({"x": ([(0.5, (0, 0, 1, 1))], [])}), [])
+        cc = E.conf_curves(frames)
+        self.assertEqual([c["conf"] for c in cc], list(E.CONF_GRID))
+        self.assertEqual(cc[0], E.scores(frames, 0.01))
+        o = E.frame_outcome(*frames["a"], conf=0.2)
+        self.assertEqual(o, {"matched_boxes": [(0.9, (10, 10, 20, 20))],
+                             "false_boxes": [(0.3, (200, 200, 210, 210))],
+                             "found_crosses": [(15, 15)], "missed_crosses": [(50, 50)]})
+        self.assertEqual(E.frame_outcome(*frames["a"], conf=0.95)["missed_crosses"], [(15, 15), (50, 50)])
+        details = E.match_details(*frames["a"])
+        self.assertEqual([i for _, _, i in details], [0, None])
+
     def test_read_predictions(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "a.txt"
