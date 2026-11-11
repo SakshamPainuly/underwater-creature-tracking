@@ -16,6 +16,7 @@ from dataset_audit import tritonia_dataset as T
 from dataset_audit import tritonia_point_eval as E
 from dataset_audit import tritonia_prelabel as P
 from dataset_audit.tritonia_frames import write_png_gray
+from dataset_audit.tritonia_labeller import px_to_yolo
 from test_tritonia_prelabel import H, W, frame
 
 
@@ -136,6 +137,29 @@ class AutoLabelTest(unittest.TestCase):
                 self.assertEqual(len(list(csv.DictReader(f))), 4)
             with self.assertRaises(FileExistsError):
                 P.auto_label_batch(d / "batch", d / "auto")
+
+
+class FixedBoxTest(unittest.TestCase):
+    def test_fixed_box_centred_and_clipped_to_the_camera_view(self):
+        self.assertEqual(P.fixed_box(100, 50, W, H, (20, 17)), (90, 41.5, 110, 58.5))
+        tx0, ty0, tx1, ty1 = P.tile_bounds(W / 3 - 2, 5, W, H)  # 2 px left of a camera border, near the top
+        b = P.fixed_box(W / 3 - 2, 5, W, H, (20, 17))
+        self.assertEqual((b[1], b[2]), (ty0, tx1))
+        self.assertEqual(T.box_problems([px_to_yolo(b, W, H)], W, H), [])
+        with self.assertRaises(ValueError):
+            P.fixed_box(W + 1, 5, W, H)
+
+    def test_fixed_labels_pass_the_real_ingest(self):
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            make_png_batch(d / "batch")
+            counts = P.fixed_label_batch(d / "batch", d / "fixed", (20, 17))
+            self.assertEqual((counts["frames"], counts["crosses"], counts["boxes"]), (3, 4, 4))
+            report = T.ingest_boxes(d / "fixed" / "labels.zip", d / "fixed" / "notes.txt", d / "batch",
+                                    d / "boxes", (d / "fixed" / "fixed_label_report.json",))
+            self.assertEqual((report["counts"]["boxes"], report["counts"]["excluded"]), (4, 0))
+            with self.assertRaises(FileExistsError):
+                P.fixed_label_batch(d / "batch", d / "fixed")
 
 
 class CliTest(unittest.TestCase):
