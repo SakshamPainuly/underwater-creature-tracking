@@ -1,16 +1,16 @@
-# E010 -- E006 on dataset v6 (fixed-size boxes on every cross, D-036). GPU only: see docs/COLAB.md.
-# Single variable changed vs E006: dataset v3 -> v6, i.e. the box method. Same 150 frames, same images
+# E010 -- E006 on dataset v7 (fixed-size boxes on every cross, D-036; v7 per D-037). GPU only: see docs/COLAB.md.
+# Single variable changed vs E006: dataset v3 -> v7, i.e. the box method. Same 150 frames, same images
 # and same day split as v3; every cross gets a 20 x 17 px box centred on it (train 86 -> 96 frames,
-# 292 -> 573 boxes, because frames the automatic labels excluded now have boxes). Model, imgsz 640,
+# 292 -> 572 boxes, because frames the automatic labels excluded now have boxes). Model, imgsz 640,
 # seed and settings as E006. Ultralytics' val P/R/mAP are against the fixed boxes, not accuracy (D-033).
 # Accuracy = point scores against the MTrackJ crosses (notebook cell 17). Selection: val point AP.
 # The training data file has no test split (CLAUDE.md rule 7).
 id: E010
 slug: yolo_seaslug_fixedbox
 parent: E006
-changed: "dataset v3 -> v6 (D-036: fixed 20x17 px box on every cross instead of automatic boxes)"
-dataset_version: v6
-dataset_fingerprint: "fbb615a2f0d5c54c544f1ff6c653c1ef00fb0709dc5a3f60d8a95eea7407dff4"
+changed: "dataset v3 -> v7 (D-036/D-037: fixed 20x17 px box on every cross instead of automatic boxes)"
+dataset_version: v7
+dataset_fingerprint: "8ea6503cab38c9fed92f1c5be9d71fae5de6af3d43f17a31d533d8bf7854649a"
 model: yolo26s.pt
 ultralytics_version: "8.4.155"
 seed: 0

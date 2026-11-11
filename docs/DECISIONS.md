@@ -1094,7 +1094,8 @@ Short, dated records of project decisions. New dataset versions must reference a
 
 ## D-036 — Tritonia fixed-size boxes on every cross; dataset v6 (2026-11-11, proposed)
 - **Status:** proposed by Anu on `anu/e006-results`; text, freezing v6 and the private Kaggle upload
-  (`anusidhu7/uwct-tritonia-v6-inputs`) user-approved by Anu on 2026-11-11.
+  (`anusidhu7/uwct-tritonia-v6-inputs`) user-approved by Anu on 2026-11-11. Its dataset is replaced by v7
+  (D-037: one duplicate box); v6 is not used.
   Accepted when the PR is reviewed and merged. Changes D-033's box method only: accuracy is still scored
   against the crosses (point P / R / F1 / AP, 10 px one to one); D-030's day split stays.
 - **Context (OBSERVED, 2026-11-10/11):** E006 (v3, automatic boxes) val point AP 0.403. E008 (imgsz 1280)
@@ -1128,3 +1129,25 @@ Short, dated records of project decisions. New dataset versions must reference a
   - Whether every slug was clicked stays UNKNOWN (D-029); bright shapes without a cross get no box.
 - **Consequences:** new functions with tests in `tritonia_prelabel.py`, a new CLI, notebook inputs for v6
   (cell 1). No change to v1–v5, E001–E009 or their label sources.
+
+## D-037 — Tritonia v7: v6 with one duplicate fixed box merged; v6 not used (2026-11-11, proposed)
+- **Status:** proposed by Anu on `anu/e006-results`; text, freezing v7, pointing E010 at v7 and the private
+  Kaggle upload (`anusidhu7/uwct-tritonia-v7-inputs`) user-approved by Anu on 2026-11-11. Corrects the
+  dataset of D-036; D-036's box method otherwise stays.
+- **Context (OBSERVED, 2026-11-11):** E010's notebook cell 10 (`verify_yolo_dataset.py`) failed on v6:
+  Ultralytics read 572 train instances, the manifest says 573. In train frame
+  `20130527all_15spf_t1273` tracks 28 (point 613) and 34 (point 1) have a cross at exactly (237, 473), so
+  `fixed_label_batch` wrote two identical boxes and Ultralytics dropped one ("1 duplicate labels
+  removed"). It is the only frame of the 150 with crosses on one spot. v6 is frozen (rule 4) and cannot be
+  changed. No run used v6 (E010 stopped before training).
+- **Decision:**
+  - `fixed_label_batch` gives crosses at exactly the same position in one frame one box
+    (`duplicate_crosses` in the report; test added). OBSERVED: 853 crosses, 852 boxes, 1 duplicate.
+  - Label source `D:\uwct_tritonia\raw\tritonia_boxes_fixed2\` (read-only); **dataset v7** built and frozen
+    as D-036 describes for v6. v7 differs from v6 only in that frame (train 572 boxes).
+  - **v6 is not used** by any experiment; it stays frozen and registered as a record.
+  - E010 (not run yet) uses v7 instead of v6; its declaration otherwise stands.
+- **LIMITATION:** two tracks on one spot may be one slug clicked twice or two touching slugs; one box
+  covers both either way. In the point eval the two crosses stay two crosses (one can be matched), as for
+  every earlier run.
+- **Consequences:** v7, E010 config and notebook input mapping updated; v1–v6 unchanged.

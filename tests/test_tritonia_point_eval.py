@@ -161,6 +161,17 @@ class FixedBoxTest(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 P.fixed_label_batch(d / "batch", d / "fixed")
 
+    def test_crosses_on_one_spot_get_one_box(self):
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            stems = make_png_batch(d / "batch")
+            pts = d / "batch" / "points" / f"{stems[2]}.csv"
+            pts.write_text(pts.read_text(encoding="utf-8") + "2,1,605,304,1\n", encoding="utf-8")  # same spot
+            counts = P.fixed_label_batch(d / "batch", d / "fixed", (20, 17))
+            self.assertEqual((counts["crosses"], counts["boxes"], counts["duplicate_crosses"]), (5, 4, 1))
+            lines = (d / "fixed" / "labels" / f"{stems[2]}.txt").read_text(encoding="utf-8").splitlines()
+            self.assertEqual(len(lines), len(set(lines)))
+
 
 class CliTest(unittest.TestCase):
     def test_test_split_needs_a_declared_final_and_val_threshold(self):

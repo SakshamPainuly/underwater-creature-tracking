@@ -76,6 +76,17 @@
         "split_manifest.csv": "41a11f083ab14e3ec19a409967c952ad5d566a85c9d8372c264965f67fd21d88",
         "VERSION.json": "32543271e2201629dc41d0f2934d894abd2353c28bed5dcb5a5aedb481c65d71"
       }
+    },
+    "v7": {
+      "dir": "v7",
+      "parent": null,
+      "decision": "D-037",
+      "frozen_on": "2026-11-10",
+      "files": {
+        "image_manifest.csv": "e83a6b72e3a1aab73e2b044aa15bac4638c4c86eba06fe6e6420ace9b02840ef",
+        "split_manifest.csv": "5c44983f742a94cc27ea981119183643e16fb1b2f0d7a94daa5356ff6cba4bc1",
+        "VERSION.json": "873aabf33900bdc050b235ee73a5823fcbb61c907b276b106eec26b194ce4871"
+      }
     }
   }
 }

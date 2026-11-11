@@ -41,7 +41,7 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E007 | `configs/experiments/E007_yolo_model_a_all.yaml` | E001 | dataset v1 → v4 only: all safe Model A training data (4,111 images: our originals, Zenodo `mpa`, colour change, copy-paste, diffusion; D-031, D-032); model and settings as E001 | completed 2026-11-08 on Kaggle (Tesla T4); 58 epochs (early stop); registered; not a final candidate |
 | E008 | `configs/experiments/E008_yolo_seaslug_imgsz1280.yaml` | E006 | train_args.imgsz 640 → 1280 only (frames 1056 × 480 px, slugs about 12–20 px: at 640 they are shrunk to 0.61×); dataset v3, model and settings as E006 | completed 2026-11-11 on Kaggle (Tesla T4); 100 epochs; registered; val point AP 0.317 < E006's 0.403: not a final candidate, no test |
 | E009 | `configs/experiments/E009_yolo_seaslug_v5.yaml` | E006 | dataset v3 → v5 only (D-035: batch 1 unchanged plus the frames of batch 2, from the 10 training days only, where every cross got an automatic box); model and settings as E006 (imgsz 640) | trained 2026-11-10 on Kaggle; val point AP 0.274 < E006's 0.403: not a final candidate, no test; not registered: its run_record.json was not saved and is lost (only the cell 17 val point scores remain) |
-| E010 | `configs/experiments/E010_yolo_seaslug_fixedbox.yaml` | E006 | dataset v3 → v6 only (D-036: the same 150 frames, images and day split, with a fixed 20 × 17 px box centred on every cross instead of the automatic boxes; train 86 → 96 frames, 292 → 573 boxes); model and settings as E006 (imgsz 640) | planned 2026-11-11; not run |
+| E010 | `configs/experiments/E010_yolo_seaslug_fixedbox.yaml` | E006 | dataset v3 → v7 only (D-036, D-037: the same 150 frames, images and day split, with a fixed 20 × 17 px box centred on every cross instead of the automatic boxes; train 86 → 96 frames, 292 → 572 boxes; v6 had one duplicate box and is not used); model and settings as E006 (imgsz 640) | planned 2026-11-11; not run |
 
 **E006 (Tritonia sea slugs, D-030), declared before any result:** selection metric val mAP50 of class
 `sea_slug`; also reported per class: P, R, mAP50-95 on val, and false positives on the confirmed-negative
@@ -83,7 +83,7 @@ is run once with its own val threshold, and E006's and E009's test numbers are r
 separately declared experiment. LIMITATION: one run per arm (seed 0), 27 val frames.
 
 **E010 vs E006 (Tritonia, fixed boxes on every cross), declared 2026-11-11 before any E010 result:** E010 is
-E006 with only the dataset changed, v3 → v6 (D-036): same frames, images and day split, so the 27 val and 27
+E006 with only the dataset changed, v3 → v7 (D-036; v7 replaces v6, D-037): same frames, images and day split, so the 27 val and 27
 test frames and their 153 / 127 crosses are E006's. Comparison as for E008 and E009: **val point AP**, then
 val point P / R / F1 at each run's own val-best-F1 threshold, overall and per day. Ultralytics' val mAP of
 E010 is against the fixed boxes and is not comparable with E006's (different val boxes), nor accuracy.

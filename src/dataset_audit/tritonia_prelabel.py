@@ -296,6 +296,9 @@ def fixed_label_batch(batch_dir: Path, out_dir: Path, size: tuple[float, float] 
     """One fixed-size box per cross on every batch frame (D-036): <out>/labels/<stem>.txt, labels.zip,
     notes.txt (no frame is excluded: every cross gets a box) and fixed_label_report.json.
 
+    Crosses at exactly the same position in one frame (two tracks on one spot) get one box, not two
+    identical ones (D-037: Ultralytics drops exact duplicate labels, so the view would not verify).
+
     Same layout as auto_label_batch, so scripts/ingest_tritonia_boxes.py reads it. Nothing is looked
     at in the image: the boxes come from the cross positions alone.
     """
@@ -310,7 +313,8 @@ def fixed_label_batch(batch_dir: Path, out_dir: Path, size: tuple[float, float] 
     with open(batch_dir / "manifest.csv", newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     (out_dir / "labels").mkdir(parents=True)
-    counts = {"frames": 0, "crosses": 0, "boxes": 0, "clipped": 0, "frames_without_crosses": 0}
+    counts = {"frames": 0, "crosses": 0, "boxes": 0, "clipped": 0, "frames_without_crosses": 0,
+              "duplicate_crosses": 0}
     for r in rows:
         stem = Path(r["image"]).stem
         info = meta["source_stacks"][r["source_tif"][:-len(".tif")]]
@@ -320,7 +324,9 @@ def fixed_label_batch(batch_dir: Path, out_dir: Path, size: tuple[float, float] 
         if not pts:
             counts["frames_without_crosses"] += 1
             continue
-        boxes = [fixed_box(x, y, w, h, size) for x, y in pts]
+        unique = list(dict.fromkeys(pts))
+        counts["duplicate_crosses"] += len(pts) - len(unique)
+        boxes = [fixed_box(x, y, w, h, size) for x, y in unique]
         counts["crosses"] += len(pts)
         counts["boxes"] += len(boxes)
         counts["clipped"] += sum(1 for b in boxes if (round(b[2] - b[0], 6), round(b[3] - b[1], 6)) != tuple(size))
