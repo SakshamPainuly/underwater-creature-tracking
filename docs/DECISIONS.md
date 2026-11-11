@@ -1234,3 +1234,21 @@ Short, dated records of project decisions. New dataset versions must reference a
   optimistic. Only the single test evaluation of the declared runs is unbiased. Round 2 has one seed per
   combination. Val/test measure new sessions at known sites; only Zenodo `sk` is a new site. Early
   stopping on val means val also chose each run's length (as in every earlier run).
+
+## D-039 — Round-1 configs name E007 as parent (2026-11-11, accepted)
+- **Status:** accepted 2026-11-11 (user-approved: "yes commit push and open the PR"). Supersedes the parent chain in D-038 point 2;
+  everything else in D-038 is unchanged.
+- **Context (OBSERVED):** the first background run of the D-038 notebook (Kaggle version "D-038 round 1
+  E011-E019 (2affc59)", 2026-11-11 21:13 UTC) started E011 and then stopped E013, E012 and E016 within
+  seconds: `train.py` refuses a full run whose parent is not in `experiments/registry.csv` ("parent E011
+  is not in registry.csv at this commit"). D-038 made E012–E019 children of E011 / E012 / E013, which run
+  in the same session and cannot be registered first. No run produced results; the user stopped the version
+  (E011 had trained for about 15 min; its partial run is not used).
+- **Decision:** E012–E019 name **E007** (registered, reviewed) as parent; their `changed` field lists every
+  variable relative to E007 (epochs, patience, and model and/or seed). The configs differ from the D-038
+  versions only in `parent` and `changed`: model, seed and train_args are the same. The parent guard is
+  kept as it is. Round-2 configs (E020–E024) name the round-1 winner, which is registered before round 2.
+- **Consequences:** the round-1 notebook is re-run from Cell 1 on the fixed commit; all nine runs start
+  from scratch. Comparisons within round 1 are still single-variable in substance (same settings, only
+  model or seed differ), as D-038 points 4 and 6 already assume.
+
