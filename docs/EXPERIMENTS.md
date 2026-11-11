@@ -39,8 +39,8 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E005 | `configs/experiments/E005_rtdetr_amp_off.yaml` | E001 | as E003 (model yolo26s.pt → rtdetr-l.pt) plus amp true → false; replaces the diverged E003 (D-025) | training finished: 100 epochs at commit 292d9ab, run_record.json finalized 2026-10-15 on Drive (OBSERVED in the RT-DETR notebook output); effective batch 8 after automatic OOM reduction (D-026); declared final candidate 2026-10-15; registered 2026-10-17 |
 | E006 | `configs/experiments/E006_yolo_seaslug.yaml` | E001 | dataset v1 (lobster) → v3 (Tritonia sea slugs; classes lobster + sea_slug, automatic boxes, D-033) only; model and settings as E001 (D-030) | completed 2026-11-10 on Kaggle (Tesla T4); 100 epochs; registered; val point-scored (D-033); declared final candidate 2026-11-10; evaluated on test once, 2026-11-10 (point eval, D-033) |
 | E007 | `configs/experiments/E007_yolo_model_a_all.yaml` | E001 | dataset v1 → v4 only: all safe Model A training data (4,111 images: our originals, Zenodo `mpa`, colour change, copy-paste, diffusion; D-031, D-032); model and settings as E001 | completed 2026-11-08 on Kaggle (Tesla T4); 58 epochs (early stop); registered; not a final candidate |
-| E008 | `configs/experiments/E008_yolo_seaslug_imgsz1280.yaml` | E006 | train_args.imgsz 640 → 1280 only (frames 1056 × 480 px, slugs about 12–20 px: at 640 they are shrunk to 0.61×); dataset v3, model and settings as E006 | trained 2026-11-10 on Kaggle; val point AP 0.317 < E006's 0.403: not a final candidate, no test; not registered yet (run_record.json not archived) |
-| E009 | `configs/experiments/E009_yolo_seaslug_v5.yaml` | E006 | dataset v3 → v5 only (D-035: batch 1 unchanged plus the frames of batch 2, from the 10 training days only, where every cross got an automatic box); model and settings as E006 (imgsz 640) | trained 2026-11-10 on Kaggle; val point AP 0.274 < E006's 0.403: not a final candidate, no test; not registered yet (run_record.json not archived) |
+| E008 | `configs/experiments/E008_yolo_seaslug_imgsz1280.yaml` | E006 | train_args.imgsz 640 → 1280 only (frames 1056 × 480 px, slugs about 12–20 px: at 640 they are shrunk to 0.61×); dataset v3, model and settings as E006 | completed 2026-11-11 on Kaggle (Tesla T4); 100 epochs; registered; val point AP 0.317 < E006's 0.403: not a final candidate, no test |
+| E009 | `configs/experiments/E009_yolo_seaslug_v5.yaml` | E006 | dataset v3 → v5 only (D-035: batch 1 unchanged plus the frames of batch 2, from the 10 training days only, where every cross got an automatic box); model and settings as E006 (imgsz 640) | trained 2026-11-10 on Kaggle; val point AP 0.274 < E006's 0.403: not a final candidate, no test; not registered: its run_record.json was not saved and is lost (only the cell 17 val point scores remain) |
 
 **E006 (Tritonia sea slugs, D-030), declared before any result:** selection metric val mAP50 of class
 `sea_slug`; also reported per class: P, R, mAP50-95 on val, and false positives on the confirmed-negative
@@ -134,8 +134,8 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | E005 | 2026-10-15 | E001 | rtdetr-l.pt, amp off (D-025); effective batch 8 (D-026) | v1 | 0.8359 | 0.5884 | 100 epochs completed over 5 launches; best.pt recorded, later lost on Drive (final test uses the recovered epoch-41 best.pt, D-027); final candidate |
 | E007 | 2026-11-08 | E001 | dataset v1 → v4 only: all 4,111 safe Model A training images (D-032) | v4 | 0.8423 | 0.5993 | 58 epochs (early stop at 28 + 30); best.pt recorded; Kaggle; not a final candidate |
 | E006 | 2026-11-10 | E001 | dataset v1 → v3 only: Tritonia sea slugs, automatic boxes (D-030, D-033) | v3 | — | — | not mAP (D-033): val point AP 0.403; point P / R / F1 0.504 / 0.451 / 0.476 at conf 0.06; 100 epochs; best.pt recorded; Kaggle; final candidate |
-| E008 | 2026-11-10 | E006 | imgsz 640 → 1280 only | v3 | — | — | not mAP (D-033): val point AP 0.317; point P / R / F1 0.436 / 0.379 / 0.406 at conf 0.12; Kaggle; not registered yet; not a final candidate (below 0.403) |
-| E009 | 2026-11-10 | E006 | dataset v3 → v5 only (D-035) | v5 | — | — | not mAP (D-033): val point AP 0.274; point P / R / F1 0.340 / 0.333 / 0.337 at conf 0.06; Kaggle; not registered yet; not a final candidate (below 0.403) |
+| E008 | 2026-11-10 | E006 | imgsz 640 → 1280 only | v3 | — | — | not mAP (D-033): val point AP 0.317; point P / R / F1 0.436 / 0.379 / 0.406 at conf 0.12; 100 epochs; best.pt recorded; Kaggle; registered; not a final candidate (below 0.403) |
+| E009 | 2026-11-10 | E006 | dataset v3 → v5 only (D-035) | v5 | — | — | not mAP (D-033): val point AP 0.274; point P / R / F1 0.340 / 0.333 / 0.337 at conf 0.06; Kaggle; not registered (run record lost); not a final candidate (below 0.403) |
 
 E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
 The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
@@ -288,9 +288,18 @@ the saved Kaggle notebook version. From these files and the Kaggle log (OBSERVED
 ### E008 and E009 vs E006: val point scores (Tritonia)
 
 Source (OBSERVED): the cell 17 output of `notebooks/colab_train_tritonia.ipynb` for each run, pasted by
-Anu on 2026-11-10 (Kaggle notebook `anusidhu7/notebookc47ea7c413`, commit `caaf18d`). Neither run is
-registered yet: their `run_record.json` (epochs, best epoch, `best.pt` sha256, Ultralytics val metrics)
-and per-day point scores are not archived in the repo. All 27 val frames, 153 crosses, 10 px one to
+Anu on 2026-11-10 (Kaggle notebook `anusidhu7/notebookc47ea7c413`, commit `caaf18d`).
+- **E008 is registered** in `experiments/registry.csv`; `run_record.json` (9,646 B, sha256 `2673bf74…`,
+  downloaded by Anu from the Kaggle session output) is archived in `experiments/records/E008/`. From it
+  (OBSERVED): commit `caaf18d`, clean; dataset v3 `c1d42afa…`; imgsz 1280; all 100 epochs, one launch,
+  727 s on a Tesla T4; `best.pt` 20,362,885 B sha256 `a3a1ea47…` (off-repo, not downloaded).
+  Ultralytics val of `best.pt` against the automatic boxes (NOT accuracy, D-033): P 0.685, R 0.507,
+  mAP50 0.594, mAP50-95 0.426 (E006: 0.731, 0.558, 0.619, 0.417). Its per-day point scores
+  (`val_point_scores.json`) were not downloaded.
+- **E009 is not registered and cannot be:** its Kaggle session ended without a saved version with
+  output, so `run_record.json`, `best.pt` and the per-day point scores are lost. The cell 17 summary
+  below is the only record. It is not re-run: it is not a final candidate, and a re-run would be a
+  new run, not a recovery. All 27 val frames, 153 crosses, 10 px one to
 one, threshold = each run's own best val F1 (D-033).
 
 | run | changed from E006 | point AP | conf | predictions | matched | point P | point R | F1 |
