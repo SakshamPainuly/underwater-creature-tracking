@@ -6,8 +6,8 @@
 # The v1 test and the held-out Zenodo sk site are never seen by training (CLAUDE.md rule 7).
 id: E015
 slug: yolol_ep60_seed1
-parent: E013
-changed: "seed 0 -> 1 only (seed spread of the E013 configuration)"
+parent: E007
+changed: "train_args.epochs 100 -> 60, patience 30 -> 10, model yolo26s.pt -> yolo26l.pt and seed 0 -> 1 (D-038 round-1 grid point yolo26l seed 1; several variables on purpose. Parent is E007, the registered run, because round 1 runs in parallel and its own runs are not registered yet, D-039)"
 dataset_version: v4
 dataset_fingerprint: "bbd4a8b172fd590b18d2e8c26be05c85cb3c3246a2e60a3b3513590b931cd13f"
 model: yolo26l.pt
