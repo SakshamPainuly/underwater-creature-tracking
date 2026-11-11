@@ -16,6 +16,7 @@ from dataset_audit import tritonia_dataset as T
 from dataset_audit import tritonia_point_eval as E
 from dataset_audit import tritonia_prelabel as P
 from dataset_audit.tritonia_frames import write_png_gray
+from dataset_audit.tritonia_labeller import px_to_yolo
 from test_tritonia_prelabel import H, W, frame
 
 
@@ -49,6 +50,24 @@ class MatchTest(unittest.TestCase):
         self.assertEqual(best["predictions"], 1)  # dropping the false box raises F1
         self.assertGreaterEqual(best["conf"], 0.31)
         self.assertEqual(E.point_ap({"x": ([], [(1, 1)])}), 0.0)
+
+    def test_curves_and_frame_outcome(self):
+        frames = {"a": ([(0.9, (10, 10, 20, 20)), (0.3, (200, 200, 210, 210))], [(15, 15), (50, 50)]),
+                  "b": ([], [(100, 100)])}
+        pr = E.pr_curve(frames)
+        self.assertEqual([(p["precision"], round(p["recall"], 4)) for p in pr],
+                         [(1.0, 0.0), (1.0, 0.3333), (0.5, 0.3333)])
+        self.assertEqual(E.pr_curve({"x": ([(0.5, (0, 0, 1, 1))], [])}), [])
+        cc = E.conf_curves(frames)
+        self.assertEqual([c["conf"] for c in cc], list(E.CONF_GRID))
+        self.assertEqual(cc[0], E.scores(frames, 0.01))
+        o = E.frame_outcome(*frames["a"], conf=0.2)
+        self.assertEqual(o, {"matched_boxes": [(0.9, (10, 10, 20, 20))],
+                             "false_boxes": [(0.3, (200, 200, 210, 210))],
+                             "found_crosses": [(15, 15)], "missed_crosses": [(50, 50)]})
+        self.assertEqual(E.frame_outcome(*frames["a"], conf=0.95)["missed_crosses"], [(15, 15), (50, 50)])
+        details = E.match_details(*frames["a"])
+        self.assertEqual([i for _, _, i in details], [0, None])
 
     def test_read_predictions(self):
         with tempfile.TemporaryDirectory() as d:
@@ -118,6 +137,40 @@ class AutoLabelTest(unittest.TestCase):
                 self.assertEqual(len(list(csv.DictReader(f))), 4)
             with self.assertRaises(FileExistsError):
                 P.auto_label_batch(d / "batch", d / "auto")
+
+
+class FixedBoxTest(unittest.TestCase):
+    def test_fixed_box_centred_and_clipped_to_the_camera_view(self):
+        self.assertEqual(P.fixed_box(100, 50, W, H, (20, 17)), (90, 41.5, 110, 58.5))
+        tx0, ty0, tx1, ty1 = P.tile_bounds(W / 3 - 2, 5, W, H)  # 2 px left of a camera border, near the top
+        b = P.fixed_box(W / 3 - 2, 5, W, H, (20, 17))
+        self.assertEqual((b[1], b[2]), (ty0, tx1))
+        self.assertEqual(T.box_problems([px_to_yolo(b, W, H)], W, H), [])
+        with self.assertRaises(ValueError):
+            P.fixed_box(W + 1, 5, W, H)
+
+    def test_fixed_labels_pass_the_real_ingest(self):
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            make_png_batch(d / "batch")
+            counts = P.fixed_label_batch(d / "batch", d / "fixed", (20, 17))
+            self.assertEqual((counts["frames"], counts["crosses"], counts["boxes"]), (3, 4, 4))
+            report = T.ingest_boxes(d / "fixed" / "labels.zip", d / "fixed" / "notes.txt", d / "batch",
+                                    d / "boxes", (d / "fixed" / "fixed_label_report.json",))
+            self.assertEqual((report["counts"]["boxes"], report["counts"]["excluded"]), (4, 0))
+            with self.assertRaises(FileExistsError):
+                P.fixed_label_batch(d / "batch", d / "fixed")
+
+    def test_crosses_on_one_spot_get_one_box(self):
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            stems = make_png_batch(d / "batch")
+            pts = d / "batch" / "points" / f"{stems[2]}.csv"
+            pts.write_text(pts.read_text(encoding="utf-8") + "2,1,605,304,1\n", encoding="utf-8")  # same spot
+            counts = P.fixed_label_batch(d / "batch", d / "fixed", (20, 17))
+            self.assertEqual((counts["crosses"], counts["boxes"], counts["duplicate_crosses"]), (5, 4, 1))
+            lines = (d / "fixed" / "labels" / f"{stems[2]}.txt").read_text(encoding="utf-8").splitlines()
+            self.assertEqual(len(lines), len(set(lines)))
 
 
 class CliTest(unittest.TestCase):

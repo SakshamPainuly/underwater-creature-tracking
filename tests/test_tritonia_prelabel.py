@@ -118,5 +118,16 @@ class ProvenanceTest(unittest.TestCase):
                 self.assertEqual(z.namelist(), ["a.txt"])
 
 
+
+class Batch2RuleTest(unittest.TestCase):
+    def test_incomplete_added_frames(self):
+        from dataset_audit.tritonia_prelabel import incomplete_added_frames
+        sug = [{"frame": "a", "flag": ""}, {"frame": "a", "flag": "no clear blob"},
+               {"frame": "b", "flag": ""}, {"frame": "old", "flag": "no clear blob"}]
+        self.assertEqual(incomplete_added_frames(sug, ["a", "b"]), {"a": 1})  # batch 1 frame "old" not judged
+        with self.assertRaisesRegex(ValueError, "no row"):
+            incomplete_added_frames(sug, ["a", "c"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -54,6 +54,39 @@
         "VERSION.json": "07510814a1dd3e1fbb4082d48fcf7cf905db52ca92f2a18dad5a4b732b567e82",
         "zenodo_groups.csv": "c756abab24a9b37eb7d41b30a9630595806d77b15e2588e4c0264cecf56d5b52"
       }
+    },
+    "v5": {
+      "dir": "v5",
+      "parent": null,
+      "decision": "D-035",
+      "frozen_on": "2026-11-10",
+      "files": {
+        "image_manifest.csv": "2636522d34d4e11827289be760924b67e4be79f94aa2926c64885c43cf987513",
+        "split_manifest.csv": "f15449c09568ea686edb1db2fb172d0c7af84dabacdbf020594ee4e29243c426",
+        "VERSION.json": "7efc1d473bb5578f3c16dc5e25622fc4d0ab72489f2eb3ea602e84c2beafa6b3"
+      }
+    },
+    "v6": {
+      "dir": "v6",
+      "parent": null,
+      "decision": "D-036",
+      "frozen_on": "2026-11-10",
+      "files": {
+        "image_manifest.csv": "1bbf661ec86138dd9dd770d37dfb5d6a8955258792bbbede81e99c4d740cb51a",
+        "split_manifest.csv": "41a11f083ab14e3ec19a409967c952ad5d566a85c9d8372c264965f67fd21d88",
+        "VERSION.json": "32543271e2201629dc41d0f2934d894abd2353c28bed5dcb5a5aedb481c65d71"
+      }
+    },
+    "v7": {
+      "dir": "v7",
+      "parent": null,
+      "decision": "D-037",
+      "frozen_on": "2026-11-10",
+      "files": {
+        "image_manifest.csv": "e83a6b72e3a1aab73e2b044aa15bac4638c4c86eba06fe6e6420ace9b02840ef",
+        "split_manifest.csv": "5c44983f742a94cc27ea981119183643e16fb1b2f0d7a94daa5356ff6cba4bc1",
+        "VERSION.json": "873aabf33900bdc050b235ee73a5823fcbb61c907b276b106eec26b194ce4871"
+      }
     }
   }
 }

@@ -1048,3 +1048,106 @@ Short, dated records of project decisions. New dataset versions must reference a
   Tritonia scripts. Earlier decisions (D-029, D-030, D-033) keep their old paths as written; this entry
   supersedes them for location only. Any lab-PC or user environment variable that pointed at the
   old paths must be updated.
+
+## D-035 — Tritonia batch 2: more training frames, kept only where every cross got a box; dataset v5 (2026-11-10, proposed)
+- **Status:** proposed by Anu on `anu/e006-results`; text and freezing v5 user-approved by Anu on
+  2026-11-10. Accepted when the PR is reviewed and merged. Extends D-033 (same automatic boxes, same scoring against the crosses); D-030's day split stays.
+- **Context (OBSERVED, 2026-11-10):** E006 (v3: 86 included training frames, 292 boxes) scored val point
+  F1 0.476 and test point F1 0.361. In v3 only about half of the crosses got a training box, so many
+  clicked slugs are background in training (D-033 LIMITATION). The MTrackJ files hold 117,969 points on
+  21,840 frames; v3 uses 150 frames. Only 35 of v3's 150 frames have a box for every cross.
+- **Decision:**
+  - **Batch 2** (`scripts/make_tritonia_batch2.py`, `pick_extra_frames`): the 150 batch 1 frames copied
+    unchanged (sha256 checked), plus frames from the **10 v3 training days only**: up to 500 per day,
+    frames with at least one cross, at least 5 frames (75 s) from each other and from every batch 1
+    frame, seed 0. Result: 2,662 added frames (fewer than 500 on every day because of the gap rule).
+    `D:\uwct_tritonia\work\tritonia_label_batch2\`.
+  - **Boxes:** `scripts/auto_label_tritonia.py` unchanged (D-033 method and parameters) on the whole
+    batch. The batch 1 frames give byte-identical label files and the same 18 exclusions as v3's label
+    source (OBSERVED: 132 of 132 label files identical).
+  - **Keep only complete added frames** (`scripts/tritonia_batch2_notes.py`, `incomplete_added_frames`):
+    an added frame where any cross got no box (any flag) is marked `exclude`, so no clicked slug is a
+    background example in an added frame. Batch 1 frames keep v3's treatment. OBSERVED: 536 of 2,662
+    added frames kept (1,186 boxes); kept per day 20130519 121, 20130522 83, 20130523 62, 20130525 71,
+    20130526 1, 20130527 27, 20130530 0, 20130531 85, 20130601 3, 20130603 83.
+  - **Label source:** ingested unchanged by `scripts/ingest_tritonia_boxes.py` into
+    `D:\uwct_tritonia\raw\tritonia_boxes_batch2\` (read-only, rule 1), with suggestions.csv,
+    auto_label_report.json and batch2_filter_report.json as `--extra`.
+  - **Dataset v5:** `make_tritonia_version.py --version v5 --decision D-035 --extends v3 --seed 0
+    --val-days 3 --test-days 3`. `--extends v3` refuses unless every v3 frame is in v5 with identical
+    manifest fields (split, status, boxes, hashes) and the split rule is v3's. So v5's val and test frames
+    are exactly v3's (27 + 27); only train grows. v5 is a new Tritonia lineage (`parent: null`, like v3)
+    recording `extends: v3`. Freezing needs explicit user approval.
+  - **Experiment:** E009 = E006 with dataset v3 → v5 only (docs/EXPERIMENTS.md, declared before any result).
+- **LIMITATIONS:**
+  - "Complete" means every **cross** got a box, not every slug: whether every visible slug was clicked is
+    UNKNOWN (D-029). Dr. Wyeth wrote that "the entire data set has been tracked manually"; many bright
+    shapes have no cross, and whether they are slugs is UNKNOWN — requires confirmation.
+  - The rule favours frames with few crosses and clear blobs: crowded days give almost nothing
+    (20130526, 20130530, 20130601), so training under-represents crowded scenes. Some boxes sit on faint
+    texture (D-033); nobody reviews them.
+  - Added frames 75 s apart are close in time and similar; the effective amount of new data is smaller
+    than the frame count.
+- **Consequences:** new scripts and functions above with tests; `make_version` takes `extends` and records
+  the label source folder name; the notebook picks its inputs by dataset version (cell 1). No change to
+  v1–v4, E001–E008. v3 and its label source are not touched.
+
+## D-036 — Tritonia fixed-size boxes on every cross; dataset v6 (2026-11-11, proposed)
+- **Status:** proposed by Anu on `anu/e006-results`; text, freezing v6 and the private Kaggle upload
+  (`anusidhu7/uwct-tritonia-v6-inputs`) user-approved by Anu on 2026-11-11. Its dataset is replaced by v7
+  (D-037: one duplicate box); v6 is not used.
+  Accepted when the PR is reviewed and merged. Changes D-033's box method only: accuracy is still scored
+  against the crosses (point P / R / F1 / AP, 10 px one to one); D-030's day split stays.
+- **Context (OBSERVED, 2026-11-10/11):** E006 (v3, automatic boxes) val point AP 0.403. E008 (imgsz 1280)
+  0.317 and E009 (5× more automatic boxes, D-035) 0.274 did not beat it. In v3 only 292 of the 573 train
+  crosses have a box, so about half the clicked slugs are background in training. On the v3 train days the
+  automatic boxes have median size 20 × 17 px (IQR w 17–24, h 13–20) and their centres lie a median 1.0 /
+  0.5 px (x / y) from the cross (IQR x −1.5 to 2.5, y −1.5 to 2.0 px): the cross marks the slug's centre
+  (INFERRED for the crosses with a clear blob; the others have no box to compare).
+- **Decision:**
+  - **Boxes** (`scripts/fixed_label_tritonia.py`, `fixed_box`, `fixed_label_batch`): on every frame of
+    batch 1, one **20 × 17 px** box (the train-day median above) centred on **every** cross, clipped to the
+    camera view that holds the cross, so no box crosses a camera border. No image content is used and no
+    frame is excluded. OBSERVED: 150 frames, 853 crosses, 853 boxes (51 clipped at a view edge); train 96
+    frames / 573 boxes, val 27 / 153, test 27 / 127.
+  - **Label source:** ingested unchanged by `scripts/ingest_tritonia_boxes.py` into
+    `D:\uwct_tritonia\raw\tritonia_boxes_fixed1\` (read-only, rule 1), with fixed_label_report.json as `--extra`.
+  - **Dataset v6:** `make_tritonia_version.py --version v6 --decision D-036 --boxes …tritonia_boxes_fixed1
+    --batch …tritonia_label_batch1 --seed 0 --val-days 3 --test-days 3`: the same 150 frames and the same
+    day split as v3 (checked: identical split_manifest), only the boxes differ. A new Tritonia lineage
+    (`parent: null`, like v3). Freezing needs explicit user approval.
+  - **Experiment:** E010 = E006 with dataset v3 → v6 only (the box method), declared in docs/EXPERIMENTS.md
+    before any result; it replaces E006 as final candidate only if its val point AP is higher than 0.403.
+- **LIMITATIONS:**
+  - A box is drawn on a cross even where no slug is visible (dark, blurred), and it has one size for every
+    slug, so some boxes are loose or hold mostly background. HYPOTHESIS, not tested: on crowded, faint days
+    this may teach the model to fire on flat background and lower precision.
+  - Train grows from 86 to 96 frames because frames the automatic labels excluded now have boxes: part of
+    the same change (every cross gets a box), not a second variable chosen separately.
+  - Val and test also get fixed boxes; they matter only for Ultralytics' mAP and its best-checkpoint choice
+    (against these boxes, NOT accuracy, D-033). The point scores use the crosses as before.
+  - Whether every slug was clicked stays UNKNOWN (D-029); bright shapes without a cross get no box.
+- **Consequences:** new functions with tests in `tritonia_prelabel.py`, a new CLI, notebook inputs for v6
+  (cell 1). No change to v1–v5, E001–E009 or their label sources.
+
+## D-037 — Tritonia v7: v6 with one duplicate fixed box merged; v6 not used (2026-11-11, proposed)
+- **Status:** proposed by Anu on `anu/e006-results`; text, freezing v7, pointing E010 at v7 and the private
+  Kaggle upload (`anusidhu7/uwct-tritonia-v7-inputs`) user-approved by Anu on 2026-11-11. Corrects the
+  dataset of D-036; D-036's box method otherwise stays.
+- **Context (OBSERVED, 2026-11-11):** E010's notebook cell 10 (`verify_yolo_dataset.py`) failed on v6:
+  Ultralytics read 572 train instances, the manifest says 573. In train frame
+  `20130527all_15spf_t1273` tracks 28 (point 613) and 34 (point 1) have a cross at exactly (237, 473), so
+  `fixed_label_batch` wrote two identical boxes and Ultralytics dropped one ("1 duplicate labels
+  removed"). It is the only frame of the 150 with crosses on one spot. v6 is frozen (rule 4) and cannot be
+  changed. No run used v6 (E010 stopped before training).
+- **Decision:**
+  - `fixed_label_batch` gives crosses at exactly the same position in one frame one box
+    (`duplicate_crosses` in the report; test added). OBSERVED: 853 crosses, 852 boxes, 1 duplicate.
+  - Label source `D:\uwct_tritonia\raw\tritonia_boxes_fixed2\` (read-only); **dataset v7** built and frozen
+    as D-036 describes for v6. v7 differs from v6 only in that frame (train 572 boxes).
+  - **v6 is not used** by any experiment; it stays frozen and registered as a record.
+  - E010 (not run yet) uses v7 instead of v6; its declaration otherwise stands.
+- **LIMITATION:** two tracks on one spot may be one slug clicked twice or two touching slugs; one box
+  covers both either way. In the point eval the two crosses stay two crosses (one can be matched), as for
+  every earlier run.
+- **Consequences:** v7, E010 config and notebook input mapping updated; v1–v6 unchanged.

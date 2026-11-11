@@ -32,9 +32,11 @@ def main():
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--val-days", type=int, required=True)
     parser.add_argument("--test-days", type=int, required=True)
+    parser.add_argument("--extends", help="frozen Tritonia version whose frames must come through unchanged (D-035)")
     args = parser.parse_args()
     try:
-        d = make_version(args.version, args.decision, args.boxes, args.batch, args.seed, args.val_days, args.test_days)
+        d = make_version(args.version, args.decision, args.boxes, args.batch, args.seed, args.val_days, args.test_days,
+                         extends=args.extends)
     except (TritoniaError, VersionError, OSError, KeyError) as e:
         sys.exit(f"REFUSED: {e}")
     with open(d / "split_manifest.csv", newline="", encoding="utf-8") as f:

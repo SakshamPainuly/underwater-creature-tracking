@@ -105,6 +105,22 @@ class FramesTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Lower min_gap"):
             F.pick_frames({"a": a}, 6, seed=0, min_gap=40)
 
+    def test_pick_extra_frames_only_given_days_and_away_from_batch1(self):
+        a = M.parse_mdf(mdf({1: [(1, 1, t) for t in range(1, 200)]}))
+        b = M.parse_mdf(mdf({1: [(1, 1, t) for t in range(1, 200)]}))
+        taken = {"a": [100]}
+        picks = F.pick_extra_frames({"a": a, "b": b}, ["a"], 4, seed=0, min_gap=20, taken=taken)
+        self.assertEqual(picks, F.pick_extra_frames({"a": a, "b": b}, ["a"], 4, seed=0, min_gap=20, taken=taken))
+        self.assertEqual({n for n, _ in picks}, {"a"})  # day b (val/test) never touched
+        ts = [t for _, t in picks]
+        self.assertEqual(len(ts), 4)
+        self.assertTrue(all(abs(t - 100) >= 20 for t in ts))
+        self.assertTrue(all(y - x >= 20 for x, y in zip(ts, ts[1:])))
+        few = F.pick_extra_frames({"a": a}, ["a"], 50, seed=0, min_gap=40, taken={})
+        self.assertLessEqual(len(few), 5)  # gives what it has instead of failing
+        with self.assertRaisesRegex(ValueError, "no MTrackJ file"):
+            F.pick_extra_frames({"a": a}, ["zz"], 1, seed=0, min_gap=1, taken={})
+
 
 class BatchCliTest(unittest.TestCase):
     def test_builds_batch_and_refuses_output_inside_source(self):

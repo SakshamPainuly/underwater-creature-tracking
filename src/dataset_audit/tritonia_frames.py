@@ -145,3 +145,29 @@ def pick_frames(mdfs: dict[str, MdfFile], total: int, seed: int, min_gap: int) -
                              f"wanted {want}. Lower min_gap or the total.")
         picks += [(name, t) for t in sorted(kept)]
     return picks
+
+
+def pick_extra_frames(mdfs: dict[str, MdfFile], days: list[str], per_day: int, seed: int, min_gap: int,
+                      taken: dict[str, list[int]]) -> list[tuple[str, int]]:
+    """Batch 2 (D-035): up to `per_day` more frames per stack in `days` (the training days only).
+
+    Candidates are frames with at least one point that are at least `min_gap` frames from every frame
+    already in `taken` (batch 1) and from every frame kept here. Drawn at random with one generator seeded
+    with `seed`, stacks in sorted order. A stack with fewer candidates gives what it has (reported by the
+    caller); val and test days are never touched because only `days` is read.
+    """
+    rng = random.Random(seed)
+    picks = []
+    for name in sorted(days):
+        if name not in mdfs:
+            raise ValueError(f"{name}: no MTrackJ file for this training day")
+        cands = sorted({p.t for p in mdfs[name].points})
+        rng.shuffle(cands)
+        kept, base = [], list(taken.get(name, []))
+        for t in cands:
+            if all(abs(t - k) >= min_gap for k in kept + base):
+                kept.append(t)
+                if len(kept) == per_day:
+                    break
+        picks += [(name, t) for t in sorted(kept)]
+    return picks

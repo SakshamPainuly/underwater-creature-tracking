@@ -58,18 +58,26 @@ def point_to_box(px: float, py: float, box: tuple[float, ...]) -> float:
     return (dx * dx + dy * dy) ** 0.5
 
 
-def match_frame(preds: list[tuple[float, tuple[float, ...]]], crosses: list[tuple[float, float]],
-                match_px: float = MATCH_PX) -> list[tuple[float, bool]]:
-    """[(conf, matched)] per prediction, greedy by confidence (ties: input order)."""
+def match_details(preds: list[tuple[float, tuple[float, ...]]], crosses: list[tuple[float, float]],
+                  match_px: float = MATCH_PX) -> list[tuple[float, tuple[float, ...], int | None]]:
+    """[(conf, box, index of the matched cross or None)] per prediction, greedy by confidence
+    (ties: input order). The matching rule of D-033; match_frame is this without the indices."""
     free = set(range(len(crosses)))
     result = []
     for conf, box in sorted(preds, key=lambda p: -p[0]):
         near = [(point_to_box(*crosses[i], box), i) for i in free]
         near = [d for d in near if d[0] <= match_px]
-        if near:
-            free.discard(min(near)[1])
-        result.append((conf, bool(near)))
+        hit = min(near)[1] if near else None
+        if hit is not None:
+            free.discard(hit)
+        result.append((conf, box, hit))
     return result
+
+
+def match_frame(preds: list[tuple[float, tuple[float, ...]]], crosses: list[tuple[float, float]],
+                match_px: float = MATCH_PX) -> list[tuple[float, bool]]:
+    """[(conf, matched)] per prediction, greedy by confidence (ties: input order)."""
+    return [(conf, hit is not None) for conf, _, hit in match_details(preds, crosses, match_px)]
 
 
 def scores(frames: dict[str, tuple[list, list]], conf: float, match_px: float = MATCH_PX) -> dict:
@@ -88,25 +96,51 @@ def scores(frames: dict[str, tuple[list, list]], conf: float, match_px: float = 
             "f1": round(2 * p * r / (p + r), 4) if p + r else 0.0}
 
 
-def point_ap(frames: dict[str, tuple[list, list]], match_px: float = MATCH_PX) -> float:
-    """All-point interpolated AP of the confidence-ranked predictions (matching done per frame)."""
+def pr_curve(frames: dict[str, tuple[list, list]], match_px: float = MATCH_PX) -> list[dict]:
+    """Raw point precision-recall curve: one point per confidence-ranked prediction (matching done
+    per frame, as for point_ap). Starts at recall 0, precision 1. Empty if there are no crosses."""
     ranked, n_cross = [], 0
     for preds, crosses in frames.values():
         ranked += match_frame(preds, crosses, match_px)
         n_cross += len(crosses)
-    if not n_cross or not ranked:
-        return 0.0
+    if not n_cross:
+        return []
     ranked.sort(key=lambda m: -m[0])
     tp = fp = 0
-    recall, precision = [0.0], [1.0]
-    for _, ok in ranked:
+    curve = [{"conf": None, "precision": 1.0, "recall": 0.0}]
+    for conf, ok in ranked:
         tp += ok
         fp += not ok
-        recall.append(tp / n_cross)
-        precision.append(tp / (tp + fp))
+        curve.append({"conf": conf, "precision": tp / (tp + fp), "recall": tp / n_cross})
+    return curve
+
+
+def point_ap(frames: dict[str, tuple[list, list]], match_px: float = MATCH_PX) -> float:
+    """All-point interpolated AP of the confidence-ranked predictions (matching done per frame)."""
+    curve = pr_curve(frames, match_px)
+    if len(curve) < 2:
+        return 0.0
+    recall = [c["recall"] for c in curve]
+    precision = [c["precision"] for c in curve]
     for i in range(len(precision) - 2, -1, -1):  # precision envelope
         precision[i] = max(precision[i], precision[i + 1])
     return round(sum((recall[i] - recall[i - 1]) * precision[i] for i in range(1, len(recall))), 4)
+
+
+def conf_curves(frames: dict[str, tuple[list, list]], match_px: float = MATCH_PX) -> list[dict]:
+    """scores() at every CONF_GRID threshold, lowest first: the P, R and F1 curves over confidence."""
+    return [scores(frames, c, match_px) for c in CONF_GRID]
+
+
+def frame_outcome(preds: list, crosses: list, conf: float, match_px: float = MATCH_PX) -> dict:
+    """One frame at one threshold, for drawing: matched / false boxes and found / missed crosses."""
+    kept = [p for p in preds if p[0] >= conf]
+    details = match_details(kept, crosses, match_px)
+    hit = {i for _, _, i in details if i is not None}
+    return {"matched_boxes": [(c, b) for c, b, i in details if i is not None],
+            "false_boxes": [(c, b) for c, b, i in details if i is None],
+            "found_crosses": [crosses[i] for i in sorted(hit)],
+            "missed_crosses": [p for i, p in enumerate(crosses) if i not in hit]}
 
 
 def best_f1_conf(frames: dict[str, tuple[list, list]], match_px: float = MATCH_PX) -> dict:

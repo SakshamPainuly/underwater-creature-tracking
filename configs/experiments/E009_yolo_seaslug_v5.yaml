@@ -1,0 +1,22 @@
+# E009 -- E006 on dataset v5 (Tritonia batch 2, D-035). GPU only: see docs/COLAB.md.
+# Single variable changed vs E006: dataset v3 -> v5. v5 = every v3 frame unchanged plus 536 frames of
+# batch 2 from the training days where every cross got an automatic box (train 86 -> 622 frames,
+# 292 -> 1,478 boxes); val and test frames identical to v3. Model, imgsz 640, seed and settings as E006.
+# Training boxes are automatic (D-033): Ultralytics' val P/R/mAP are against them, not accuracy.
+# Accuracy = point scores against the MTrackJ crosses (notebook cell 17). Selection: val point AP.
+# The training data file has no test split (CLAUDE.md rule 7).
+id: E009
+slug: yolo_seaslug_v5
+parent: E006
+changed: "dataset v3 -> v5 (D-035: plus complete batch 2 training frames; val/test unchanged)"
+dataset_version: v5
+dataset_fingerprint: "1dc6aa0355674c6b81eda39bb25fd52286577c6f4d90888f5031d65b8730c1e0"
+model: yolo26s.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 640
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true

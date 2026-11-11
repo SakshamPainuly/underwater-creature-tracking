@@ -257,3 +257,90 @@ def auto_label_batch(batch_dir: Path, out_dir: Path) -> dict:
     (out_dir / "auto_label_report.json").write_text(json.dumps(counts, indent=2, sort_keys=True) + "\n",
                                                     encoding="utf-8")
     return counts
+
+
+def incomplete_added_frames(suggestions: list[dict], added: list[str]) -> dict[str, int]:
+    """Batch 2 rule (D-035): {added frame: crosses without a box} for every added frame where at least one
+    cross got no box (any flag in suggestions.csv). Such a frame would show a clicked slug as background,
+    so it is excluded from training. Batch 1 frames are not judged here: they keep v3's treatment."""
+    added_set = set(added)
+    missing: dict[str, int] = {}
+    seen = set()
+    for r in suggestions:
+        f = r["frame"]
+        if f in added_set:
+            seen.add(f)
+            if r["flag"]:
+                missing[f] = missing.get(f, 0) + 1
+    unseen = added_set - seen
+    if unseen:
+        raise ValueError(f"{len(unseen)} added frames have no row in suggestions.csv, e.g. {sorted(unseen)[:3]}")
+    return dict(sorted(missing.items()))
+
+
+FIXED_BOX_PX = (20, 17)  # D-036: median width x height of the v3 automatic boxes on the TRAIN days (292 boxes)
+
+
+def fixed_box(x: float, y: float, width: int, height: int,
+              size: tuple[float, float] = FIXED_BOX_PX) -> tuple[float, float, float, float]:
+    """A size[0] x size[1] px box centred on the cross, clipped to the frame and to the camera view
+    holding the cross, so it never crosses a camera border (D-036)."""
+    if not (0 <= x < width and 0 <= y < height):
+        raise ValueError(f"cross ({x}, {y}) is outside the {width}x{height} frame")
+    tx0, ty0, tx1, ty1 = tile_bounds(x, y, width, height)
+    bw, bh = size
+    return (max(tx0, x - bw / 2), max(ty0, y - bh / 2), min(tx1, x + bw / 2), min(ty1, y + bh / 2))
+
+
+def fixed_label_batch(batch_dir: Path, out_dir: Path, size: tuple[float, float] = FIXED_BOX_PX) -> dict:
+    """One fixed-size box per cross on every batch frame (D-036): <out>/labels/<stem>.txt, labels.zip,
+    notes.txt (no frame is excluded: every cross gets a box) and fixed_label_report.json.
+
+    Crosses at exactly the same position in one frame (two tracks on one spot) get one box, not two
+    identical ones (D-037: Ultralytics drops exact duplicate labels, so the view would not verify).
+
+    Same layout as auto_label_batch, so scripts/ingest_tritonia_boxes.py reads it. Nothing is looked
+    at in the image: the boxes come from the cross positions alone.
+    """
+    import json
+    import zipfile
+
+    from .tritonia_labeller import format_label
+    batch_dir, out_dir = Path(batch_dir), Path(out_dir)
+    if out_dir.exists():
+        raise FileExistsError(f"{out_dir} already exists; fixed-box labels are written once")
+    meta = json.loads((batch_dir / "batch.json").read_text(encoding="utf-8"))
+    with open(batch_dir / "manifest.csv", newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    (out_dir / "labels").mkdir(parents=True)
+    counts = {"frames": 0, "crosses": 0, "boxes": 0, "clipped": 0, "frames_without_crosses": 0,
+              "duplicate_crosses": 0}
+    for r in rows:
+        stem = Path(r["image"]).stem
+        info = meta["source_stacks"][r["source_tif"][:-len(".tif")]]
+        w, h = info["width"], info["height"]
+        pts = read_points(batch_dir / "points" / f"{stem}.csv")
+        counts["frames"] += 1
+        if not pts:
+            counts["frames_without_crosses"] += 1
+            continue
+        unique = list(dict.fromkeys(pts))
+        counts["duplicate_crosses"] += len(pts) - len(unique)
+        boxes = [fixed_box(x, y, w, h, size) for x, y in unique]
+        counts["crosses"] += len(pts)
+        counts["boxes"] += len(boxes)
+        counts["clipped"] += sum(1 for b in boxes if (round(b[2] - b[0], 6), round(b[3] - b[1], 6)) != tuple(size))
+        (out_dir / "labels" / f"{stem}.txt").write_text(format_label(boxes, w, h), encoding="utf-8", newline="\n")
+    if counts["frames_without_crosses"]:
+        raise ValueError(f"{counts['frames_without_crosses']} batch frames have no cross; every batch frame "
+                         "should have one (make_tritonia_label_batch.py picks only such frames)")
+    (out_dir / "notes.txt").write_text(
+        f"# frame | note or exclude | reason   (fixed {size[0]}x{size[1]} px box on every cross, D-036)\n",
+        encoding="utf-8", newline="\n")
+    with zipfile.ZipFile(out_dir / "labels.zip", "x", zipfile.ZIP_DEFLATED) as z:
+        for p in sorted((out_dir / "labels").glob("*.txt")):
+            z.write(p, p.name)
+    counts["box_px"] = list(size)
+    (out_dir / "fixed_label_report.json").write_text(json.dumps(counts, indent=2, sort_keys=True) + "\n",
+                                                     encoding="utf-8")
+    return counts

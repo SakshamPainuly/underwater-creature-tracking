@@ -174,3 +174,14 @@ D030_TEST = ["20130520", "20130521", "20130528"]
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ExtensionTest(unittest.TestCase):
+    def test_extension_problems(self):
+        from dataset_audit.tritonia_dataset import extension_problems
+        parent = [{"filename": "a.png", "split": "val", "n_instances": "2"}]
+        self.assertEqual(extension_problems(parent, [{"filename": "a.png", "split": "val", "n_instances": 2},
+                                                     {"filename": "b.png", "split": "train", "n_instances": 1}]), [])
+        self.assertIn("missing", extension_problems(parent, [])[0])
+        self.assertIn("['split']", extension_problems(parent, [{"filename": "a.png", "split": "train",
+                                                                "n_instances": 2}])[0])
