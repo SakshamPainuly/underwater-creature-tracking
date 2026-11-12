@@ -1,0 +1,22 @@
+# E016 -- Model A tuning round 1 (D-038): model size x seed, all with a 60-epoch ceiling and patience 10 (early stopping on val mAP50-95), dataset v4.
+# Everything not listed under "changed" is exactly as in E007 (imgsz 640, batch 16,
+# deterministic, optimizer auto = AdamW lr 0.002 as OBSERVED in E007's log).
+# workers: 2 pins the value E007 used ("Using 2 dataloader workers", 4 CPUs / 2 visible GPUs); with one
+# GPU visible per process Ultralytics would otherwise pick 4. It is not a changed variable.
+# The v1 test and the held-out Zenodo sk site are never seen by training (CLAUDE.md rule 7).
+id: E016
+slug: yolos_ep60_seed1
+parent: E007
+changed: "train_args.epochs 100 -> 60, patience 30 -> 10 and seed 0 -> 1 (D-038 round-1 grid point yolo26s seed 1; several variables on purpose. Parent is E007, the registered run, because round 1 runs in parallel and its own runs are not registered yet, D-039)"
+dataset_version: v4
+dataset_fingerprint: "bbd4a8b172fd590b18d2e8c26be05c85cb3c3246a2e60a3b3513590b931cd13f"
+model: yolo26s.pt
+ultralytics_version: "8.4.155"
+seed: 1
+train_args:
+  imgsz: 640
+  epochs: 60
+  patience: 10
+  batch: 16
+  deterministic: true
+  workers: 2

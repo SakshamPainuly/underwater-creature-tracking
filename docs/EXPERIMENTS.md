@@ -42,6 +42,24 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E008 | `configs/experiments/E008_yolo_seaslug_imgsz1280.yaml` | E006 | train_args.imgsz 640 → 1280 only (frames 1056 × 480 px, slugs about 12–20 px: at 640 they are shrunk to 0.61×); dataset v3, model and settings as E006 | completed 2026-11-11 on Kaggle (Tesla T4); 100 epochs; registered; val point AP 0.317 < E006's 0.403: not a final candidate, no test |
 | E009 | `configs/experiments/E009_yolo_seaslug_v5.yaml` | E006 | dataset v3 → v5 only (D-035: batch 1 unchanged plus the frames of batch 2, from the 10 training days only, where every cross got an automatic box); model and settings as E006 (imgsz 640) | trained 2026-11-10 on Kaggle; val point AP 0.274 < E006's 0.403: not a final candidate, no test; not registered: its run_record.json was not saved and is lost (only the cell 17 val point scores remain) |
 | E010 | `configs/experiments/E010_yolo_seaslug_fixedbox.yaml` | E006 | dataset v3 → v7 only (D-036, D-037: the same 150 frames, images and day split, with a fixed 20 × 17 px box centred on every cross instead of the automatic boxes; train 86 → 96 frames, 292 → 572 boxes; v6 had one duplicate box and is not used); model and settings as E006 (imgsz 640) | completed 2026-11-12 on Kaggle (Tesla T4); 100 epochs; registered; val point AP 0.496 > E006's 0.403: declared final candidate 2026-11-12; evaluated on test once, 2026-11-12 (point eval, D-033) |
+| E011 | `configs/experiments/E011_yolos_ep60_seed0.yaml` | E007 | train_args.epochs 100 → 60 and patience 30 → 10 (D-038 round 1: together the stopping rule, up to 60 epochs while val mAP50-95 improves) | planned 2026-11-11; not run |
+| E012 | `configs/experiments/E012_yolom_ep60_seed0.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and model yolo26s.pt → yolo26m.pt (D-038 round-1 grid point yolo26m seed 0; parent E007 per D-039) | planned 2026-11-11; not run |
+| E013 | `configs/experiments/E013_yolol_ep60_seed0.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and model yolo26s.pt → yolo26l.pt (D-038 round-1 grid point yolo26l seed 0; parent E007 per D-039) | planned 2026-11-11; not run |
+| E014 | `configs/experiments/E014_yolom_ep60_seed1.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26m.pt and seed 0 → 1 (D-038 round-1 grid point yolo26m seed 1; parent E007 per D-039) | planned 2026-11-11; not run |
+| E015 | `configs/experiments/E015_yolol_ep60_seed1.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26l.pt and seed 0 → 1 (D-038 round-1 grid point yolo26l seed 1; parent E007 per D-039) | planned 2026-11-11; not run |
+| E016 | `configs/experiments/E016_yolos_ep60_seed1.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and seed 0 → 1 (D-038 round-1 grid point yolo26s seed 1; parent E007 per D-039) | planned 2026-11-11; not run |
+| E017 | `configs/experiments/E017_yolom_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26m.pt and seed 0 → 2 (D-038 round-1 grid point yolo26m seed 2; parent E007 per D-039) | planned 2026-11-11; not run |
+| E018 | `configs/experiments/E018_yolol_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26l.pt and seed 0 → 2 (D-038 round-1 grid point yolo26l seed 2; parent E007 per D-039) | planned 2026-11-11; not run |
+| E019 | `configs/experiments/E019_yolos_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and seed 0 → 2 (D-038 round-1 grid point yolo26s seed 2; parent E007 per D-039) | planned 2026-11-11; not run |
+
+**Model A tuning E011–E024 (D-038), declared 2026-11-11 before any of these runs:** the selection metric
+is **val mAP50-95** (class `lobster`), at both levels: Ultralytics picks each run's `best.pt` on it (in
+8.4.155 fitness = mAP50-95, OBSERVED in E007's run_record), and runs/configurations are compared on the
+seed mean of it (D-038 points 4 and 6). Val mAP50, P and R are reported next to it. This replaces val
+mAP50 as the primary metric for these runs only; earlier experiments keep their declared metrics.
+Comparisons with E001/E007 show both (mAP50-95 / mAP50: E001 0.6115 / 0.8527, E007 0.5993 / 0.8423).
+Why (for the report, D-038 point 8): trajectories are built from box positions, so box tightness matters
+as well as finding the lobster; mAP50-95 measures both. Neither is a tracking metric (CLAUDE.md rule 9).
 
 **E006 (Tritonia sea slugs, D-030), declared before any result:** selection metric val mAP50 of class
 `sea_slug`; also reported per class: P, R, mAP50-95 on val, and false positives on the confirmed-negative

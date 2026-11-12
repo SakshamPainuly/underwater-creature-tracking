@@ -1151,3 +1151,104 @@ Short, dated records of project decisions. New dataset versions must reference a
   covers both either way. In the point eval the two crosses stay two crosses (one can be matched), as for
   every earlier run.
 - **Consequences:** v7, E010 config and notebook input mapping updated; v1–v6 unchanged.
+
+## D-038 — Model A tuning sprint: model size × seed, then declared combinations (2026-11-11, accepted)
+- **Status:** accepted 2026-11-11. The user approved the plan ("i approve of your plan"), asked to "utilize
+  the kaggle gpu to the fullest", for "hyperparameter tuning with different combinations" and "bigger models"
+  (yolo26l, the third seed and round 2 were added for that), and then approved the selection metric and the
+  epoch rule below ("i approve all your decisions go ahead"). The user also asked that the final report
+  explain what the metric means for the project and why it was picked (point 8).
+- **Context (OBSERVED):** E007 (v4, yolo26s, 100 epochs, patience 30) peaked at epoch 28 (val mAP50
+  0.8420, mAP50-95 0.5985 in results.csv) and stopped at 58; train losses kept falling while val mAP50
+  stayed at about 0.80–0.82. Ultralytics `optimizer=auto` chose AdamW lr 0.002 with linear decay over 100
+  epochs, so the learning rate was still about 0.0015 at the peak. In the pinned Ultralytics 8.4.155,
+  `best.pt` is the epoch with the highest "fitness", and fitness equals val mAP50-95: E007's run_record
+  shows fitness 0.59933 = mAP50-95 0.59933. In E007, epoch 28 was the best on mAP50, mAP50-95 and fitness
+  alike. E007 ran in a 2× Tesla T4 session but trained on GPU 0 only, with 2 dataloader workers
+  (4 CPUs). The user must show the report on 2026-11-13 and has about 24 h. The Kaggle weekly GPU quota is
+  about 30 h, of which E007 used about 2.5 h (the user reports no other GPU use).
+- **Decision:**
+  1. **Selection metric: val mAP50-95 (class `lobster`), at both levels.** It picks the best epoch of a run
+     (Ultralytics fitness, unchanged) and the best run/configuration (points 4 and 6), so one metric is used
+     throughout. Val mAP50, P and R are always reported next to it. This replaces val mAP50 as the selection
+     metric for Model A runs from E011 on; it is declared before any of these runs (CLAUDE.md §5).
+     Comparisons with E001 and E007 show both metrics (mAP50-95 / mAP50: E001 0.6115 / 0.8527, E007
+     0.5993 / 0.8423).
+  2. **Round 1 (configs E011–E019, committed before any run):** yolo26s / yolo26m / yolo26l × seeds 0 / 1 / 2,
+     all v4, imgsz 640, batch 16, **epochs 60 as a ceiling and patience 10**, otherwise as E007. A run trains
+     while val mAP50-95 improves, up to 60 epochs, and stops 10 epochs after its last improvement. The
+     learning-rate schedule decays over the 60 epochs; an Ultralytics run cannot be extended past its
+     `epochs` value, so the ceiling is set up front. Chain: E011 = E007 with epochs 100 → 60 and patience
+     30 → 10 (two variables on purpose: together they are the stopping rule); E012 / E013 = E011 with the
+     model changed; the seed runs change only the seed.
+  3. **Execution:** one Kaggle background version on the 2×T4 session, one training process per GPU
+     (`CUDA_VISIBLE_DEVICES`), taking runs from one queue in the order E011 (s0), E013 (l0), E012 (m0),
+     E016 (s1), E014 (m1), E015 (l1), E019 (s2), E017 (m2), E018 (l2): every size gets seed 0 first and the
+     longest run starts at once. A run starts only if its worst-case duration (60 epochs × the slowest
+     measured seconds per epoch of its model size, or a default until one is measured, + 10 min) ends
+     before a deadline of 9.5 h after the notebook starts, so no run is ever cut off. Each finished run is
+     packaged (zip + sha256) at once. Runs not started are recorded as "not run (time)", never as results.
+  4. **Round 1 selection (val only):** for each model, the mean val mAP50-95 of its finished seeds (mAP50,
+     P, R and the seed range are reported too). The winner is the model with the highest mean. If the gap
+     to a smaller model is not larger than the bigger of the two seed ranges, the smaller model wins
+     (cheaper, no evidence of a gain). A model with one finished seed has no range: it is reported, and it
+     wins only if it beats the best mean by more than the largest range among the multi-seed models.
+  5. **Round 2 (Thursday 2026-11-12, only if quota allows: it starts only when the Kaggle quota meter shows
+     at least round 2's deadline + 4 h left):** five combinations, fixed now, each one run (seed 0) with
+     the round-1 winning model and otherwise the round-1 settings (epochs 60, patience 10). Configs
+     E020–E024 are instantiated with that model before the run:
+     - C1: `optimizer: AdamW`, `lr0: 0.001`, `momentum: 0.9`, `cos_lr: true`
+     - C2: `cos_lr: true`, `mixup: 0.1`
+     - C3: `freeze: 10` (backbone frozen)
+     - C4: `optimizer: AdamW`, `lr0: 0.001`, `momentum: 0.9`, `weight_decay: 0.001`, `mixup: 0.1`
+     - C5: `cos_lr: true`, `close_mosaic: 20`
+
+     `momentum: 0.9` reproduces the AdamW beta1 that `auto` used. Several variables change per run on
+     purpose (a combination search); this decision is the reason (CLAUDE.md §5). Queue order C1–C5, same
+     worst-case deadline rule, with the deadline set when round 2 is launched.
+  6. **Overall selection (val only):** a round-2 combination replaces the round-1 winner only if its val
+     mAP50-95 beats the winner's seed mean by more than the winner's seed range (one seed must clear the
+     noise).
+  7. **Final candidates:** the finished runs of the selected configuration are declared in
+     `experiments/final_candidates.csv` before any test evaluation. Each is evaluated once on the v1 test
+     and once on Zenodo `sk`, and the mean and range are reported (mAP50-95, mAP50, P, R). The demo model
+     is the declared run with the highest val mAP50-95. E001 (v1) is compared on val and on its existing
+     test result. If the selected configuration does not beat E001's val mAP50-95 0.6115, the report says
+     so.
+  8. **Report:** the final report explains the metric for the project. mAP50 counts a detection as correct
+     when its box overlaps the annotated box with IoU ≥ 0.5 ("was the lobster found?"). mAP50-95 averages
+     over IoU thresholds 0.50–0.95, so it also rewards tight boxes. The tracker links detections from frame
+     to frame and the trajectories are built from box positions in px, so both finding the lobster and box
+     accuracy matter. mAP50-95 measures both, and Ultralytics already uses it to choose the best epoch, so
+     selecting runs on it keeps one criterion throughout. LIMITATION: neither is a tracking metric (no
+     ground-truth track IDs, CLAUDE.md rule 9), and the operating confidence threshold (P/R trade-off,
+     false positives on negatives) is chosen later, on val.
+  9. **Deferred:** leave-site-out cross-validation (D-031 stage 5) to after 2026-11-13, before 2026-12-15.
+     Also deferred: imgsz > 640, RT-DETR on v4 and a run without derived images. Ultralytics `model.tune()`
+     is not used (it needs dozens to hundreds of runs).
+- **ASSUMPTION — requires confirmation:** Kaggle counts quota by session time regardless of the number of
+  GPUs. This is checked on the quota meter after the first hour of the background run. The time per epoch
+  with two runs sharing 4 CPUs is UNKNOWN; the worst-case deadline rule (point 3) bounds the session and
+  may skip later seeds, especially of yolo26l.
+- **LIMITATIONS:** 324 val images select among up to 14 configurations, so the selected val score is
+  optimistic. Only the single test evaluation of the declared runs is unbiased. Round 2 has one seed per
+  combination. Val/test measure new sessions at known sites; only Zenodo `sk` is a new site. Early
+  stopping on val means val also chose each run's length (as in every earlier run).
+
+## D-039 — Round-1 configs name E007 as parent (2026-11-11, accepted)
+- **Status:** accepted 2026-11-11 (user-approved: "yes commit push and open the PR"). Supersedes the parent chain in D-038 point 2;
+  everything else in D-038 is unchanged.
+- **Context (OBSERVED):** the first background run of the D-038 notebook (Kaggle version "D-038 round 1
+  E011-E019 (2affc59)", 2026-11-11 21:13 UTC) started E011 and then stopped E013, E012 and E016 within
+  seconds: `train.py` refuses a full run whose parent is not in `experiments/registry.csv` ("parent E011
+  is not in registry.csv at this commit"). D-038 made E012–E019 children of E011 / E012 / E013, which run
+  in the same session and cannot be registered first. No run produced results; the user stopped the version
+  (E011 had trained for about 15 min; its partial run is not used).
+- **Decision:** E012–E019 name **E007** (registered, reviewed) as parent; their `changed` field lists every
+  variable relative to E007 (epochs, patience, and model and/or seed). The configs differ from the D-038
+  versions only in `parent` and `changed`: model, seed and train_args are the same. The parent guard is
+  kept as it is. Round-2 configs (E020–E024) name the round-1 winner, which is registered before round 2.
+- **Consequences:** the round-1 notebook is re-run from Cell 1 on the fixed commit; all nine runs start
+  from scratch. Comparisons within round 1 are still single-variable in substance (same settings, only
+  model or seed differ), as D-038 points 4 and 6 already assume.
+
