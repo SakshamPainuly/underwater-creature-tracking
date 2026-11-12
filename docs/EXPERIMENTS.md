@@ -51,6 +51,20 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E017 | `configs/experiments/E017_yolom_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26m.pt and seed 0 → 2 (D-038 round-1 grid point yolo26m seed 2; parent E007 per D-039) | planned 2026-11-11; not run |
 | E018 | `configs/experiments/E018_yolol_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26l.pt and seed 0 → 2 (D-038 round-1 grid point yolo26l seed 2; parent E007 per D-039) | planned 2026-11-11; not run |
 | E019 | `configs/experiments/E019_yolos_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and seed 0 → 2 (D-038 round-1 grid point yolo26s seed 2; parent E007 per D-039) | planned 2026-11-11; not run |
+| E025 | `configs/experiments/E025_seaslug_base_seed1.yaml` | E010 | seed 0 → 1 only (E010 repeated, D-040 baseline); dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E026 | `configs/experiments/E026_seaslug_base_seed2.yaml` | E010 | seed 0 → 2 only (E010 repeated, D-040 baseline); dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E027 | `configs/experiments/E027_seaslug_ep200_seed0.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-040 arm A, together the stopping rule); dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E028 | `configs/experiments/E028_seaslug_ep200_seed1.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-040 arm A, together the stopping rule); seed 0 → 1; dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E029 | `configs/experiments/E029_seaslug_ep200_seed2.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-040 arm A, together the stopping rule); seed 0 → 2; dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E030 | `configs/experiments/E030_seaslug_batch8_seed0.yaml` | E010 | train_args.batch 16 → 8 (D-040 arm B); dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E031 | `configs/experiments/E031_seaslug_batch8_seed1.yaml` | E010 | train_args.batch 16 → 8 (D-040 arm B); seed 0 → 1; dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E032 | `configs/experiments/E032_seaslug_batch8_seed2.yaml` | E010 | train_args.batch 16 → 8 (D-040 arm B); seed 0 → 2; dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E033 | `configs/experiments/E033_seaslug_scale02_seed0.yaml` | E010 | train_args.scale 0.5 → 0.2 (D-040 arm C); dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E034 | `configs/experiments/E034_seaslug_scale02_seed1.yaml` | E010 | train_args.scale 0.5 → 0.2 (D-040 arm C); seed 0 → 1; dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E035 | `configs/experiments/E035_seaslug_scale02_seed2.yaml` | E010 | train_args.scale 0.5 → 0.2 (D-040 arm C); seed 0 → 2; dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E036 | `configs/experiments/E036_seaslug_imgsz1056_seed0.yaml` | E010 | train_args.imgsz 640 → 1056 (D-040 arm D); dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E037 | `configs/experiments/E037_seaslug_imgsz1056_seed1.yaml` | E010 | train_args.imgsz 640 → 1056 (D-040 arm D); seed 0 → 1; dataset v7, otherwise as E010 | planned 2026-11-12; not run |
+| E038 | `configs/experiments/E038_seaslug_imgsz1056_seed2.yaml` | E010 | train_args.imgsz 640 → 1056 (D-040 arm D); seed 0 → 2; dataset v7, otherwise as E010 | planned 2026-11-12; not run |
 
 **Model A tuning E011–E024 (D-038), declared 2026-11-11 before any of these runs:** the selection metric
 is **val mAP50-95** (class `lobster`), at both levels: Ultralytics picks each run's `best.pt` on it (in
@@ -108,6 +122,16 @@ E010 is against the fixed boxes and is not comparable with E006's (different val
 E010 is declared as a final candidate only after registration and only if its val point AP is higher than
 E006's 0.403; then its test is run once with its own val threshold and reported beside E006's (test never
 chooses). LIMITATION: one run per arm (seed 0), 27 val frames.
+
+**Tritonia tuning round 1 E025–E038 (D-040), declared 2026-11-12 before any of these runs:** baseline = E010's
+settings on v7 (seed 0 = E010, seeds 1 / 2 = E025 / E026); arms A (epochs 200, patience 50), B (batch 8),
+C (scale 0.2), D (imgsz 1056), each seeds 0 / 1 / 2 and one setting changed from E010. Selection metric:
+**val point AP** (D-033) on all 27 val frames, 153 crosses, 10 px one to one, each run at its own best-val-F1
+threshold; per arm the **mean over 3 seeds** and the seed range. An arm wins only if its mean exceeds the
+baseline mean by more than the larger of the two seed ranges; fewer than 3 finished seeds cannot win. Point
+P / R / F1, per day, and Ultralytics' val metrics (not accuracy) are reported next to it. Round 2 (winning
+settings combined, 3 seeds, configs committed first) only if an arm wins; a test of its result only after a
+separate user approval; no test in round 1. LIMITATION: four arms compared on 27 val frames from 3 days.
 
 E001–E003 and E005 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
 E004 uses dataset v2 (fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e`):

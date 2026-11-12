@@ -1252,3 +1252,42 @@ Short, dated records of project decisions. New dataset versions must reference a
   from scratch. Comparisons within round 1 are still single-variable in substance (same settings, only
   model or seed differ), as D-038 points 4 and 6 already assume.
 
+
+## D-040 — Tritonia hyperparameter tuning, round 1: four single-setting arms × 3 seeds on v7 (2026-11-12, proposed)
+- **Status:** proposed by Anu on `anu/e006-results`. Plan user-approved by Anu on 2026-11-12 ("ok proceed with
+  this but dont do anything for gui"): baseline E010, arms A–D, 3 seeds, the selection rule, round 2 and a
+  test only on a later approval, one Kaggle notebook. No GUI work is part of it.
+- **Context (OBSERVED):** E010 (v7, yolo26s, imgsz 640, 100 epochs, patience 30, batch 16) has the best Tritonia
+  val point AP (0.496; E006 0.403) and a lower test point AP than E006 (0.215 vs 0.248), so one seed on 27 val
+  frames is not enough to tell settings apart. Its `results.csv`: no val detections until about epoch 20, best
+  epoch 81 of 100, val mAP50-95 still about 0.18–0.19 at epochs 80–100 (against the fixed boxes, not accuracy,
+  D-033). 96 training images at batch 16 = 6 optimizer steps per epoch. Augmentation is the Ultralytics default,
+  including `scale 0.5`; frames are 1056 × 480 and slugs about 12–20 px, shrunk to 0.61× at imgsz 640.
+  One E010 run took 239 s on a Tesla T4.
+- **Decision:**
+  1. **Baseline:** E010's settings on frozen dataset v7 (chosen on val; test results never choose, rule 7).
+     Seed 0 is E010 itself; E025 / E026 repeat it with seeds 1 / 2.
+  2. **Round 1 arms**, each one setting changed from E010, seeds 0 / 1 / 2, parent E010 (registered):
+     A `epochs 100 → 200` with `patience 30 → 50` (two variables on purpose: together the stopping rule;
+     E027–E029); B `batch 16 → 8` (E030–E032); C `scale 0.5 → 0.2` (E033–E035); D `imgsz 640 → 1056`
+     (E036–E038; the val point eval runs at the same imgsz). Everything else as E010; `workers: 2` is pinned
+     for one process per GPU and is not a changed variable. IDs start at E025 because D-038 reserves E020–E024.
+  3. **Execution:** `notebooks/kaggle_tritonia_tuning.ipynb`, one Kaggle session (GPU T4 × 2, one training
+     process per GPU), at one pushed commit: build and verify v7, smoke test, then the 14 runs from one queue
+     with seed 0 of every arm first, then the val point eval of every finished run (`tritonia_point_eval.py
+     --split val`, all 27 val frames, 10 px one to one, threshold = that run's best val F1). Each run's folder
+     and the comparison are zipped for download in the session (saved versions have kept no output, E010).
+  4. **Selection metric: val point AP** (D-033), per arm the **mean over its 3 seeds**, with the seed range
+     (max − min). Point P / R / F1 at each run's threshold, per day, and Ultralytics' val metrics (labelled not
+     accuracy) are reported next to it. An arm **wins** only if its mean is higher than the baseline mean by
+     more than the larger of the two seed ranges; otherwise the result is "no evidence of a gain". An arm with
+     fewer than 3 finished seeds is reported and cannot win.
+  5. **Round 2** (only if at least one arm wins): one config combining the winning settings, 3 seeds, compared
+     with the baseline by the same rule; its configs are committed before it runs. If it wins it may be
+     declared a final candidate and tested once, only after a separate user approval (the 27 test frames were
+     already used by E006 and E010). If no arm wins, E010 stays the Tritonia reference and there is no test.
+- **LIMITATION:** 27 val frames from 3 days and four arms compared on them: the best arm can still be partly
+  chosen by noise; the 3 seeds and the seed-range rule reduce this but do not remove it. All runs are on one
+  setup (new days, not new sites); point precision is a lower bound (D-029). Arm D costs about 2.7× the compute.
+- **Consequences:** 14 configs E025–E038, the notebook, docs/EXPERIMENTS.md rows and the declaration below,
+  all before any run. No change to v7, E006, E010 or any earlier result.
