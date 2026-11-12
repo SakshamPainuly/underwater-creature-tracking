@@ -21,7 +21,7 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
   - Mechanism (D-012): a final candidate is declared by a committed row in
     `experiments/final_candidates.csv` (E001 declared; E005 declared 2026-10-15 while still training,
     tested only after it is registered and reviewed; E006 declared 2026-11-10 after registration,
-    tested by `scripts/tritonia_point_eval.py --final`). `scripts/final_test_eval.py` refuses
+    tested by `scripts/tritonia_point_eval.py --final`; E010 declared 2026-11-12 after registration). `scripts/final_test_eval.py` refuses
     undeclared experiments, fixes the operating confidence on val, then evaluates once on test
     (docs/COLAB.md).
 
@@ -41,7 +41,7 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E007 | `configs/experiments/E007_yolo_model_a_all.yaml` | E001 | dataset v1 → v4 only: all safe Model A training data (4,111 images: our originals, Zenodo `mpa`, colour change, copy-paste, diffusion; D-031, D-032); model and settings as E001 | completed 2026-11-08 on Kaggle (Tesla T4); 58 epochs (early stop); registered; not a final candidate |
 | E008 | `configs/experiments/E008_yolo_seaslug_imgsz1280.yaml` | E006 | train_args.imgsz 640 → 1280 only (frames 1056 × 480 px, slugs about 12–20 px: at 640 they are shrunk to 0.61×); dataset v3, model and settings as E006 | completed 2026-11-11 on Kaggle (Tesla T4); 100 epochs; registered; val point AP 0.317 < E006's 0.403: not a final candidate, no test |
 | E009 | `configs/experiments/E009_yolo_seaslug_v5.yaml` | E006 | dataset v3 → v5 only (D-035: batch 1 unchanged plus the frames of batch 2, from the 10 training days only, where every cross got an automatic box); model and settings as E006 (imgsz 640) | trained 2026-11-10 on Kaggle; val point AP 0.274 < E006's 0.403: not a final candidate, no test; not registered: its run_record.json was not saved and is lost (only the cell 17 val point scores remain) |
-| E010 | `configs/experiments/E010_yolo_seaslug_fixedbox.yaml` | E006 | dataset v3 → v7 only (D-036, D-037: the same 150 frames, images and day split, with a fixed 20 × 17 px box centred on every cross instead of the automatic boxes; train 86 → 96 frames, 292 → 572 boxes; v6 had one duplicate box and is not used); model and settings as E006 (imgsz 640) | planned 2026-11-11; not run |
+| E010 | `configs/experiments/E010_yolo_seaslug_fixedbox.yaml` | E006 | dataset v3 → v7 only (D-036, D-037: the same 150 frames, images and day split, with a fixed 20 × 17 px box centred on every cross instead of the automatic boxes; train 86 → 96 frames, 292 → 572 boxes; v6 had one duplicate box and is not used); model and settings as E006 (imgsz 640) | completed 2026-11-12 on Kaggle (Tesla T4); 100 epochs; registered; val point AP 0.496 > E006's 0.403: declared final candidate 2026-11-12; not tested yet |
 
 **E006 (Tritonia sea slugs, D-030), declared before any result:** selection metric val mAP50 of class
 `sea_slug`; also reported per class: P, R, mAP50-95 on val, and false positives on the confirmed-negative
@@ -146,6 +146,7 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | E006 | 2026-11-10 | E001 | dataset v1 → v3 only: Tritonia sea slugs, automatic boxes (D-030, D-033) | v3 | — | — | not mAP (D-033): val point AP 0.403; point P / R / F1 0.504 / 0.451 / 0.476 at conf 0.06; 100 epochs; best.pt recorded; Kaggle; final candidate |
 | E008 | 2026-11-10 | E006 | imgsz 640 → 1280 only | v3 | — | — | not mAP (D-033): val point AP 0.317; point P / R / F1 0.436 / 0.379 / 0.406 at conf 0.12; 100 epochs; best.pt recorded; Kaggle; registered; not a final candidate (below 0.403) |
 | E009 | 2026-11-10 | E006 | dataset v3 → v5 only (D-035) | v5 | — | — | not mAP (D-033): val point AP 0.274; point P / R / F1 0.340 / 0.333 / 0.337 at conf 0.06; Kaggle; not registered (run record lost); not a final candidate (below 0.403) |
+| E010 | 2026-11-12 | E006 | dataset v3 → v7 only: fixed 20 × 17 px box on every cross (D-036, D-037) | v7 | — | — | not mAP (D-033): val point AP 0.496; point P / R / F1 0.614 / 0.458 / 0.524 at conf 0.16; 100 epochs; best.pt recorded; Kaggle; registered; final candidate |
 
 E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
 The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
@@ -326,6 +327,45 @@ one, threshold = each run's own best val F1 (D-033).
   point to the automatic labels, not the amount of data or the image size, as the limit.
 - LIMITATION: one run per arm (seed 0) on 27 val frames; the differences may be partly noise. These runs
   show that E006 was not beaten, not that imgsz 1280 or v5 are worse in general.
+
+### E010 vs E006: val point scores (Tritonia, fixed boxes)
+
+Source (OBSERVED): `val_point_scores.json` (1,270 B) and `run_record.json` (9,779 B, sha256 `3e1d8c2d…`)
+from the E010 Kaggle session (notebook `anusidhu7/notebooka3e73b4a4d`, commit `2a8daf3`), downloaded by
+Anu on 2026-11-12 as a zip from the live session (two saved versions had no output) and kept in
+`D:\uwct_tritonia\runs\E010\` with `best.pt`; the record is archived in `experiments/records/E010/`.
+- From the record (OBSERVED): commit `2a8daf3`, clean; dataset v7 `8ea6503c…`, frozen and verified by
+  Ultralytics (train 96 images / 572 boxes, val 27 / 153); all 100 epochs, one launch, 239 s on a Tesla T4;
+  `best.pt` 20,291,141 B sha256 `48d72b79…`, checked against the downloaded file.
+- Ultralytics val of `best.pt` against the **fixed** val boxes (NOT accuracy, D-033, and not comparable with
+  E006's, which are against other boxes): P 0.510, R 0.425, mAP50 0.408, mAP50-95 0.198.
+- Point scores: all 27 val frames, 153 crosses, 10 px one to one, threshold = each run's own best val F1.
+
+| run | changed from E006 | point AP | conf | predictions | matched | point P | point R | F1 |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| E006 | — | 0.403 | 0.06 | 137 | 69 | 0.504 | 0.451 | 0.476 |
+| **E010** | dataset v3 → v7 (fixed boxes) | **0.496** | 0.16 | 114 | 70 | **0.614** | **0.458** | **0.524** |
+
+Per val day (point P / R / F1, matched / crosses; E006 at conf 0.06, E010 at conf 0.16):
+
+| day | crosses | E006 | E010 |
+|---|---:|---|---|
+| 20130524 | 15 | 0.069 / 0.133 / 0.091 (2 / 15, 29 predictions) | 0.167 / 0.133 / 0.148 (2 / 15, 12 predictions) |
+| 20130529 | 77 | 0.825 / 0.429 / 0.564 (33 / 77) | 0.769 / 0.649 / 0.704 (50 / 77) |
+| 20130602 | 61 | 0.500 / 0.557 / 0.527 (34 / 61) | 0.486 / 0.295 / 0.367 (18 / 61) |
+
+- Outcome by the declared rule: E010's val point AP 0.496 is higher than E006's 0.403, so **E010 is declared
+  a final candidate** (`experiments/final_candidates.csv`, 2026-11-12) with its own val threshold conf 0.16
+  and `best.pt` sha256 `48d72b79…`. Its test is run once (notebook cell 18) and reported beside E006's
+  test result; test never chooses.
+- OBSERVED: the gain is not uniform. E010 finds many more slugs on 20130529 (50 vs 33 matched) and fewer
+  on 20130602 (18 vs 34); overall matched crosses are almost equal (70 vs 69), and the higher point AP
+  and precision come mostly from fewer false boxes (114 vs 137 predictions).
+- HYPOTHESIS, not tested: boxes on every cross (including frames the automatic labels excluded) give
+  fewer slugs counted as background in training, hence fewer false boxes; the fixed 20 × 17 px size may
+  fit some days' slugs worse than others (20130602).
+- LIMITATION: one run per arm (seed 0) on 27 val frames from 3 days; the difference may be partly noise.
+  Point precision is a lower bound (UNKNOWN whether every slug was clicked, D-029).
 
 ### Val secondary metrics: E001 vs E004 (D-020)
 
