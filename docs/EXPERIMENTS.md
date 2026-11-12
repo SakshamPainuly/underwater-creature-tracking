@@ -65,6 +65,9 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E036 | `configs/experiments/E036_seaslug_imgsz1056_seed0.yaml` | E010 | train_args.imgsz 640 → 1056 (D-040 arm D); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.482; not a final candidate (D-040: no arm wins) |
 | E037 | `configs/experiments/E037_seaslug_imgsz1056_seed1.yaml` | E010 | train_args.imgsz 640 → 1056 (D-040 arm D); seed 0 → 1; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.481; not a final candidate (D-040: no arm wins) |
 | E038 | `configs/experiments/E038_seaslug_imgsz1056_seed2.yaml` | E010 | train_args.imgsz 640 → 1056 (D-040 arm D); seed 0 → 2; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.471; not a final candidate (D-040: no arm wins) |
+| E039 | `configs/experiments/E039_seaslug_v8_seed0.yaml` | E010 | dataset v7 → v8 only (D-041: v7 plus 2,662 batch-2 training-day frames with fixed boxes; val and test unchanged); otherwise as E010 | planned 2026-11-12; dataset v8 frozen, fingerprint `52cd95c3…`; not run |
+| E040 | `configs/experiments/E040_seaslug_v8_seed1.yaml` | E010 | dataset v7 → v8 (D-041); seed 0 → 1; otherwise as E010 | planned 2026-11-12; dataset v8 frozen, fingerprint `52cd95c3…`; not run |
+| E041 | `configs/experiments/E041_seaslug_v8_seed2.yaml` | E010 | dataset v7 → v8 (D-041); seed 0 → 2; otherwise as E010 | planned 2026-11-12; dataset v8 frozen, fingerprint `52cd95c3…`; not run |
 
 **Model A tuning E011–E024 (D-038), declared 2026-11-11 before any of these runs:** the selection metric
 is **val mAP50-95** (class `lobster`), at both levels: Ultralytics picks each run's `best.pt` on it (in
@@ -132,6 +135,19 @@ baseline mean by more than the larger of the two seed ranges; fewer than 3 finis
 P / R / F1, per day, and Ultralytics' val metrics (not accuracy) are reported next to it. Round 2 (winning
 settings combined, 3 seeds, configs committed first) only if an arm wins; a test of its result only after a
 separate user approval; no test in round 1. LIMITATION: four arms compared on 27 val frames from 3 days.
+
+**Tritonia v8, more training frames E039–E041 (D-041), declared 2026-11-12 before any of these runs:** arm v8 =
+E010's settings with only the dataset changed, v7 → v8 (train 96 → 2,758 frames, 572 → 18,950 fixed boxes; the
+27 val and 27 test frames are v7's, unchanged, so their 153 / 127 crosses are the same), seeds 0 / 1 / 2 =
+E039 / E040 / E041. Reference = the D-040 baseline (E010, E025, E026: mean val point AP 0.489, seed range
+0.018), not re-run. Selection metric and rule as D-040: **val point AP** on all 27 val frames, 153 crosses,
+10 px one to one, each run at its own best-val-F1 threshold; **mean over 3 seeds** and the seed range; v8 wins
+only if its mean exceeds 0.489 by more than the larger of the two seed ranges; fewer than 3 finished seeds cannot
+win. Point P / R / F1, per day, and Ultralytics' val metrics (not accuracy) are reported next to it. If v8 wins,
+the seed with the highest val point AP is the candidate; a test of it only after a separate user approval, run
+once with its own val threshold and reported beside E006's and E010's (test never chooses). LIMITATIONS: 27 val
+frames from 3 days; added frames are 75 s apart and partly redundant; unclicked slugs in added frames are
+background examples (D-029).
 
 E001–E003 and E005 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
 E004 uses dataset v2 (fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e`):
