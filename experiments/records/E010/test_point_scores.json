@@ -1,0 +1,51 @@
+{
+  "split": "test",
+  "final": "E010",
+  "frames": 27,
+  "match_px": 10.0,
+  "prediction_run": {
+    "weights": "/kaggle/input/datasets/anusidhu7/uwct-e010-weights/train/weights/best.pt",
+    "conf": 0.001,
+    "imgsz": 640
+  },
+  "point_ap": 0.2145,
+  "at_conf": {
+    "conf": 0.16,
+    "predictions": 87,
+    "crosses": 127,
+    "matched": 31,
+    "precision": 0.3563,
+    "recall": 0.2441,
+    "f1": 0.2897
+  },
+  "per_day": {
+    "20130520": {
+      "conf": 0.16,
+      "predictions": 19,
+      "crosses": 20,
+      "matched": 7,
+      "precision": 0.3684,
+      "recall": 0.35,
+      "f1": 0.359
+    },
+    "20130521": {
+      "conf": 0.16,
+      "predictions": 46,
+      "crosses": 27,
+      "matched": 10,
+      "precision": 0.2174,
+      "recall": 0.3704,
+      "f1": 0.274
+    },
+    "20130528": {
+      "conf": 0.16,
+      "predictions": 22,
+      "crosses": 80,
+      "matched": 14,
+      "precision": 0.6364,
+      "recall": 0.175,
+      "f1": 0.2745
+    }
+  },
+  "limitation": "crosses are the ground truth; precision is a lower bound because it is UNKNOWN whether every slug was clicked (D-029). Not mAP."
+}
