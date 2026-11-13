@@ -178,6 +178,13 @@ class OperatingPointTest(unittest.TestCase):
             ("test", "A", "a1.png"), ("val", "V", "v1.png"), ("train", "T", "t1.png"))]
         self.assertEqual(F.select_prediction_examples(rows), ["a1.png", "b2.png"])
 
+    def test_prediction_examples_mixed_view_uses_group_id_and_target_split(self):
+        rows = [{"split": s, "group_id": g, "filename": f} for s, g, f in (
+            ("test", "S1", "t1.jpg"), ("test_zenodo_sk", "sk_a", "k2.jpg"), ("test_zenodo_sk", "sk_a", "k1.jpg"),
+            ("test_zenodo_sk", "sk_a", "k3.jpg"), ("test_zenodo_sk", "sk_b", "m1.jpg"))]
+        self.assertEqual(F.select_prediction_examples(rows), ["t1.jpg"])
+        self.assertEqual(F.select_prediction_examples(rows, "test_zenodo_sk"), ["k2.jpg", "m1.jpg"])
+
     def test_final_record_requires_metrics(self):
         kw = dict(run_record=make_record(), declaration={"experiment_id": "E001"}, git={"commit": "a" * 40},
                   dataset={"fingerprint": "f" * 64}, test_counts={}, conf={"value": 0.4}, artifacts=[],
@@ -185,8 +192,59 @@ class OperatingPointTest(unittest.TestCase):
         rec = F.build_final_record(metrics={"ultralytics_reported": {"precision": 1.0, "recall": 1.0, "map50": 1.0,
                                                                      "map50_95": 1.0}}, **kw)
         self.assertEqual((rec["label"], rec["split"]), ("FINAL TEST EVALUATION", "test"))
+        self.assertEqual((rec["target"], rec["data_file"]), ("test", "data.yaml"))
+        self.assertEqual(rec["limitations"], list(F.FINAL_TEST_LIMITATIONS))
         with self.assertRaises(F.FinalTestError):
             F.build_final_record(metrics={"ultralytics_reported": {}}, **kw)
+        sk = F.build_final_record(metrics={"ultralytics_reported": {"precision": 1.0, "recall": 1.0, "map50": 1.0,
+                                                                    "map50_95": 1.0}}, target="test_zenodo_sk", **kw)
+        self.assertEqual((sk["split"], sk["target"], sk["data_file"]),
+                         ("test", "test_zenodo_sk", "data_test_zenodo_sk.yaml"))
+        self.assertEqual(sk["limitations"], list(F.ZENODO_SK_LIMITATIONS))
+
+
+class TargetTest(unittest.TestCase):
+    """D-043: the v1 test and the held-out Zenodo sk site are separate targets, each evaluated once."""
+
+    SUMMARY = {"splits": {"train": {"images": 5}, "test": {"images": 348, "negative": 27, "instances": 1512}},
+               "eval_only_splits": {"test_zenodo_sk": {"data_file": "data_test_zenodo_sk.yaml", "images": 428,
+                                                       "negative": 285, "instances": 143}}}
+
+    def test_unknown_target_is_refused(self):
+        with self.assertRaises(F.FinalTestError):
+            F.target_spec("val")
+
+    def test_expected_counts_per_target(self):
+        self.assertEqual(F.expected_target_counts(self.SUMMARY, "test")["images"], 348)
+        self.assertEqual(F.expected_target_counts(self.SUMMARY, "test_zenodo_sk"),
+                         {"images": 428, "negative": 285, "instances": 143})
+        with self.assertRaises(F.FinalTestError):  # a v1 view has no sk split
+            F.expected_target_counts({"splits": self.SUMMARY["splits"]}, "test_zenodo_sk")
+
+    def test_targets_have_separate_folders_and_data_files(self):
+        self.assertEqual(F.TARGETS["test"]["out_dir"], F.FINAL_DIR)
+        self.assertEqual(len({t["out_dir"] for t in F.TARGETS.values()}), len(F.TARGETS))
+        self.assertEqual(len({t["data_file"] for t in F.TARGETS.values()}), len(F.TARGETS))
+        from yolo_prep import mixed
+        self.assertEqual(F.TARGETS["test_zenodo_sk"]["data_file"], mixed.EVAL_ONLY_SPLITS["test_zenodo_sk"])
+
+    def test_each_target_is_evaluated_once(self):
+        with tempfile.TemporaryDirectory() as t:
+            run = Path(t) / "E001"
+            (run / "train" / "weights").mkdir(parents=True)
+            best = run / "train" / "weights" / "best.pt"
+            best.write_bytes(b"w")
+            record = make_record()
+            record["outputs"]["best"]["sha256"] = sha256_file(best)
+            (run / "run_record.json").write_text(json.dumps(record), encoding="utf-8")
+            (run / F.FINAL_DIR).mkdir()
+            (run / F.FINAL_DIR / F.FINAL_RECORD).write_text("{}", encoding="utf-8")
+            sk_dir = F.TARGETS["test_zenodo_sk"]["out_dir"]
+            self.assertEqual(F.check_run_for_final_test(run, None, sk_dir)["run_name"], "E001")
+            (run / sk_dir).mkdir()
+            (run / sk_dir / F.FINAL_RECORD).write_text("{}", encoding="utf-8")
+            with self.assertRaises(F.FinalTestError):
+                F.check_run_for_final_test(run, None, sk_dir)
 
 
 class IsolationTest(unittest.TestCase):
@@ -236,6 +294,23 @@ class IsolationTest(unittest.TestCase):
                 final_test_eval.main()
         self.assertEqual(ctx.exception.code, 2)
         run.assert_not_called()
+
+    def test_cli_passes_target(self):
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import final_test_eval
+        argv = ["final_test_eval.py", "--experiment", "E001", "--runs-root", "/tmp/r", "--confirm-final-test",
+                "--target", "test_zenodo_sk"]
+        with mock.patch.object(sys, "argv", argv), \
+                mock.patch.object(final_test_eval, "run_final_test",
+                                  side_effect=F.FinalTestError("stop")) as run, mock.patch("sys.stdout"):
+            with self.assertRaises(SystemExit) as ctx:
+                final_test_eval.main()
+        self.assertEqual(ctx.exception.code, 1)
+        self.assertEqual(run.call_args.kwargs["target"], "test_zenodo_sk")
+        with mock.patch.object(sys, "argv", argv[:-1] + ["val"]), mock.patch("sys.stderr"):
+            with self.assertRaises(SystemExit) as ctx:
+                final_test_eval.main()
+        self.assertEqual(ctx.exception.code, 2)
 
 
 class NotebookAuthAndFinalTestTest(unittest.TestCase):
