@@ -585,6 +585,19 @@ Sparse-frame/timelapse analysis (15 s per frame), val days only; no test day was
   D-029); MOTA is negative because unmatched detections outnumber correct ones minus switches; 3 val days of one
   setup; val numbers only (rule 7).
 
+**Tritonia tracking grid T001 (D-043 phase 4), declared 2026-11-13 before the run:** config
+`configs/tracking/T001_tritonia_val_grid.json`, run by `scripts/sweep_tritonia_tracking.py` on the phase-2 val
+detections (E010, fixed) named by their sha256 in the config. Grid, every combination (81 settings): conf
+0.10 / 0.16 / 0.25 × gate 8 / 12 / 20 px × maximum gap 8 / 20 / 60 frames × minimum length 1 / 3 / 10 detections.
+**Selection metric: mean HOTA over the 3 val days** (cameras summed per day); results within 0.001 of the best are
+tied and broken by higher mean IDF1, then lower conf, smaller gate, smaller maximum gap, smaller minimum length.
+Reported next to it: DetA, AssA, LocA, IDF1, MOTA, ID switches, HOTA per day, scores on close-pair frames (two clicks
+within 10 px), and the no-linking and clicks-as-detections references at the selected setting. The selected
+setting is frozen as **T002**, the single final-test candidate: its test (phase 6) runs once, only after a separate
+user approval, and is logged here (rule 7). No second grid on val unless declared first. LIMITATIONS: 81 settings
+on 3 val days can partly fit noise; the gap values 20 / 60 were chosen after the phase-3 check showed tracks split
+at the click gaps (median 16 frames), so that check informed the grid (OBSERVED, stated here).
+
 ### Val secondary metrics: E001 vs E004 (D-020)
 
 Val only; test not used. Both runs evaluated on 2026-10-11 in one Colab Tesla T4 session at commit

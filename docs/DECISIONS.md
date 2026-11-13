@@ -1400,8 +1400,9 @@ Short, dated records of project decisions. New dataset versions must reference a
 
 ## D-043 — Tritonia sparse-frame tracking: E010 detections → per-camera tracks → trajectories, scored against the MTrackJ tracks (2026-11-13, proposed)
 - **Status:** proposed by Anu on `anu/e006-results`. The plan below (phases 1–6, HOTA as selection metric, an
-  own standard-library tracker) is user-approved (Anu, 2026-11-13, "proceed"). Open: whether tracking runs get
-  their own ID series (e.g. `T001`), to be agreed with Saksham before phase 4.
+  own standard-library tracker) is user-approved (Anu, 2026-11-13, "proceed"). Tracking runs get their own ID
+  series `T001`, `T002`, … (Saksham agreed, as reported by Anu, 2026-11-13): configs in `configs/tracking/`,
+  records in `experiments/records/T###/`.
 - **Context (OBSERVED 2026-11-13, read-only check of the 16 `.mdf` files in `D:\uwct_tritonia\raw\tritonia\`,
   the location every Tritonia script has used since D-035):** 956 tracks, 117,969 points; track IDs unique per
   day; no track has two points in one frame; `Tritonia Info.txt`: "the entire data set has been tracked
