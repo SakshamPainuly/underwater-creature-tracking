@@ -1,0 +1,247 @@
+{
+  "schema": "uwct.final_test_record/1",
+  "created_utc": "2026-11-13T12:31:43+00:00",
+  "label": "FINAL TEST EVALUATION",
+  "split": "test",
+  "target": "test",
+  "data_file": "data.yaml",
+  "experiment_id": "E027",
+  "run_name": "E027",
+  "declaration": {
+    "experiment_id": "E027",
+    "declared_utc": "2026-11-13T11:46:53Z",
+    "decision": "candidate",
+    "reason": "E027 YOLO26l round-2 C4 (AdamW lr0 0.001, weight_decay 0.001, mixup 0.1, 30 epochs) on v4 declared for the held-out final test after registration: only round-2 run above the D-040 bar (val mAP50-95 0.6280 > 0.62542); single seed (D-043); best.pt sha256 821bb767..."
+  },
+  "training_git_commit": "97810a5d71654981301ff19a95981a27664ac24c",
+  "evaluation_git": {
+    "commit": "a060c7091662a8279e99d443168c0718c12a3131",
+    "branch": "p4/colab-baseline",
+    "dirty": false
+  },
+  "run_record_best_sha256": "821bb767a2378269e212f94bedbb21385b6d678a0db2efb686d78d1b16634bea",
+  "evaluated_best_sha256": "821bb767a2378269e212f94bedbb21385b6d678a0db2efb686d78d1b16634bea",
+  "weights_recovery": null,
+  "dataset": {
+    "version": "v4",
+    "dataset_kind": "lobster_mixed",
+    "status": "frozen",
+    "frozen_registry_verified": true,
+    "fingerprint": "bbd4a8b172fd590b18d2e8c26be05c85cb3c3246a2e60a3b3513590b931cd13f",
+    "image_source": "mixed",
+    "mixed_manifest_sha256": "578de534dbbbe7bff2e57608b79cef6363d45a376ba0538db2d5b274f33606c6",
+    "dataset_dir": "/tmp/uwct_yolo/lobster_mixed_v4",
+    "splits_used_for_training": [
+      "train",
+      "val"
+    ],
+    "counts": {
+      "train": {
+        "images": 4111,
+        "positive": 3721,
+        "negative": 390,
+        "instances": 11784
+      },
+      "val": {
+        "images": 324,
+        "positive": 269,
+        "negative": 55,
+        "instances": 1010
+      }
+    },
+    "test_counts": {
+      "images": 348,
+      "positive": 321,
+      "negative": 27,
+      "instances": 1512
+    }
+  },
+  "operating_conf": {
+    "value": 0.26926926926926925,
+    "chosen_on": "val",
+    "rule": "max mean F1 on val"
+  },
+  "metrics": {
+    "ultralytics_reported": {
+      "precision": 0.8433988641046009,
+      "recall": 0.8477412335874093,
+      "map50": 0.9095768040865357,
+      "map50_95": 0.696600412658707,
+      "results_dict": {
+        "metrics/precision(B)": 0.8433988641046009,
+        "metrics/recall(B)": 0.8477412335874093,
+        "metrics/mAP50(B)": 0.9095768040865357,
+        "metrics/mAP50-95(B)": 0.696600412658707,
+        "fitness": 0.696600412658707
+      }
+    },
+    "at_val_conf": {
+      "conf": 0.26926926926926925,
+      "precision": 0.8478374364098541,
+      "recall": 0.8425925925925926,
+      "f1": 0.845206877995661
+    },
+    "confusion_matrix": {
+      "matrix": [
+        [
+          1289.0,
+          232.0
+        ],
+        [
+          223.0,
+          0.0
+        ]
+      ],
+      "axes": "rows = predicted, cols = true; classes + background (Ultralytics)"
+    },
+    "speed_ms_per_image": {
+      "preprocess": 1.3854370632186184,
+      "inference": 19.54563869252944,
+      "loss": 0.014158454023763416,
+      "postprocess": 1.6528861810346456
+    },
+    "val_for_threshold": {
+      "precision": 0.7791807285837348,
+      "recall": 0.8306930693069307,
+      "map50": 0.8537401320028682,
+      "map50_95": 0.6279603999242002,
+      "results_dict": {
+        "metrics/precision(B)": 0.7791807285837348,
+        "metrics/recall(B)": 0.8306930693069307,
+        "metrics/mAP50(B)": 0.8537401320028682,
+        "metrics/mAP50-95(B)": 0.6279603999242002,
+        "fitness": 0.6279603999242002
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/predictions/ours__original__06_HERR_04_CW_20200902_GP089565_12601.jpg",
+      "size": 318540,
+      "sha256": "befa2da8cf411a1c74e5dc1fd0339d852f08084d097678d876d7c3d723f36a10"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/predictions/ours__original__06_HERR_08_CW_20200903_GP120003_12151.jpg",
+      "size": 384562,
+      "sha256": "242fb0efa631d66ebbc8e75228bacd54ddb26ccdc5cd9279180a65ec85b27be3"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/predictions/ours__original__06_HERR_11_CW_20200905_GP100004_16173.jpg",
+      "size": 427537,
+      "sha256": "125239deae8d4f3ae51f04d93d2813f3280b50c3ff03b31b611231cf114a2bef"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/predictions/ours__original__13_SHRI_12_BW_20210811_GP050066_00000.jpg",
+      "size": 538698,
+      "sha256": "c72d30156af07af9818cd6592174832bf25ba2e1b760a66a37bf03e63663f443"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/predictions/ours__original__21_MACK_09_BW_20220815_GP051706_16173.jpg",
+      "size": 304869,
+      "sha256": "b4aaac12126b8feac5038210074cf989161504dc29fe5970d67a33c1baa14808"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/predictions/ours__original__21_SUB6_03_BW_20220810_GP111645_16173.jpg",
+      "size": 361173,
+      "sha256": "95eaa5ad3fb17b90d8239aec18f00bc3ad961a7ae4870ae32413fc140ceb9465"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/BoxF1_curve.png",
+      "size": 104455,
+      "sha256": "66d24b3c78f9788170887ac4514fc8365458e76ca088831092b6c47db861b9f0"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/BoxPR_curve.png",
+      "size": 88681,
+      "sha256": "323c4234eaa902ed49bd95e314fe4a318b3780fba0f459784d7e67a6433f921a"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/BoxP_curve.png",
+      "size": 94641,
+      "sha256": "45ca46d10b1cee58b5517bedf154d2b5f623c167860a005fc0148d6cbd14d78e"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/BoxR_curve.png",
+      "size": 107588,
+      "sha256": "1684662ce739bad328d247afc7c801352206c0725e485fb7db141cbbcbd4c657"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/confusion_matrix.png",
+      "size": 104142,
+      "sha256": "f71cef0648669f8c601da7d424033c7b030f998e463d535abd48f707c5d53f66"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/confusion_matrix_normalized.png",
+      "size": 98774,
+      "sha256": "654f3759c484a96681c942cf7cc29a32910e66483aa7dba96e8e8b6e68d9c5dd"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/val_batch0_labels.jpg",
+      "size": 356454,
+      "sha256": "ecf6ab4a8ba7cdb006d0d32fac7dcc47f650efe6e138c3691d9ebf627702c96c"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/val_batch0_pred.jpg",
+      "size": 394094,
+      "sha256": "c78e21b0c9a029da359ca13e1603bf83d83ed3f139961b3aa7abf52b93291fa7"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/val_batch1_labels.jpg",
+      "size": 357611,
+      "sha256": "ccf9a1dcf930186d902b009fe06d88652601b877ec21c6110e5e6562bacda37e"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/val_batch1_pred.jpg",
+      "size": 401238,
+      "sha256": "6e290c08283c83a08ef71a50278a652a81a6259cbd0f8b75b7c466862de3b532"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/val_batch2_labels.jpg",
+      "size": 269060,
+      "sha256": "768834b3b7b6938acdef2aee0b3b80f919eef1d25abaf8028cb3dd838896902c"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test/test/val_batch2_pred.jpg",
+      "size": 280030,
+      "sha256": "7d8db8dc7cada9e712d2f38b8c845aa2e162cbd7ab38ff5a96796fd12cc15b9b"
+    }
+  ],
+  "attempts_including_this_one": 1,
+  "environment": {
+    "timestamp_utc": "2026-11-13T12:31:43+00:00",
+    "os": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "python": "3.13.16",
+    "cpu_count": 4,
+    "torch": "2.11.0+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "cudnn_version": 92700,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      }
+    ],
+    "ultralytics": "8.4.155",
+    "nvidia_smi": [
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      },
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      }
+    ]
+  },
+  "limitations": [
+    "v1 test sessions share sites (mostly also dates) with train sessions: this measures generalization to new sessions, not new sites (D-007).",
+    "Test boxes are concentrated: 13_SHRI_12 + 21_SUB6_03 hold 1,135 of 1,512 (D-008).",
+    "Substrate/visibility metadata is mostly missing; zExtra is excluded.",
+    "ultralytics_reported precision/recall are at the confidence that maximizes F1 on the TEST split itself (Ultralytics convention); the operating point is at_val_conf, chosen on val."
+  ],
+  "log_to": "docs/EXPERIMENTS.md -> Test-evaluation log"
+}
