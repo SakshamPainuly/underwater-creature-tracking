@@ -551,6 +551,40 @@ the notebook's cell 9 summary (`d041_summary.json`).
 - LIMITATION: 27 val frames from 3 days of one setup; 3 seeds; 20130524 has only 15 crosses. Val numbers only
   (rule 7).
 
+### D-043: Tritonia tracking, phase 2 detections and phase 3 pipeline check (val, not tuned)
+
+Sparse-frame/timelapse analysis (15 s per frame), val days only; no test day was extracted or read.
+- **Phase 2 (OBSERVED):** E010's registered `best.pt` (sha256 `48d72b79…`, as `experiments/registry.csv`) on all 7,728
+  frames of the v8 val days, imgsz 640, conf 0.001; Kaggle Tesla T4, `notebooks/kaggle_tritonia_tracking_detect.ipynb`
+  at commit `a4629f0` (clean), ultralytics 8.4.155, torch 2.11.0+cu130; 10 s of checks (every frame's sha256, the
+  weights' sha256) and 103 s of prediction. Download `d043_val_detections.zip` (sha256 `c3e5ca82…`, 7,731 files),
+  kept in `D:\uwct_tritonia\runs\d043_val_detections\` (byte-identical to the zip); the record is archived as
+  `experiments/records/tracking_d043/phase2_val_predictions.json`. Recomputed from the files: 1,366,304 detections
+  at conf ≥ 0.001; 28,667 at conf ≥ 0.16 on 6,331 frames, as recorded.
+- **Phase 3 pipeline check (OBSERVED):** `scripts/track_tritonia.py` at the untuned defaults (conf 0.16 = E010's
+  val threshold, gate 12 px, maximum gap 8 frames, minimum length 3), with the two references; scored on the
+  4,604 clicked frames (22,390 clicks, 162 tracks), 10 px, per camera, cameras summed per day. Scores archived in
+  `experiments/records/tracking_d043/phase3_check/`. **Not a tuning result and not a selection:** the grid is
+  declared before phase 4.
+
+| run | tracks | mean over days: HOTA | DetA | AssA | IDF1 | MOTA | all days: ID switches | TP / FN / FP |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| no linking (floor) | 28,667 | 0.027 | 0.153 | 0.008 | 0.008 | −0.402 | 8,145 | 8,279 / 14,111 / 8,771 |
+| tracker, defaults | 1,281 | 0.143 | 0.155 | 0.134 | 0.179 | −0.067 | 868 | 8,106 / 14,284 / 7,264 |
+| clicks as detections (ceiling) | 517 | 0.765 | 0.983 | 0.599 | 0.697 | 0.963 | 525 | 21,985 / 405 / 0 |
+
+- Per day, tracker at defaults: HOTA 0.039 / 0.300 / 0.090 and IDF1 0.057 / 0.358 / 0.122 on 20130524 / 20130529 /
+  20130602.
+- OBSERVED: linking works (ID switches 8,145 → 868, HOTA 0.027 → 0.143), but **detection limits the result**: at
+  conf 0.16 the detections match 36 % of the clicks (8,106 of 22,390) with 7,264 unmatched detections, so DetA is
+  0.155. 20130529 is the best day and 20130524 the worst, as in E010's val point scores. With perfect detections
+  (ceiling) the tracker still splits tracks (AssA 0.599, 517 tracks for 162): the maximum gap of 8 frames is shorter
+  than the click gaps (median 16 frames, D-043).
+- INFERRED: improving detection matters more than tuning the tracker; phase 4 should include longer gaps.
+- LIMITATIONS: unmatched detections are an upper bound on false positives (UNKNOWN whether every slug was clicked,
+  D-029); MOTA is negative because unmatched detections outnumber correct ones minus switches; 3 val days of one
+  setup; val numbers only (rule 7).
+
 ### Val secondary metrics: E001 vs E004 (D-020)
 
 Val only; test not used. Both runs evaluated on 2026-10-11 in one Colab Tesla T4 session at commit
