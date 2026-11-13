@@ -3,7 +3,7 @@
 # batch 16, deterministic, Ultralytics defaults otherwise). Dataset v8 = v7 plus 2,662 batch-2 training-day frames
 # with fixed 20 x 17 px boxes (train 96 -> 2,758 frames, 572 -> 18,950 boxes); val and test are v7's, unchanged.
 # workers: 2 pins the 2 dataloader workers of a 4-CPU / 2-GPU Kaggle session with one GPU per process, as in
-# E025-E038; it is not a changed variable. Selection = mean val point AP over 3 seeds vs the D-040 baseline
+# E030-E038 and E042-E046; it is not a changed variable. Selection = mean val point AP over 3 seeds vs the D-042 baseline
 # (0.489, D-041); the training data file has no test split (CLAUDE.md rule 7).
 id: E039
 slug: seaslug_v8_seed0
