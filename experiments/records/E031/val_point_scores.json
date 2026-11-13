@@ -1,0 +1,60 @@
+{
+  "split": "val",
+  "final": null,
+  "frames": 27,
+  "match_px": 10.0,
+  "prediction_run": {
+    "weights": "/kaggle/working/runs/E031/train/weights/best.pt",
+    "conf": 0.001,
+    "imgsz": 640
+  },
+  "point_ap": 0.4475,
+  "best_f1_on_val": {
+    "conf": 0.14,
+    "predictions": 168,
+    "crosses": 153,
+    "matched": 77,
+    "precision": 0.4583,
+    "recall": 0.5033,
+    "f1": 0.4798
+  },
+  "at_conf": {
+    "conf": 0.14,
+    "predictions": 168,
+    "crosses": 153,
+    "matched": 77,
+    "precision": 0.4583,
+    "recall": 0.5033,
+    "f1": 0.4798
+  },
+  "per_day": {
+    "20130524": {
+      "conf": 0.14,
+      "predictions": 26,
+      "crosses": 15,
+      "matched": 3,
+      "precision": 0.1154,
+      "recall": 0.2,
+      "f1": 0.1463
+    },
+    "20130529": {
+      "conf": 0.14,
+      "predictions": 77,
+      "crosses": 77,
+      "matched": 49,
+      "precision": 0.6364,
+      "recall": 0.6364,
+      "f1": 0.6364
+    },
+    "20130602": {
+      "conf": 0.14,
+      "predictions": 65,
+      "crosses": 61,
+      "matched": 25,
+      "precision": 0.3846,
+      "recall": 0.4098,
+      "f1": 0.3968
+    }
+  },
+  "limitation": "crosses are the ground truth; precision is a lower bound because it is UNKNOWN whether every slug was clicked (D-029). Not mAP."
+}

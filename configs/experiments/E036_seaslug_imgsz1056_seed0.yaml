@@ -1,0 +1,21 @@
+# E036 -- Tritonia tuning round 1 (D-042), arm D, seed 0. GPU only (notebooks/kaggle_tritonia_tuning.ipynb).
+# Everything not listed under "changed" is exactly as in E010 (dataset v7, yolo26s, imgsz 640, 100 epochs,
+# patience 30, batch 16, deterministic, Ultralytics defaults otherwise). workers: 2 pins the 2 dataloader workers
+# of a 4-CPU / 2-GPU Kaggle session with one GPU per process; it is not a changed variable.
+# Selection = mean val point AP over 3 seeds (D-042); the training data file has no test split (CLAUDE.md rule 7).
+id: E036
+slug: seaslug_imgsz1056_seed0
+parent: E010
+changed: "train_args.imgsz 640 -> 1056 (D-042 arm D: native frame width, slugs not shrunk to 0.61x; point eval at the same size)"
+dataset_version: v7
+dataset_fingerprint: "8ea6503cab38c9fed92f1c5be9d71fae5de6af3d43f17a31d533d8bf7854649a"
+model: yolo26s.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 1056
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true
+  workers: 2

@@ -1326,3 +1326,75 @@ Short, dated records of project decisions. New dataset versions must reference a
 - **Consequences:** round-1 runs registered with archived records; `docs/EXPERIMENTS.md` updated; configs
   E020–E029 and the round-2 notebook added. Expected Kaggle use about 9.5 h (about 21.5 of 30 h after round 2),
   leaving about 8.5 h for the final test evaluations.
+
+## D-041 — Tritonia v8: fixed boxes on all batch-2 frames (v7 + 2,662 training-day frames); E039–E041 (2026-11-12, proposed)
+- **Status:** proposed by Anu on `anu/e006-results`. Plan user-approved by Anu on 2026-11-12 ("ok do both", to the
+  D-041 proposal: v8 = v7 plus all batch-2 frames with fixed boxes, val/test unchanged, E010's settings at 3 seeds,
+  D-042's rule). Freezing v8 and the private Kaggle upload need their own approval.
+- **Context (OBSERVED):** D-042: no training setting beats E010's (baseline mean val point AP 0.489 over 3 seeds,
+  range 0.018). v7 trains on 96 frames; the MTrackJ files hold crosses on 21,840 frames. Batch 2 (D-035) already
+  holds the 150 batch-1 frames plus 2,662 frames from the 10 training days; D-035 kept only 536 of them because
+  the automatic boxes missed crosses. Fixed boxes (D-036) give every cross a box, so that filter is not needed.
+- **Decision:**
+  - **Labels:** `scripts/fixed_label_tritonia.py` (unchanged, D-036/D-037 method) on
+    `D:\uwct_tritonia\work\tritonia_label_batch2`. OBSERVED: 2,812 frames, 19,326 crosses, 19,230 boxes
+    (96 duplicate crosses merged, D-037; 1,207 clipped at a view edge), no frame excluded; the 150 batch-1 label
+    files are byte-identical to v7's label source. Ingested unchanged into
+    `D:\uwct_tritonia\raw\tritonia_boxes_fixed3\` (read-only, rule 1).
+  - **Dataset v8:** `make_tritonia_version.py --version v8 --decision D-041 --extends v7 --seed 0 --val-days 3
+    --test-days 3`: `--extends v7` refuses unless every v7 frame is in v8 unchanged, so val and test are v7's
+    27 + 27 frames; only train grows. Freezing needs explicit user approval.
+  - **Experiments:** E039 / E040 / E041 = E010 with dataset v7 → v8 only, seeds 0 / 1 / 2, parent E010.
+    Compared with the D-042 baseline (E010, E042, E043) by D-042's rule, declared in docs/EXPERIMENTS.md before
+    any run: v8 wins only if its mean val point AP exceeds 0.489 by more than the larger of the two seed ranges.
+    A test only after a separate user approval.
+  - **Freeze (OBSERVED):** v8 frozen on 2026-11-12 (UTC), user-approved by Anu ("yes", to freezing v8). YOLO view
+    fingerprint `52cd95c302e3f4a5e13f0646b055a16cd7d4e556b3a212f21c4ce3f144261b84` (local build: train 2,758 frames
+    / 18,950 boxes, val 27 / 153, test 27 / 127); val and test label files byte-identical to the v7 view's.
+- **LIMITATIONS:** whether every slug was clicked is UNKNOWN (D-029): an unclicked slug in an added frame is a
+  background example. Added frames are 75 s apart, so the effective amount of new data is smaller than the frame
+  count. More frames make each epoch about 28× longer; 100 epochs are kept so only the dataset changes.
+- **Consequences:** label source `tritonia_boxes_fixed3`, draft v8, configs E039–E041. No change to v1–v7 or
+  earlier experiments.
+
+## D-042 — Tritonia hyperparameter tuning, round 1: four single-setting arms × 3 seeds on v7 (2026-11-12, proposed)
+
+> **Renumbered 2026-11-13** (CLAUDE.md §10, before this branch's PR): numbered **D-040** until then, and its runs E042–E046 ran on Kaggle as **E025–E029** (commit `1f84325`); `p4/colab-baseline` (#25) had meanwhile used D-040 and E020–E029. Content otherwise unchanged. Archived run records and off-repo files keep the original IDs and names (`d040_*`). D-041 kept its number (the frozen v8 records it).
+- **Status:** proposed by Anu on `anu/e006-results`. Plan user-approved by Anu on 2026-11-12 ("ok proceed with
+  this but dont do anything for gui"): baseline E010, arms A–D, 3 seeds, the selection rule, round 2 and a
+  test only on a later approval, one Kaggle notebook. No GUI work is part of it.
+- **Context (OBSERVED):** E010 (v7, yolo26s, imgsz 640, 100 epochs, patience 30, batch 16) has the best Tritonia
+  val point AP (0.496; E006 0.403) and a lower test point AP than E006 (0.215 vs 0.248), so one seed on 27 val
+  frames is not enough to tell settings apart. Its `results.csv`: no val detections until about epoch 20, best
+  epoch 81 of 100, val mAP50-95 still about 0.18–0.19 at epochs 80–100 (against the fixed boxes, not accuracy,
+  D-033). 96 training images at batch 16 = 6 optimizer steps per epoch. Augmentation is the Ultralytics default,
+  including `scale 0.5`; frames are 1056 × 480 and slugs about 12–20 px, shrunk to 0.61× at imgsz 640.
+  One E010 run took 239 s on a Tesla T4.
+- **Decision:**
+  1. **Baseline:** E010's settings on frozen dataset v7 (chosen on val; test results never choose, rule 7).
+     Seed 0 is E010 itself; E042 / E043 repeat it with seeds 1 / 2.
+  2. **Round 1 arms**, each one setting changed from E010, seeds 0 / 1 / 2, parent E010 (registered):
+     A `epochs 100 → 200` with `patience 30 → 50` (two variables on purpose: together the stopping rule;
+     E044–E046); B `batch 16 → 8` (E030–E032); C `scale 0.5 → 0.2` (E033–E035); D `imgsz 640 → 1056`
+     (E036–E038; the val point eval runs at the same imgsz). Everything else as E010; `workers: 2` is pinned
+     for one process per GPU and is not a changed variable. IDs started at E025 because D-038 reserves E020–E024; E025–E029 were renumbered E042–E046 on 2026-11-13 (see the note above).
+  3. **Execution:** `notebooks/kaggle_tritonia_tuning.ipynb`, one Kaggle session (GPU T4 × 2, one training
+     process per GPU), at one pushed commit: build and verify v7, smoke test, then the 14 runs from one queue
+     with seed 0 of every arm first, then the val point eval of every finished run (`tritonia_point_eval.py
+     --split val`, all 27 val frames, 10 px one to one, threshold = that run's best val F1). Each run's folder
+     and the comparison are zipped for download in the session (saved versions have kept no output, E010).
+  4. **Selection metric: val point AP** (D-033), per arm the **mean over its 3 seeds**, with the seed range
+     (max − min). Point P / R / F1 at each run's threshold, per day, and Ultralytics' val metrics (labelled not
+     accuracy) are reported next to it. An arm **wins** only if its mean is higher than the baseline mean by
+     more than the larger of the two seed ranges; otherwise the result is "no evidence of a gain". An arm with
+     fewer than 3 finished seeds is reported and cannot win.
+  5. **Round 2** (only if at least one arm wins): one config combining the winning settings, 3 seeds, compared
+     with the baseline by the same rule; its configs are committed before it runs. If it wins it may be
+     declared a final candidate and tested once, only after a separate user approval (the 27 test frames were
+     already used by E006 and E010). If no arm wins, E010 stays the Tritonia reference and there is no test.
+- **LIMITATION:** 27 val frames from 3 days and four arms compared on them: the best arm can still be partly
+  chosen by noise; the 3 seeds and the seed-range rule reduce this but do not remove it. All runs are on one
+  setup (new days, not new sites); point precision is a lower bound (D-029). Arm D costs about 2.7× the compute.
+- **Consequences:** 14 configs E030–E038 and E042–E046, the notebook, docs/EXPERIMENTS.md rows and the declaration below,
+  all before any run. No change to v7, E006, E010 or any earlier result.
+

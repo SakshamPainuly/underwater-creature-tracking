@@ -1,0 +1,22 @@
+# E044 -- Tritonia tuning round 1 (D-042), arm A, seed 0. GPU only (notebooks/kaggle_tritonia_tuning.ipynb).
+# Renumbered 2026-11-13: ran on Kaggle as E027 (D-040) at 1f84325; ID collision with #25, see docs/EXPERIMENTS.md "ID renumbering".
+# Everything not listed under "changed" is exactly as in E010 (dataset v7, yolo26s, imgsz 640, 100 epochs,
+# patience 30, batch 16, deterministic, Ultralytics defaults otherwise). workers: 2 pins the 2 dataloader workers
+# of a 4-CPU / 2-GPU Kaggle session with one GPU per process; it is not a changed variable.
+# Selection = mean val point AP over 3 seeds (D-042); the training data file has no test split (CLAUDE.md rule 7).
+id: E044
+slug: seaslug_ep200_seed0
+parent: E010
+changed: "train_args.epochs 100 -> 200 and patience 30 -> 50 (two variables on purpose, D-042 arm A: together the stopping rule; E010's best epoch was 81 of 100 and val was still improving)"
+dataset_version: v7
+dataset_fingerprint: "8ea6503cab38c9fed92f1c5be9d71fae5de6af3d43f17a31d533d8bf7854649a"
+model: yolo26s.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 640
+  epochs: 200
+  patience: 50
+  batch: 16
+  deterministic: true
+  workers: 2
