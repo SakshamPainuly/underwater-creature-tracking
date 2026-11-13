@@ -1398,3 +1398,52 @@ Short, dated records of project decisions. New dataset versions must reference a
 - **Consequences:** 14 configs E030–E038 and E042–E046, the notebook, docs/EXPERIMENTS.md rows and the declaration below,
   all before any run. No change to v7, E006, E010 or any earlier result.
 
+## D-043 — Tritonia sparse-frame tracking: E010 detections → per-camera tracks → trajectories, scored against the MTrackJ tracks (2026-11-13, proposed)
+- **Status:** proposed by Anu on `anu/e006-results`. The plan below (phases 1–6, HOTA as selection metric, an
+  own standard-library tracker) is user-approved (Anu, 2026-11-13, "proceed"). Open: whether tracking runs get
+  their own ID series (e.g. `T001`), to be agreed with Saksham before phase 4.
+- **Context (OBSERVED 2026-11-13, read-only check of the 16 `.mdf` files in `D:\uwct_tritonia\raw\tritonia\`,
+  the location every Tritonia script has used since D-035):** 956 tracks, 117,969 points; track IDs unique per
+  day; no track has two points in one frame; `Tritonia Info.txt`: "the entire data set has been tracked
+  manually", "Slugs are tracked in each camera separately". The MTrackJ IDs can therefore be tracking ground
+  truth (CLAUDE.md rule 9). Camera layout: dark seams at columns 351 / 703 and row 240 (mean intensity of
+  20130524 and 20130529), so 3 × 2 cameras of about 352 × 240 px (D-029 had this INFERRED). The 7 tracks
+  with points in two cameras have 1–12 points on a seam (≤ 2.5 px from it): no track crosses cameras. Click
+  cadence: every frame (15 s) on 20130521–20130525, mixed 1 / 2 on 20130519–20130520, every 2nd frame (30 s)
+  from 20130526. Median move 2–4 px per click (99th percentile 10 px); 253 tracks have gaps longer than twice
+  their day's cadence (573 gaps, median 16 frames, longest 1,481); 27 steps > 30 px in 22 tracks; on most
+  later days some track pairs stay within 5 px for many frames (e.g. 20130601 tracks 28 / 29, 162 frames):
+  touching slugs or one slug tracked twice, UNKNOWN — requires confirmation (Dr. Wyeth). The track flag
+  (`true` / `false`) is still not understood and is ignored (ASSUMPTION: it does not mark invalid tracks).
+- **Decision:**
+  1. **Sequences (phase 1, local CPU):** every frame of the 3 v8 val days (20130524, 20130529, 20130602;
+     7,728 frames) as PNG in `D:\uwct_tritonia\sequences\val\` (outside every raw root), with `manifest.csv`
+     (frame, sha256), `gt_points.csv` (day, camera, track, frame, x, y) and `sequence.json`
+     (`scripts/make_tritonia_sequence.py`, `src/tracking/sequences.py`). A track's camera is the camera
+     holding most of its points. The small files are kept in `data/processed/tritonia_tracking/val/`. Test
+     days are extracted only for the final test (the script refuses `--split test` without `--final D-043`).
+  2. **Detections (phase 2, Kaggle GPU):** E010's registered `best.pt` on every val frame, imgsz 640,
+     conf 0.001, predictions saved per frame. The detector is fixed: no retraining in D-043.
+  3. **Tracker and evaluation (phase 3, `src/tracking/`, local CPU, unit-tested):** per camera, detections
+     are linked frame to frame by optimal assignment on point distance, with 4 settings (confidence
+     threshold, distance gate in px, maximum gap in frames, minimum track length). Scores: **HOTA**, IDF1,
+     MOTA and ID switches, a prediction matching a click within 10 px (as D-033), per camera and per day,
+     **only on clicked frames** (each day's cadence). Two references: ground-truth points as detections
+     (tracker ceiling) and no linking (floor). File schemas in a new `docs/PIPELINE.md`.
+  4. **Tuning (phase 4, val only):** a grid of tracker settings declared in docs/EXPERIMENTS.md before any
+     run; selection = **mean HOTA over the 3 val days**; IDF1, MOTA, ID switches, per camera and per day,
+     and results on close-pair frames reported next to it.
+  5. **Trajectories and figures (phase 5):** per track path length (px), mean speed (px/s from 15 s per
+     frame), net displacement, compared with the ground truth; trajectory overlays per camera. No physical
+     units (rule 9); speeds are not comparable between cameras (angled cameras, parallax).
+  6. **Final test (phase 6, only after a separate user approval):** extract the 3 v8 test days (20130520,
+     20130521, 20130528; 6,316 frames), detect, track with the frozen settings, score once, log in
+     docs/EXPERIMENTS.md (rule 7).
+- **LIMITATIONS:** UNKNOWN whether every slug was clicked (D-029), so tracker false positives are an upper
+  bound; close pairs and long gaps may be ground-truth ambiguities; detection on 20130524 is weak (val point
+  F1 about 0.17), which caps tracking there; val and test days are one setup, so this measures new-day
+  generalization, not new-site; frames are 15 s apart: "sparse-frame/timelapse analysis", never "video
+  tracking".
+- **Consequences:** new package `src/tracking/`, `scripts/make_tritonia_sequence.py`, tests, the val
+  sequence on D:, and later a Kaggle detection notebook. No change to any dataset version, E010 or earlier
+  result. Each phase stops for approval before the next.
