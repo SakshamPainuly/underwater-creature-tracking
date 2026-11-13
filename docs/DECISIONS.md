@@ -1252,3 +1252,77 @@ Short, dated records of project decisions. New dataset versions must reference a
   from scratch. Comparisons within round 1 are still single-variable in substance (same settings, only
   model or seed differ), as D-038 points 4 and 6 already assume.
 
+
+## D-040 — Round-1 result (yolo26m selected) and round 2: a schedule that completes, × 5 combinations on yolo26m and yolo26l (2026-11-12, accepted)
+- **Status:** accepted 2026-11-12. The user approved the recommended reading of D-038 point 4 and asked to keep
+  yolo26l and tune further ("just go ahead with what you recommend but dont drop yolo26l now just tweak
+  everything so that we can get better results"). The round-2 design below was proposed in reply and approved
+  with its commit plan. Clarifies D-038 point 4, supersedes D-038 point 5 (round-2 combinations) and extends
+  D-038 point 6; everything else in D-038/D-039 is unchanged.
+- **Context (OBSERVED):**
+  1. Round 1 ran in Kaggle version "D-039 round 1 E011-E019 (fix)" (commit cf7bea9, 2× Tesla T4, two runs in
+     parallel, queue finished about 7.4 h after Cell 1). 8 of 9 runs finished; E018 (yolo26l seed 2) was not
+     started (deadline rule: "not run (time)"). All 8 packages match their sha256 locally; the run records are
+     archived in `experiments/records/` and registered. Val mAP50-95 (best.pt):
+
+     | Model | seed 0 | seed 1 | seed 2 | mean | range |
+     |---|---|---|---|---|---|
+     | yolo26s | E011 0.59987 | E016 0.59649 | E019 0.59645 | 0.59760 | 0.00342 |
+     | yolo26m | E012 0.60303 | E014 0.61360 | E017 0.61718 | 0.61127 | 0.01415 |
+     | yolo26l | E013 0.61243 | E015 0.61602 | E018 not run | 0.61422 | 0.00360 |
+
+     Gaps of the means: l − m 0.00296, m − s 0.01367, l − s 0.01662. E001 0.6115, E007 0.5993.
+  2. D-038 point 4 can be read two ways. Stepwise (l vs m, then m vs s) it picks yolo26s, by a margin of
+     0.0005 (0.01367 vs 0.01415), although s is 0.0166 below l, 4–5 times either model's seed range. Comparing
+     the top model with each smaller one it picks yolo26m.
+  3. Ultralytics' val confusion matrices of best.pt (counts read from `val_best/confusion_matrix.png`, one
+     internal operating point, 1010 val boxes): found / missed / false alarms, mean per model: s 823 / 187 / 288,
+     m 829 / 181 / 271, l 856 / 154 / 274. yolo26l finds about 27 more lobsters than yolo26m at a similar
+     false-alarm count, and its two seeds agree (859 and 853 found).
+  4. **No round-1 run completed its schedule.** All 8 stopped by patience at epoch 26–41 of 60; their best epochs
+     were 16–31, where the learning rate (pg0) was still 0.0010–0.0015 (start 0.002; it reaches the final
+     0.00002 only at epoch 60), and `close_mosaic: 10` (mosaic off from epoch 51) was never reached
+     (`results.csv` of each run). So no run ever trained with an annealed learning rate or without mosaic.
+     D-038's round-2 combinations all keep epochs 60 / patience 10 and would inherit this; its C5
+     (`close_mosaic: 20`) would turn mosaic off at epoch 41, after 7 of the 8 round-1 runs had stopped.
+  5. Kaggle quota after round 1: 12:00 of 30 h used; two GPUs are counted once (confirms the D-038
+     ASSUMPTION). Seconds per epoch with two runs in parallel: yolo26m 189–201, yolo26l 202–206.
+- **Decision:**
+  1. **D-038 point 4 reading:** the model with the highest seed mean is compared with each smaller model; the
+     smallest model whose gap to the top is not larger than the bigger of the two seed ranges wins. Round 1:
+     **yolo26m** (l − m 0.00296 ≤ 0.01415; l − s 0.01662 > 0.00360). The selected round-1 configuration is
+     yolo26m, 60 epochs, patience 10: runs E012, E014, E017, seed mean 0.61127, range 0.01415. The confusion
+     matrix comparison (context 3) is reported, not used to select.
+  2. **Round 2 (supersedes D-038 point 5), configs E020–E029 committed before any run, seed 0:** every run uses
+     the base schedule **epochs 30, patience 30** (no early stop before the schedule ends), so the linear
+     learning-rate decay completes and the last 10 epochs train without mosaic (`close_mosaic: 10`, the
+     default, unchanged). 30 epochs because the round-1 best epochs were 16–31 and ten such runs fit two T4
+     lanes inside the 9.5 h deadline. Five combinations, each on yolo26m (parent E012) and yolo26l (parent E013):
+     - C1 schedule only (the control): E020 (m), E021 (l)
+     - C2 + `optimizer: AdamW`, `lr0: 0.001`, `momentum: 0.9` (half of `auto`'s 0.002; 0.9 is the beta1 `auto` used): E022, E023
+     - C3 + `mixup: 0.1`: E024, E025
+     - C4 + `optimizer: AdamW`, `lr0: 0.001`, `momentum: 0.9`, `weight_decay: 0.001`, `mixup: 0.1`: E026, E027
+     - C5 + `freeze: 10` (backbone frozen): E028, E029
+
+     Several variables change per run on purpose (schedule + combination); this decision is the reason
+     (CLAUDE.md §5). Not carried over from D-038: `cos_lr` (it keeps the learning rate higher than linear decay
+     through the epochs where round-1 runs peaked) and `close_mosaic: 20` (the completed schedule already
+     trains the last 10 epochs without mosaic). E018 is not run.
+  3. **Execution** as D-038 point 3, in `notebooks/kaggle_tuning_round2_E020_E029.ipynb`: queue in ID order
+     (C1 m, C1 l, … C5 l, so the least likely gain, freeze, is last), deadline 9.5 h after Cell 1, worst case
+     30 epochs × the slowest measured seconds per epoch of the model size (round-1 values m 210 s, l 215 s until
+     measured) + 10 min. Smoke tests: E020, E021, E026 (all C2–C4 arguments) and E028 (freeze). Round 2 starts
+     only if the quota meter shows at least 13.5 h left (deadline + 4 h, D-038 point 5).
+  4. **Overall selection (extends D-038 point 6), val only:** a round-2 run replaces the selected round-1
+     configuration only if its val mAP50-95 is above **0.62542** (yolo26m mean 0.61127 + its range 0.01415).
+     If several runs clear it, the one with the highest val mAP50-95 is selected and declared alone (one seed,
+     no range). If none clears it, the final candidates are E012, E014 and E017 (D-038 point 7; demo model
+     E017). Val mAP50, P, R and the confusion matrix counts are reported next to it.
+- **LIMITATIONS:** up to 19 configurations are now selected on 324 val images, so the selected val score is
+  optimistic; the bar of one yolo26m seed range only partly guards against that, and only the single test
+  evaluation of the declared run(s) is unbiased. Round-2 runs are single-seed. The confusion matrix counts are
+  read from Ultralytics' PNGs at its internal operating point (exact confidence threshold in 8.4.155: UNKNOWN —
+  requires confirmation before quoting it); our operating threshold is chosen later on val.
+- **Consequences:** round-1 runs registered with archived records; `docs/EXPERIMENTS.md` updated; configs
+  E020–E029 and the round-2 notebook added. Expected Kaggle use about 9.5 h (about 21.5 of 30 h after round 2),
+  leaving about 8.5 h for the final test evaluations.
