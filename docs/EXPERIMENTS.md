@@ -65,9 +65,9 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E036 | `configs/experiments/E036_seaslug_imgsz1056_seed0.yaml` | E010 | train_args.imgsz 640 → 1056 (D-040 arm D); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.482; not a final candidate (D-040: no arm wins) |
 | E037 | `configs/experiments/E037_seaslug_imgsz1056_seed1.yaml` | E010 | train_args.imgsz 640 → 1056 (D-040 arm D); seed 0 → 1; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.481; not a final candidate (D-040: no arm wins) |
 | E038 | `configs/experiments/E038_seaslug_imgsz1056_seed2.yaml` | E010 | train_args.imgsz 640 → 1056 (D-040 arm D); seed 0 → 2; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.471; not a final candidate (D-040: no arm wins) |
-| E039 | `configs/experiments/E039_seaslug_v8_seed0.yaml` | E010 | dataset v7 → v8 only (D-041: v7 plus 2,662 batch-2 training-day frames with fixed boxes; val and test unchanged); otherwise as E010 | planned 2026-11-12; dataset v8 frozen, fingerprint `52cd95c3…`; not run |
-| E040 | `configs/experiments/E040_seaslug_v8_seed1.yaml` | E010 | dataset v7 → v8 (D-041); seed 0 → 1; otherwise as E010 | planned 2026-11-12; dataset v8 frozen, fingerprint `52cd95c3…`; not run |
-| E041 | `configs/experiments/E041_seaslug_v8_seed2.yaml` | E010 | dataset v7 → v8 (D-041); seed 0 → 2; otherwise as E010 | planned 2026-11-12; dataset v8 frozen, fingerprint `52cd95c3…`; not run |
+| E039 | `configs/experiments/E039_seaslug_v8_seed0.yaml` | E010 | dataset v7 → v8 only (D-041: v7 plus 2,662 batch-2 training-day frames with fixed boxes; val and test unchanged); otherwise as E010 | completed 2026-11-13 on Kaggle (Tesla T4, one of two in parallel); 35 epochs (early stop, patience 30); registered; val point AP 0.509; not a final candidate (D-041: v8 does not win) |
+| E040 | `configs/experiments/E040_seaslug_v8_seed1.yaml` | E010 | dataset v7 → v8 (D-041); seed 0 → 1; otherwise as E010 | completed 2026-11-13 on Kaggle (Tesla T4, one of two in parallel); 43 epochs (early stop, patience 30); registered; val point AP 0.461; not a final candidate (D-041: v8 does not win) |
+| E041 | `configs/experiments/E041_seaslug_v8_seed2.yaml` | E010 | dataset v7 → v8 (D-041); seed 0 → 2; otherwise as E010 | completed 2026-11-13 on Kaggle (Tesla T4, one of two in parallel); 59 epochs (early stop, patience 30); registered; val point AP 0.502; not a final candidate (D-041: v8 does not win) |
 
 **Model A tuning E011–E024 (D-038), declared 2026-11-11 before any of these runs:** the selection metric
 is **val mAP50-95** (class `lobster`), at both levels: Ultralytics picks each run's `best.pt` on it (in
@@ -219,6 +219,9 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | E036 | 2026-11-12 | E010 | D-040 arm D, seed 0 | v7 | — | — | not mAP (D-033): val point AP 0.482; point P / R / F1 0.532 / 0.484 / 0.507 at conf 0.1; 100 epochs; best.pt recorded; Kaggle; registered |
 | E037 | 2026-11-12 | E010 | D-040 arm D, seed 1 | v7 | — | — | not mAP (D-033): val point AP 0.481; point P / R / F1 0.523 / 0.582 / 0.551 at conf 0.18; 100 epochs; best.pt recorded; Kaggle; registered |
 | E038 | 2026-11-12 | E010 | D-040 arm D, seed 2 | v7 | — | — | not mAP (D-033): val point AP 0.471; point P / R / F1 0.608 / 0.477 / 0.535 at conf 0.2; 100 epochs; best.pt recorded; Kaggle; registered |
+| E039 | 2026-11-13 | E010 | D-041 v8, seed 0 | v8 | — | — | not mAP (D-033): val point AP 0.509; point P / R / F1 0.677 / 0.451 / 0.541 at conf 0.23; 35 epochs (early stop); best.pt recorded; Kaggle; registered |
+| E040 | 2026-11-13 | E010 | D-041 v8, seed 1 | v8 | — | — | not mAP (D-033): val point AP 0.461; point P / R / F1 0.596 / 0.425 / 0.496 at conf 0.15; 43 epochs (early stop); best.pt recorded; Kaggle; registered |
+| E041 | 2026-11-13 | E010 | D-041 v8, seed 2 | v8 | — | — | not mAP (D-033): val point AP 0.502; point P / R / F1 0.597 / 0.523 / 0.558 at conf 0.18; 59 epochs (early stop); best.pt recorded; Kaggle; registered |
 
 E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
 The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
@@ -476,6 +479,38 @@ Source (OBSERVED): `d040_results.zip` (sha256 `9ba80567…`) and `d040_weights.z
   frames from 10 days, 12–20 px slugs, crosses instead of outlines, D-036).
 - LIMITATION: 27 val frames from 3 days of one setup; 3 seeds per arm; the 20130524 day has only 15 crosses, so
   its per-day numbers are very noisy. These are val numbers only (rule 7).
+
+### D-041: Tritonia v8, val point scores (E039–E041)
+
+Source (OBSERVED): `d041_results.zip` (sha256 `5cc51f45…`) and `d041_weights.zip` (`747205ef…`), downloaded by Anu on
+2026-11-13 (UTC) from an interactive Kaggle session (2 × Tesla T4, `notebooks/kaggle_tritonia_v8.ipynb`, commit
+`4021eef`, clean; one cell 8 attempt, `20261112T234910Z`), kept in `D:\uwct_tritonia\runs\d041_results\` and
+`d041_weights\`. Every run record names commit `4021eef`, dataset v8 `52cd95c3…` and its config's settings; every
+`best.pt` matches its recorded sha256; all 3 are registered and their `run_record.json` + `val_point_scores.json` are
+archived in `experiments/records/E0xx/`. The smoke run (E039) passed in 57 s. Recomputed from the files: identical to
+the notebook's cell 9 summary (`d041_summary.json`).
+- Val point AP (27 val frames, 153 crosses, 10 px one to one, each run at its own best-val-F1 threshold):
+
+| arm | change from E010 | runs (val point AP) | mean | seed range | mean P / R / F1 | rule |
+|---|---|---|---:|---:|---|---|
+| baseline (v7, D-040) | — | E010 0.496, E025 0.478, E026 0.493 | **0.489** | 0.018 | 0.621 / 0.455 / 0.520 | reference |
+| v8 | dataset v7 → v8 | E039 0.509, E040 0.461, E041 0.502 | 0.491 | 0.048 | 0.623 / 0.466 / 0.532 | no evidence of a gain |
+
+- Mean val point F1 per day (20130524 / 20130529 / 20130602; 15 / 77 / 61 crosses): baseline 0.174 / 0.663 / 0.420;
+  v8 0.018 / 0.689 / 0.440.
+- **Outcome by the declared rule (D-041): v8 does not win.** Its mean is +0.002 above the baseline mean, but the
+  rule needs more than 0.489 + 0.048 (the larger seed range) = 0.537. No final candidate, no test; E010 stays the
+  Tritonia reference.
+- OBSERVED: all three runs stopped early (patience 30) at 35 / 43 / 59 of 100 epochs; training took 34 / 42 / 48 min
+  per run (queue 83 min in total, well under the 4–5 h estimate). Mean matched crosses 71.3 with 115.0 predictions
+  (baseline 69.7 / 114). The seed range grew from 0.018 to 0.048. On 20130524 v8 finds almost none of the 15
+  crosses (matched 0 / 0 / 1 across seeds).
+- INFERRED: 28× more training frames (96 → 2,758) from the same training days did not measurably change val point
+  AP; together with D-040, neither the training settings tried nor more frames from these days is what limits it.
+  HYPOTHESIS, not tested: added frames 75 s apart add little new appearance (same days, same slugs); unclicked slugs
+  in them are trained as background (D-029); the val days differ from the training days.
+- LIMITATION: 27 val frames from 3 days of one setup; 3 seeds; 20130524 has only 15 crosses. Val numbers only
+  (rule 7).
 
 ### Val secondary metrics: E001 vs E004 (D-020)
 
