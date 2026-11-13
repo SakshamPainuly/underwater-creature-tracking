@@ -598,6 +598,34 @@ user approval, and is logged here (rule 7). No second grid on val unless declare
 on 3 val days can partly fit noise; the gap values 20 / 60 were chosen after the phase-3 check showed tracks split
 at the click gaps (median 16 frames), so that check informed the grid (OBSERVED, stated here).
 
+**T001 result (OBSERVED, 2026-11-13):** run at commit `cb0c375` (clean, the declaration commit) on this PC, 81
+settings in 68 s; inputs checked against the config hashes. Output in `D:\uwct_tritonia\runs\T001\`
+(`selected/tracks.csv` sha256 `06716ee6…`); `run_record.json`, `grid_results.csv` and the selected setting's scores
+archived in `experiments/records/T001/`. **Selected by the declared rule: conf 0.16, gate 20 px, maximum gap 60
+frames, minimum length 10** (1 other setting within 0.001; IDF1 broke the tie). It is frozen as **T002**
+(`configs/tracking/T002_tritonia_final_candidate.json`), not run on test.
+
+| run | mean HOTA | DetA | AssA | IDF1 | MOTA | ID switches |
+|---|---:|---:|---:|---:|---:|---:|
+| no linking (floor, conf 0.16) | 0.027 | 0.153 | 0.008 | 0.008 | −0.402 | — |
+| phase-3 defaults (gate 12 px, gap 8, length 3), for comparison | 0.143 | 0.155 | 0.134 | 0.179 | −0.067 | 868 |
+| **T001 selected (E010 detections)** | **0.168** | 0.150 | 0.191 | 0.238 | −0.076 | 856 |
+| clicks as detections at the selected setting (ceiling) | 0.941 | 0.991 | 0.896 | 0.928 | 0.989 | — |
+
+- Per day (selected): HOTA 0.040 / 0.342 / 0.120, IDF1 0.063 / 0.457 / 0.192 on 20130524 / 20130529 / 20130602.
+  All days: TP 7,820, FN 14,570, FP 7,311; 344 tracks for 162 clicked tracks; MT / PT / ML 10 / 51 / 101.
+- Close-pair frames (414 camera-frames with two clicks within 10 px): IDF1 0.437, MOTA 0.251, 13 ID switches.
+- Mean HOTA over the grid by value: conf 0.10 / 0.16 / 0.25 → 0.140 / 0.155 / 0.147; gate 8 / 12 / 20 → 0.144 /
+  0.147 / 0.150; maximum gap 8 / 20 / 60 → 0.138 / 0.149 / 0.154; minimum length 1 / 3 / 10 → 0.146 / 0.148 /
+  0.148. Worst setting: conf 0.10, gate 8, gap 8, length 1 (0.121).
+- OBSERVED: the tracker settings move mean HOTA only from 0.121 to 0.168, while with perfect detections the
+  selected setting reaches 0.941. **Detection is the limit** (DetA 0.150; 35 % of clicks matched). The longer
+  maximum gap helps most.
+- LIMITATION: the selected gate, gap and length are the largest values in the grid, so the best setting may lie
+  outside it; by the declaration there is no second grid unless declared first. 81 settings on 3 val days; the
+  selected HOTA is optimistic for new days. Unmatched detections are an upper bound on false positives (D-029).
+  Val only (rule 7).
+
 ### Val secondary metrics: E001 vs E004 (D-020)
 
 Val only; test not used. Both runs evaluated on 2026-10-11 in one Colab Tesla T4 session at commit

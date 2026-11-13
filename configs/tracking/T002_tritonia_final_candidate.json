@@ -1,0 +1,23 @@
+{
+  "id": "T002",
+  "slug": "tritonia_final_candidate",
+  "decision": "D-043",
+  "phase": 6,
+  "status": "declared final candidate, not run",
+  "parent": "T001",
+  "selected_by": "T001 declared rule (mean val HOTA over 3 days); T001 run_record sha256 85978c3eb5d2866beeafae9642543b0ff3cb3a3ab45acdb35d8d50a2f7ee5bb3",
+  "params": {
+    "conf": 0.16,
+    "gate_px": 20,
+    "max_gap": 60,
+    "min_len": 10
+  },
+  "match_px": 10,
+  "detector": {
+    "experiment": "E010",
+    "weights_sha256": "48d72b79770bf8085bf70530eae4c71648a0b6c88c1e3580b90ca84e98909ca5",
+    "imgsz": 640,
+    "conf_saved": 0.001
+  },
+  "test": "the 3 v8 test days (20130520, 20130521, 20130528), extracted only after a separate user approval (make_tritonia_sequence.py --split test --final D-043); run once; logged in docs/EXPERIMENTS.md (rule 7). Settings never change after this file is committed."
+}
