@@ -245,7 +245,12 @@ back into training, early stopping, thresholds, hyperparameters or model choice.
    - `run_record.json` is a valid finished **full** run and `best.pt` still matches its sha256;
    - the dataset view verifies and its fingerprint equals the training run's fingerprint;
    - Ultralytics reads the test split with the built counts;
-   - no completed final test exists for the run.
+   - no completed final test exists for the run and target.
+
+   **Targets (D-043):** `--target test` (default) is the v1 test sessions in `data.yaml`. For Model A
+   views (v4), `--target test_zenodo_sk` evaluates the held-out Zenodo `sk` site from
+   `data_test_zenodo_sk.yaml` instead, with its own output folder `final_test_zenodo_sk/`. Each target
+   is evaluated once, as a separate run of the command, so the two scores never mix.
 3. **What it does, in order:**
    - **a.** The operating confidence is chosen on **val**: `best.pt`, the run's
      `data_trainval.yaml`, and the confidence that maximizes F1. This is fixed before step b.
