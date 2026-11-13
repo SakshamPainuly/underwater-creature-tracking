@@ -1,0 +1,21 @@
+table,split,key,HOTA,DetA,AssA,LocA,IDF1,MOTA,IDSW,TP,FN,FP,clicks_matched,MT,PT,ML,eval_frames,clicked_tracks,clicks_median_path_px,tracker_tracks,tracker_median_path_px,matched_half
+overall,val,mean over 3 days,0.1676,0.1495,0.1908,0.7489,0.2376,-0.0763,856,7820,14570,7311,0.3493,10,51,101,,,,,,
+per_day,val,20130524,0.0403,0.0253,0.0647,,0.0631,-0.2937,15,,,,,,,,1683,,,,,
+per_day,val,20130529,0.3425,0.3163,0.3724,,0.4574,0.259,426,,,,,,,,1247,,,,,
+per_day,val,20130602,0.12,0.1068,0.1352,,0.1923,-0.1941,415,,,,,,,,1674,,,,,
+references_HOTA,val,no linking,0.0272,,,,,,,,,,,,,,,,,,,
+references_HOTA,val,T002,0.1676,,,,,,,,,,,,,,,,,,,
+references_HOTA,val,clicks as detections,0.9413,,,,,,,,,,,,,,,,,,,
+overall,test,mean over 3 days,0.0905,0.0675,0.1224,0.7459,0.1303,-0.444,289,2542,12563,7923,0.1683,2,53,132,,,,,,
+per_day,test,20130520,0.084,0.061,0.1169,,0.1209,-0.3582,28,,,,,,,,1218,,,,,
+per_day,test,20130521,0.064,0.0458,0.0908,,0.0969,-1.0308,95,,,,,,,,1903,,,,,
+per_day,test,20130528,0.1235,0.0957,0.1597,,0.1731,0.057,166,,,,,,,,872,,,,,
+references_HOTA,test,no linking,0.0324,,,,,,,,,,,,,,,,,,,
+references_HOTA,test,T002,0.0905,,,,,,,,,,,,,,,,,,,
+references_HOTA,test,clicks as detections,0.8636,,,,,,,,,,,,,,,,,,,
+trajectories,val,20130524,,,,,,,,,,,,,,,,39,218.12,53,16.44,0
+trajectories,val,20130529,,,,,,,,,,,,,,,,65,320.1,168,47.11,10
+trajectories,val,20130602,,,,,,,,,,,,,,,,58,291.025,106,38.25,2
+trajectories,test,20130520,,,,,,,,,,,,,,,,43,159.81,49,30.42,2
+trajectories,test,20130521,,,,,,,,,,,,,,,,65,234.45,98,52.725,1
+trajectories,test,20130528,,,,,,,,,,,,,,,,79,286.43,94,28.235,2

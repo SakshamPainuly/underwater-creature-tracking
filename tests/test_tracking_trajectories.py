@@ -59,5 +59,20 @@ class FigureTest(unittest.TestCase):
         self.assertEqual(len(zlib.decompress(idat)), (2 * h + 8) * (w * 3 + 1))
 
 
+class ReportChartTest(unittest.TestCase):
+    def test_bar_chart_is_well_formed_with_selective_labels(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("report", REPO / "scripts" / "tritonia_tracking_report.py")
+        R = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(R)
+        svg = R.bar_chart("t", "s", ["a", "b"], [[(0.5, R.BLUE), (0.25, R.ORANGE)], [(0.0, R.BLUE)]],
+                          [("val", R.BLUE), ("test", R.ORANGE)], {(0, 1)}, "note", ymax=0.5)
+        root = ET.fromstring(svg)
+        bars = [e for e in root.iter() if e.tag.endswith("path")]
+        self.assertEqual(len(bars), 2)  # a zero bar draws nothing
+        labels = [e.text for e in root.iter() if e.tag.endswith("text") and e.text == "0.250"]
+        self.assertEqual(labels, ["0.250"])
+
+
 if __name__ == "__main__":
     unittest.main()

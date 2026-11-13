@@ -1,0 +1,95 @@
+{
+ "tracker_id": "T002",
+ "per_day": {
+  "20130520": {
+   "click_cadence": 1,
+   "eval_frames": 1218,
+   "clicks": {
+    "tracks": 43,
+    "median_points": 51,
+    "median_duration_s": 1320.0,
+    "median_path_px": 159.81,
+    "median_net_px": 117.03,
+    "median_step_speed_px_s": 0.2415
+   },
+   "tracker": {
+    "tracks": 49,
+    "median_points": 15,
+    "median_duration_s": 915.0,
+    "median_path_px": 30.42,
+    "median_net_px": 21.03,
+    "median_step_speed_px_s": 0.0799
+   },
+   "matched": {
+    "clicked_tracks": 43,
+    "with_a_tracker_track_covering_half": 2,
+    "median_speed_ratio_tracker_over_clicks": 0.9279
+   }
+  },
+  "20130521": {
+   "click_cadence": 1,
+   "eval_frames": 1903,
+   "clicks": {
+    "tracks": 65,
+    "median_points": 68,
+    "median_duration_s": 1125.0,
+    "median_path_px": 234.45,
+    "median_net_px": 129.83,
+    "median_step_speed_px_s": 0.2404
+   },
+   "tracker": {
+    "tracks": 98,
+    "median_points": 22.5,
+    "median_duration_s": 1267.5,
+    "median_path_px": 52.725,
+    "median_net_px": 32.545,
+    "median_step_speed_px_s": 0.0895
+   },
+   "matched": {
+    "clicked_tracks": 65,
+    "with_a_tracker_track_covering_half": 1,
+    "median_speed_ratio_tracker_over_clicks": 0.2723
+   }
+  },
+  "20130528": {
+   "click_cadence": 2,
+   "eval_frames": 872,
+   "clicks": {
+    "tracks": 79,
+    "median_points": 40,
+    "median_duration_s": 1170.0,
+    "median_path_px": 286.43,
+    "median_net_px": 144.78,
+    "median_step_speed_px_s": 0.1972
+   },
+   "tracker": {
+    "tracks": 94,
+    "median_points": 9.0,
+    "median_duration_s": 825.0,
+    "median_path_px": 28.235,
+    "median_net_px": 22.045,
+    "median_step_speed_px_s": 0.0599
+   },
+   "matched": {
+    "clicked_tracks": 79,
+    "with_a_tracker_track_covering_half": 2,
+    "median_speed_ratio_tracker_over_clicks": 0.6474
+   }
+  }
+ },
+ "decision": "D-043",
+ "phase": 6,
+ "split": "test",
+ "final": "D-043",
+ "git": {
+  "commit": "d3576cdee32cc29f2aea2efb161f3f20957e5c8a",
+  "dirty": false
+ },
+ "inputs": {
+  "sequence_manifest_sha256": "bce5374cf3a86d91ab50344e4a6c526dde39de8c3ccbac746f635c8be2e34ff9",
+  "gt_points_sha256": "e47e6e17097f08f1d25e880df7325f8c45e35d647473bc9a29e0843f9cc4ec39",
+  "tracks_sha256": "dd229f01429b67dbd23bf48861bcb3990bc8b82ddcc24eef601115c578219d07"
+ },
+ "units": "px, px/s (15 s per frame); no physical units; speeds not comparable between cameras",
+ "note": "statistics on clicked frames only; steps longer than 2 x cadence are gaps, not path"
+}

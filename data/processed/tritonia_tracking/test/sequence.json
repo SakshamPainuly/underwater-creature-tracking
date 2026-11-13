@@ -1,0 +1,91 @@
+{
+  "decision": "D-043",
+  "split_version": "v8",
+  "split": "test",
+  "root": "D:\\uwct_tritonia\\raw\\tritonia",
+  "note": "sparse-frame/timelapse frames, 15 s apart; ground truth = MTrackJ clicks",
+  "days": {
+    "20130520": {
+      "source_tif": "20130520all_15spf.tif",
+      "tif_bytes": 985157935,
+      "width": 1056,
+      "height": 480,
+      "frames": 1943,
+      "click_cadence": 1,
+      "tracks": 43,
+      "gt_points": 2538,
+      "frames_with_points": 1218,
+      "tracks_per_camera": {
+        "0": 9,
+        "1": 8,
+        "2": 6,
+        "3": 7,
+        "4": 4,
+        "5": 9
+      },
+      "track_flags": {
+        "true": 43
+      }
+    },
+    "20130521": {
+      "source_tif": "20130521all_15spf.tif",
+      "tif_bytes": 1284305635,
+      "width": 1056,
+      "height": 480,
+      "frames": 2533,
+      "click_cadence": 1,
+      "tracks": 65,
+      "gt_points": 5035,
+      "frames_with_points": 1903,
+      "tracks_per_camera": {
+        "0": 10,
+        "1": 7,
+        "2": 7,
+        "3": 12,
+        "4": 11,
+        "5": 18
+      },
+      "track_flags": {
+        "true": 65
+      }
+    },
+    "20130528": {
+      "source_tif": "20130528all_15spf.tif",
+      "tif_bytes": 932931437,
+      "width": 1056,
+      "height": 480,
+      "frames": 1840,
+      "click_cadence": 2,
+      "tracks": 79,
+      "gt_points": 7532,
+      "frames_with_points": 872,
+      "tracks_per_camera": {
+        "0": 8,
+        "1": 8,
+        "2": 7,
+        "3": 21,
+        "4": 21,
+        "5": 14
+      },
+      "track_flags": {
+        "false": 18,
+        "true": 61
+      }
+    }
+  },
+  "camera_layout": {
+    "seam_x": [
+      351.5,
+      703.5
+    ],
+    "seam_y": 240.0,
+    "ids": "0 1 2 top, 3 4 5 bottom"
+  },
+  "totals": {
+    "frames": 6316,
+    "gt_points": 15105,
+    "tracks": 187
+  },
+  "manifest_sha256": "bce5374cf3a86d91ab50344e4a6c526dde39de8c3ccbac746f635c8be2e34ff9",
+  "gt_points_sha256": "e47e6e17097f08f1d25e880df7325f8c45e35d647473bc9a29e0843f9cc4ec39"
+}

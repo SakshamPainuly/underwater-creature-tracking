@@ -161,7 +161,7 @@ def day_svg(day: str, w: int, h: int, bg_pixels: bytes, bg_t: int, gt: dict, pre
     max_dt = 2 * cadence
     ph = h + 40
     legend_y = 2 * ph + 24
-    total_h = legend_y + 58
+    total_h = legend_y + 76
     parts = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -4 {w} {total_h + 4}" width="{w}" height="{total_h + 4}" '
              f'font-family="Segoe UI, Arial, sans-serif">',
              f'<style>.t1{{font-size:15px;font-weight:600;fill:{INK}}} .t2{{font-size:12px;fill:{INK2}}} '
@@ -182,8 +182,9 @@ def day_svg(day: str, w: int, h: int, bg_pixels: bytes, bg_t: int, gt: dict, pre
                      f'stroke-width="{2 if c != OTHER else 1.25}"/>')
         parts.append(f'<text x="{lx + 28}" y="{legend_y + 24}" class="t2">{name}</text>')
         lx += 28 + 8 * len(name) + 24
-    parts.append(f'<text x="0" y="{legend_y + 46}" class="t2">{_esc(subtitle)} Background: frame t={bg_t}, '
-                 f'lightened. Sparse-frame/timelapse, 15 s per frame; positions in px.</text>')
+    parts.append(f'<text x="0" y="{legend_y + 46}" class="t2">{_esc(subtitle)}</text>')
+    parts.append(f'<text x="0" y="{legend_y + 64}" class="t2">Background: frame t={bg_t}, lightened. '
+                 f'Sparse-frame/timelapse, 15 s per frame; positions in px.</text>')
     parts.append("</svg>")
     return "\n".join(parts) + "\n"
 

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" font-family="Segoe UI, Arial, sans-serif">
+<rect width="760" height="440" fill="#fcfcfb"/>
+<text x="16" y="28" font-size="17" font-weight="600" fill="#0b0b0b">T002 tracker: val vs final test</text>
+<text x="16" y="48" font-size="12" fill="#52514e">Mean over 3 days; higher is better (0 to 1)</text>
+<rect x="16" y="62" width="12" height="12" rx="3" fill="#2a78d6"/>
+<text x="34" y="72" font-size="12" fill="#0b0b0b">val (3 days, used to choose settings)</text>
+<rect x="322.40000000000003" y="62" width="12" height="12" rx="3" fill="#eb6834"/>
+<text x="340.40000000000003" y="72" font-size="12" fill="#0b0b0b">final test (3 days, run once)</text>
+<line x1="56" y1="376.0" x2="740" y2="376.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="380.0" font-size="11" text-anchor="end" fill="#52514e">0.00</text>
+<line x1="56" y1="306.0" x2="740" y2="306.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="310.0" font-size="11" text-anchor="end" fill="#52514e">0.25</text>
+<line x1="56" y1="236.0" x2="740" y2="236.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="240.0" font-size="11" text-anchor="end" fill="#52514e">0.50</text>
+<line x1="56" y1="166.0" x2="740" y2="166.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="170.0" font-size="11" text-anchor="end" fill="#52514e">0.75</text>
+<line x1="56" y1="96.0" x2="740" y2="96.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="100.0" font-size="11" text-anchor="end" fill="#52514e">1.00</text>
+<path d="M96.5,376.0 V333.1 Q96.5,329.1 100.5,329.1 H136.5 Q140.5,329.1 140.5,333.1 V376.0 Z" fill="#2a78d6"/>
+<text x="118.5" y="323.1" font-size="12" font-weight="600" text-anchor="middle" fill="#0b0b0b">0.168</text>
+<path d="M142.5,376.0 V354.7 Q142.5,350.7 146.5,350.7 H182.5 Q186.5,350.7 186.5,354.7 V376.0 Z" fill="#eb6834"/>
+<text x="164.5" y="344.7" font-size="12" font-weight="600" text-anchor="middle" fill="#0b0b0b">0.091</text>
+<text x="141.5" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">HOTA</text>
+<path d="M267.5,376.0 V338.1 Q267.5,334.1 271.5,334.1 H307.5 Q311.5,334.1 311.5,338.1 V376.0 Z" fill="#2a78d6"/>
+<path d="M313.5,376.0 V361.1 Q313.5,357.1 317.5,357.1 H353.5 Q357.5,357.1 357.5,361.1 V376.0 Z" fill="#eb6834"/>
+<text x="312.5" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">DetA</text>
+<path d="M438.5,376.0 V326.6 Q438.5,322.6 442.5,322.6 H478.5 Q482.5,322.6 482.5,326.6 V376.0 Z" fill="#2a78d6"/>
+<path d="M484.5,376.0 V345.7 Q484.5,341.7 488.5,341.7 H524.5 Q528.5,341.7 528.5,345.7 V376.0 Z" fill="#eb6834"/>
+<text x="483.5" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">AssA</text>
+<path d="M609.5,376.0 V313.5 Q609.5,309.5 613.5,309.5 H649.5 Q653.5,309.5 653.5,313.5 V376.0 Z" fill="#2a78d6"/>
+<path d="M655.5,376.0 V343.5 Q655.5,339.5 659.5,339.5 H695.5 Q699.5,339.5 699.5,343.5 V376.0 Z" fill="#eb6834"/>
+<text x="654.5" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">IDF1</text>
+<line x1="56" y1="376" x2="740" y2="376" stroke="#52514e" stroke-width="1"/>
+<text x="16" y="426" font-size="11" fill="#52514e">Tritonia sparse-frame/timelapse tracking (15 s per frame), scored on clicked frames, 10 px; D-043.</text>
+</svg>
