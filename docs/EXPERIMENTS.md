@@ -626,6 +626,29 @@ frames, minimum length 10** (1 other setting within 0.001; IDF1 broke the tie). 
   selected HOTA is optimistic for new days. Unmatched detections are an upper bound on false positives (D-029).
   Val only (rule 7).
 
+**Phase 5, trajectories and figures (OBSERVED, 2026-11-13, val):** `scripts/tritonia_trajectories.py` at commit
+`93bd16f` (clean) on the T001-selected tracks (= T002 settings; `tracks.csv` sha256 `06716ee6…`). Statistics on
+each day's clicked frames only; a step longer than 2 × the click cadence is a gap, not path; px and px/s only
+(rule 9). Output in `D:\uwct_tritonia\runs\T002_val_trajectories\`; `summary.json` and the two per-track CSVs
+archived in `experiments/records/tracking_d043/phase5/`. Figures, one SVG per day (clicked tracks above, tracker
+below, on a lightened frame; per camera the 3 tracks with the largest extent coloured and labelled, others gray):
+`20130524.svg` (`57bf4005…`), `20130529.svg` (`2b46a698…`), `20130602.svg` (`9ca87c40…`). They stay off-repo (they embed frames of
+Dr. Wyeth's data).
+
+| day | clicked tracks: n, median points / path / net | tracker tracks: n, median points / path / net | clicked tracks with a tracker track covering ≥ half |
+|---|---|---|---:|
+| 20130524 | 39, 74 / 218 px / 153 px | 53, 17 / 16 px / 10 px | 0 of 39 |
+| 20130529 | 65, 45 / 320 px / 144 px | 168, 12 / 47 px / 39 px | 10 of 65 |
+| 20130602 | 58, 39 / 291 px / 127 px | 106, 14 / 38 px / 12 px | 2 of 58 |
+
+- Median step speed (median over tracks): clicks 0.20 / 0.17 / 0.22 px/s, tracker 0.06 / 0.12 / 0.06 px/s.
+- OBSERVED: tracker tracks are short pieces of the clicked paths (visible in the figures, e.g. one slug split into
+  two overlapping tracks). On 20130524 the tracker tracks barely move (median path 16 px over a median 25.5 min):
+  INFERRED stationary detections (bright specks, D-029) rather than slugs, consistent with that day's DetA 0.025.
+- LIMITATION: the speed comparison of matched tracks rests on 10 and 2 tracks (median ratio tracker / clicks 0.37
+  and 1.10) and is not a result. Speeds are per camera only (angled cameras, parallax) and in px/s; detection
+  jitter and stationary false detections bias the tracker statistics. Val only (rule 7).
+
 ### Val secondary metrics: E001 vs E004 (D-020)
 
 Val only; test not used. Both runs evaluated on 2026-10-11 in one Colab Tesla T4 session at commit
