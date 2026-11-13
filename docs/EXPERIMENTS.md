@@ -649,6 +649,33 @@ Dr. Wyeth's data).
   and 1.10) and is not a result. Speeds are per camera only (angled cameras, parallax) and in px/s; detection
   jitter and stationary false detections bias the tracker statistics. Val only (rule 7).
 
+**Phase 6, final test of T002 (OBSERVED, 2026-11-13; run once, user-approved; logged below in the test-evaluation
+log):** T002 was declared in `experiments/final_candidates.csv` before any test frame was extracted. The 3 v8 test
+days (20130520, 20130521, 20130528; 6,316 frames, 15,105 clicks, 187 tracks) were extracted with `--final D-043`
+(raw folder unchanged), uploaded privately and detected on Kaggle (Tesla T4, `notebooks/kaggle_tritonia_tracking_test.ipynb`
+at commit `f27e82e`, clean, 85 s; download sha256 `c915a6fb…`, byte-identical copy in
+`D:\uwct_tritonia\runs\d043_test_detections\`). Tracked once on this PC with the T002 settings read from its config
+(`D:\uwct_tritonia\runs\T002_test\`, `tracks.csv` sha256 `dd229f01…`). The two references (no linking;
+clicks as detections) were scored on the same test days for the report; they choose nothing. Records in
+`experiments/records/T002/`; charts (numbers only) in `docs/reports/tritonia_tracking/`; test trajectory figures
+(commit `d3576cd`, clean) in `D:\uwct_tritonia\runs\T002_test_trajectories\figures\` (`20130520.svg` `b7b8dc49…`,
+`20130521.svg` `32f9c410…`, `20130528.svg` `136c347a…`), off-repo as they embed frames.
+
+| T002, mean over 3 days | HOTA | DetA | AssA | IDF1 | MOTA | ID switches | clicks matched | no linking (HOTA) | clicks as detections (HOTA) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| val (chose the settings) | 0.168 | 0.149 | 0.191 | 0.238 | −0.076 | 856 | 34.9 % | 0.027 | 0.941 |
+| **final test** | **0.091** | 0.067 | 0.122 | 0.130 | −0.444 | 289 | 16.8 % | 0.032 | 0.864 |
+
+- Test per day: HOTA 0.084 / 0.064 / 0.123, IDF1 0.121 / 0.097 / 0.173 on 20130520 / 20130521 / 20130528.
+  All test days: TP 2,542, FN 12,563, FP 7,923; MT / PT / ML 2 / 53 / 132; 266 tracks for 187 clicked tracks.
+- OBSERVED: test is lower than val (HOTA 0.091 vs 0.168), mostly in detection (DetA 0.067 vs 0.149; 17 % of
+  clicks matched vs 35 %), as E010's own test point AP was lower than its val one (0.215 vs 0.496). With the
+  clicks as detections the same settings reach 0.864 on test: **detection, not the tracker, limits Tritonia
+  tracking**, on test as on val.
+- LIMITATIONS: test days are new days of the same setup (not new sites); 3 days; UNKNOWN whether every slug was
+  clicked, so unmatched detections are an upper bound on false positives; frames 15 s apart (sparse-frame/
+  timelapse analysis); px only. This result chooses nothing and changes no setting (rule 7).
+
 ### Val secondary metrics: E001 vs E004 (D-020)
 
 Val only; test not used. Both runs evaluated on 2026-10-11 in one Colab Tesla T4 session at commit
@@ -714,6 +741,7 @@ m 189–201, l 202–206, s 188–201 (E017 ran alone at the end: 168). Kaggle q
 | 2026-10-18 | E005 | Final held-out test evaluation of the declared candidate after registration, with the recovered epoch-41 best.pt (D-027) | mAP50 0.8788; mAP50-95 0.6604; precision @ val-chosen conf 0.619 = 0.8411; recall = 0.7712; F1 = 0.8046 |
 | 2026-11-10 | E006 | Final held-out test evaluation of the declared Tritonia candidate (D-033): point eval against the MTrackJ crosses, 27 frames of the 3 test days, val threshold | not mAP (D-033): test point AP 0.248; point P / R / F1 @ val-chosen conf 0.06 = 0.3594 / 0.3622 / 0.3608 (128 predictions, 127 crosses, 46 matched) |
 | 2026-11-12 | E010 | Final held-out test evaluation of the second declared Tritonia candidate (val point AP 0.496 > E006's 0.403): point eval against the MTrackJ crosses, the same 27 test frames, val threshold | not mAP (D-033): test point AP 0.2145; point P / R / F1 @ val-chosen conf 0.16 = 0.3563 / 0.2441 / 0.2897 (87 predictions, 127 crosses, 31 matched) |
+| 2026-11-13 | T002 | Final held-out test of the declared Tritonia tracker (D-043 phase 6; settings chosen on val by T001, frozen before test): E010 detections on all 6,316 frames of the 3 test days, tracked once, scored on the clicked frames | not mAP: mean HOTA 0.091 (DetA 0.067, AssA 0.122), IDF1 0.130, MOTA −0.444, 289 ID switches; val 0.168 / 0.238; clicks-as-detections reference 0.864 (records `experiments/records/T002/`) |
 
 E006 test evaluation (2026-11-10, OBSERVED in the Kaggle cell 18 output pasted by Anu): Kaggle interactive session (notebook `anusidhu7/notebookc47ea7c413`), evaluation commit `b1738df`, registered `best.pt` sha256 `6f6710d1…` (checked by cell 18; attached from the private Kaggle dataset `anusidhu7/uwct-e006-weights`, a copy of the local registered run folder, because the latest output of the training notebook holds a later re-run's `best.pt`), val threshold conf 0.06, attempt 1. Per-day test scores are in `test_point_scores.json` in the session output; not yet archived in the repo. LIMITATIONS: crosses are the ground truth and point precision is a lower bound (whether every slug was clicked is UNKNOWN, D-029); 27 frames from 3 days of one setup (new days, not new sites); training boxes are automatic and cover about half of the crosses (D-033). Test is lower than val (F1 0.361 vs 0.476, point AP 0.248 vs 0.403). The result changes neither the model nor the threshold.
 
