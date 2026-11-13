@@ -1,0 +1,23 @@
+# E021 -- Model A tuning round 2 (D-040), combination C1 on yolo26l, seed 0, dataset v4.
+# Base schedule for every round-2 run: epochs 60 -> 30 and patience 10 -> 30, so no run stops early and the
+# linear learning-rate decay completes, with the last 10 epochs without mosaic (close_mosaic 10, default).
+# Round 1 never got there: all runs stopped by patience at epoch 26-41 of 60 (D-040 context 4).
+# Everything not listed under "changed" is exactly as in the parent E013 (imgsz 640, batch 16, deterministic,
+# workers 2; optimizer auto = AdamW lr 0.002 unless set below). Several variables change on purpose (D-040).
+# The v1 test and the held-out Zenodo sk site are never seen by training (CLAUDE.md rule 7).
+id: E021
+slug: yolol_r2_sched
+parent: E013
+changed: "train_args.epochs 60 -> 30, patience 10 -> 30 (D-040 round 2 combination C1 on yolo26l; several variables on purpose)"
+dataset_version: v4
+dataset_fingerprint: "bbd4a8b172fd590b18d2e8c26be05c85cb3c3246a2e60a3b3513590b931cd13f"
+model: yolo26l.pt
+ultralytics_version: "8.4.155"
+seed: 0
+train_args:
+  imgsz: 640
+  epochs: 30
+  patience: 30
+  batch: 16
+  deterministic: true
+  workers: 2

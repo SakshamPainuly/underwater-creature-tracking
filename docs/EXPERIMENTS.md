@@ -42,20 +42,25 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E008 | `configs/experiments/E008_yolo_seaslug_imgsz1280.yaml` | E006 | train_args.imgsz 640 → 1280 only (frames 1056 × 480 px, slugs about 12–20 px: at 640 they are shrunk to 0.61×); dataset v3, model and settings as E006 | completed 2026-11-11 on Kaggle (Tesla T4); 100 epochs; registered; val point AP 0.317 < E006's 0.403: not a final candidate, no test |
 | E009 | `configs/experiments/E009_yolo_seaslug_v5.yaml` | E006 | dataset v3 → v5 only (D-035: batch 1 unchanged plus the frames of batch 2, from the 10 training days only, where every cross got an automatic box); model and settings as E006 (imgsz 640) | trained 2026-11-10 on Kaggle; val point AP 0.274 < E006's 0.403: not a final candidate, no test; not registered: its run_record.json was not saved and is lost (only the cell 17 val point scores remain) |
 | E010 | `configs/experiments/E010_yolo_seaslug_fixedbox.yaml` | E006 | dataset v3 → v7 only (D-036, D-037: the same 150 frames, images and day split, with a fixed 20 × 17 px box centred on every cross instead of the automatic boxes; train 86 → 96 frames, 292 → 572 boxes; v6 had one duplicate box and is not used); model and settings as E006 (imgsz 640) | completed 2026-11-12 on Kaggle (Tesla T4); 100 epochs; registered; val point AP 0.496 > E006's 0.403: declared final candidate 2026-11-12; evaluated on test once, 2026-11-12 (point eval, D-033) |
-| E011 | `configs/experiments/E011_yolos_ep60_seed0.yaml` | E007 | train_args.epochs 100 → 60 and patience 30 → 10 (D-038 round 1: together the stopping rule, up to 60 epochs while val mAP50-95 improves) | planned 2026-11-11; not run |
-| E012 | `configs/experiments/E012_yolom_ep60_seed0.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and model yolo26s.pt → yolo26m.pt (D-038 round-1 grid point yolo26m seed 0; parent E007 per D-039) | planned 2026-11-11; not run |
-| E013 | `configs/experiments/E013_yolol_ep60_seed0.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and model yolo26s.pt → yolo26l.pt (D-038 round-1 grid point yolo26l seed 0; parent E007 per D-039) | planned 2026-11-11; not run |
-| E014 | `configs/experiments/E014_yolom_ep60_seed1.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26m.pt and seed 0 → 1 (D-038 round-1 grid point yolo26m seed 1; parent E007 per D-039) | planned 2026-11-11; not run |
-| E015 | `configs/experiments/E015_yolol_ep60_seed1.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26l.pt and seed 0 → 1 (D-038 round-1 grid point yolo26l seed 1; parent E007 per D-039) | planned 2026-11-11; not run |
-| E016 | `configs/experiments/E016_yolos_ep60_seed1.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and seed 0 → 1 (D-038 round-1 grid point yolo26s seed 1; parent E007 per D-039) | planned 2026-11-11; not run |
-| E017 | `configs/experiments/E017_yolom_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26m.pt and seed 0 → 2 (D-038 round-1 grid point yolo26m seed 2; parent E007 per D-039) | planned 2026-11-11; not run |
-| E018 | `configs/experiments/E018_yolol_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26l.pt and seed 0 → 2 (D-038 round-1 grid point yolo26l seed 2; parent E007 per D-039) | planned 2026-11-11; not run |
-| E019 | `configs/experiments/E019_yolos_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and seed 0 → 2 (D-038 round-1 grid point yolo26s seed 2; parent E007 per D-039) | planned 2026-11-11; not run |
-| E042 | `configs/experiments/E042_seaslug_base_seed1.yaml` | E010 | seed 0 → 1 only (E010 repeated, D-042 baseline); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.478; not a final candidate (D-042: no arm wins) |
-| E043 | `configs/experiments/E043_seaslug_base_seed2.yaml` | E010 | seed 0 → 2 only (E010 repeated, D-042 baseline); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.493; not a final candidate (D-042: no arm wins) |
-| E044 | `configs/experiments/E044_seaslug_ep200_seed0.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-042 arm A, together the stopping rule); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 176 epochs; registered; val point AP 0.435; not a final candidate (D-042: no arm wins) |
-| E045 | `configs/experiments/E045_seaslug_ep200_seed1.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-042 arm A, together the stopping rule); seed 0 → 1; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 97 epochs; registered; val point AP 0.494; not a final candidate (D-042: no arm wins) |
-| E046 | `configs/experiments/E046_seaslug_ep200_seed2.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-042 arm A, together the stopping rule); seed 0 → 2; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 165 epochs; registered; val point AP 0.463; not a final candidate (D-042: no arm wins) |
+| E011 | `configs/experiments/E011_yolos_ep60_seed0.yaml` | E007 | train_args.epochs 100 → 60 and patience 30 → 10 (D-038 round 1: together the stopping rule, up to 60 epochs while val mAP50-95 improves) | completed 2026-11-12 on Kaggle (2× Tesla T4, two runs in parallel); 41 epochs (early stop, best epoch 31); registered (D-040) |
+| E012 | `configs/experiments/E012_yolom_ep60_seed0.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and model yolo26s.pt → yolo26m.pt (D-038 round-1 grid point yolo26m seed 0; parent E007 per D-039) | completed 2026-11-12 on Kaggle (2× Tesla T4, two runs in parallel); 27 epochs (early stop, best epoch 17); registered (D-040) |
+| E013 | `configs/experiments/E013_yolol_ep60_seed0.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and model yolo26s.pt → yolo26l.pt (D-038 round-1 grid point yolo26l seed 0; parent E007 per D-039) | completed 2026-11-12 on Kaggle (2× Tesla T4, two runs in parallel); 34 epochs (early stop, best epoch 24); registered (D-040) |
+| E014 | `configs/experiments/E014_yolom_ep60_seed1.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26m.pt and seed 0 → 1 (D-038 round-1 grid point yolo26m seed 1; parent E007 per D-039) | completed 2026-11-12 on Kaggle (2× Tesla T4, two runs in parallel); 26 epochs (early stop, best epoch 16); registered (D-040) |
+| E015 | `configs/experiments/E015_yolol_ep60_seed1.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26l.pt and seed 0 → 1 (D-038 round-1 grid point yolo26l seed 1; parent E007 per D-039) | completed 2026-11-12 on Kaggle (2× Tesla T4, two runs in parallel); 27 epochs (early stop, best epoch 17); registered (D-040) |
+| E016 | `configs/experiments/E016_yolos_ep60_seed1.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and seed 0 → 1 (D-038 round-1 grid point yolo26s seed 1; parent E007 per D-039) | completed 2026-11-12 on Kaggle (2× Tesla T4, two runs in parallel); 27 epochs (early stop, best epoch 17); registered (D-040) |
+| E017 | `configs/experiments/E017_yolom_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26m.pt and seed 0 → 2 (D-038 round-1 grid point yolo26m seed 2; parent E007 per D-039) | completed 2026-11-12 on Kaggle (2× Tesla T4, two runs in parallel); 40 epochs (early stop, best epoch 30); registered (D-040) |
+| E018 | `configs/experiments/E018_yolol_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10, model yolo26s.pt → yolo26l.pt and seed 0 → 2 (D-038 round-1 grid point yolo26l seed 2; parent E007 per D-039) | not run (time): the round-1 deadline rule did not start it (D-038 point 3); not re-run (D-040) |
+| E019 | `configs/experiments/E019_yolos_ep60_seed2.yaml` | E007 | epochs 100 → 60, patience 30 → 10 and seed 0 → 2 (D-038 round-1 grid point yolo26s seed 2; parent E007 per D-039) | completed 2026-11-12 on Kaggle (2× Tesla T4, two runs in parallel); 26 epochs (early stop, best epoch 16); registered (D-040) |
+| E020 | `configs/experiments/E020_yolom_r2_sched.yaml` | E012 | epochs 60 → 30, patience 10 → 30 (round-2 schedule: no early stop, LR decay and the 10 no-mosaic epochs complete); C1, nothing else (control) (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
+| E021 | `configs/experiments/E021_yolol_r2_sched.yaml` | E013 | epochs 60 → 30, patience 10 → 30; C1, nothing else (control) (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
+| E022 | `configs/experiments/E022_yolom_r2_lr001.yaml` | E012 | epochs 60 → 30, patience 10 → 30; C2: optimizer auto (AdamW lr 0.002) → AdamW lr0 0.001, momentum 0.9 (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
+| E023 | `configs/experiments/E023_yolol_r2_lr001.yaml` | E013 | epochs 60 → 30, patience 10 → 30; C2: optimizer auto (AdamW lr 0.002) → AdamW lr0 0.001, momentum 0.9 (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
+| E024 | `configs/experiments/E024_yolom_r2_mixup.yaml` | E012 | epochs 60 → 30, patience 10 → 30; C3: mixup 0.0 → 0.1 (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
+| E025 | `configs/experiments/E025_yolol_r2_mixup.yaml` | E013 | epochs 60 → 30, patience 10 → 30; C3: mixup 0.0 → 0.1 (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
+| E026 | `configs/experiments/E026_yolom_r2_lr001_wd_mixup.yaml` | E012 | epochs 60 → 30, patience 10 → 30; C4: AdamW lr0 0.001, momentum 0.9, weight_decay 0.0005 → 0.001, mixup 0.0 → 0.1 (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
+| E027 | `configs/experiments/E027_yolol_r2_lr001_wd_mixup.yaml` | E013 | epochs 60 → 30, patience 10 → 30; C4: AdamW lr0 0.001, momentum 0.9, weight_decay 0.0005 → 0.001, mixup 0.0 → 0.1 (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
+| E028 | `configs/experiments/E028_yolom_r2_freeze10.yaml` | E012 | epochs 60 → 30, patience 10 → 30; C5: freeze none → 10 (backbone frozen) (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
+| E029 | `configs/experiments/E029_yolol_r2_freeze10.yaml` | E013 | epochs 60 → 30, patience 10 → 30; C5: freeze none → 10 (backbone frozen) (D-040 round 2, seed 0; several variables on purpose) | planned 2026-11-12; not run |
 | E030 | `configs/experiments/E030_seaslug_batch8_seed0.yaml` | E010 | train_args.batch 16 → 8 (D-042 arm B); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.472; not a final candidate (D-042: no arm wins) |
 | E031 | `configs/experiments/E031_seaslug_batch8_seed1.yaml` | E010 | train_args.batch 16 → 8 (D-042 arm B); seed 0 → 1; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.448; not a final candidate (D-042: no arm wins) |
 | E032 | `configs/experiments/E032_seaslug_batch8_seed2.yaml` | E010 | train_args.batch 16 → 8 (D-042 arm B); seed 0 → 2; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.496; not a final candidate (D-042: no arm wins) |
@@ -68,6 +73,11 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E039 | `configs/experiments/E039_seaslug_v8_seed0.yaml` | E010 | dataset v7 → v8 only (D-041: v7 plus 2,662 batch-2 training-day frames with fixed boxes; val and test unchanged); otherwise as E010 | completed 2026-11-13 on Kaggle (Tesla T4, one of two in parallel); 35 epochs (early stop, patience 30); registered; val point AP 0.509; not a final candidate (D-041: v8 does not win) |
 | E040 | `configs/experiments/E040_seaslug_v8_seed1.yaml` | E010 | dataset v7 → v8 (D-041); seed 0 → 1; otherwise as E010 | completed 2026-11-13 on Kaggle (Tesla T4, one of two in parallel); 43 epochs (early stop, patience 30); registered; val point AP 0.461; not a final candidate (D-041: v8 does not win) |
 | E041 | `configs/experiments/E041_seaslug_v8_seed2.yaml` | E010 | dataset v7 → v8 (D-041); seed 0 → 2; otherwise as E010 | completed 2026-11-13 on Kaggle (Tesla T4, one of two in parallel); 59 epochs (early stop, patience 30); registered; val point AP 0.502; not a final candidate (D-041: v8 does not win) |
+| E042 | `configs/experiments/E042_seaslug_base_seed1.yaml` | E010 | seed 0 → 1 only (E010 repeated, D-042 baseline); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.478; not a final candidate (D-042: no arm wins) |
+| E043 | `configs/experiments/E043_seaslug_base_seed2.yaml` | E010 | seed 0 → 2 only (E010 repeated, D-042 baseline); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 100 epochs; registered; val point AP 0.493; not a final candidate (D-042: no arm wins) |
+| E044 | `configs/experiments/E044_seaslug_ep200_seed0.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-042 arm A, together the stopping rule); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 176 epochs; registered; val point AP 0.435; not a final candidate (D-042: no arm wins) |
+| E045 | `configs/experiments/E045_seaslug_ep200_seed1.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-042 arm A, together the stopping rule); seed 0 → 1; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 97 epochs; registered; val point AP 0.494; not a final candidate (D-042: no arm wins) |
+| E046 | `configs/experiments/E046_seaslug_ep200_seed2.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-042 arm A, together the stopping rule); seed 0 → 2; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 165 epochs; registered; val point AP 0.463; not a final candidate (D-042: no arm wins) |
 
 **Model A tuning E011–E024 (D-038), declared 2026-11-11 before any of these runs:** the selection metric
 is **val mAP50-95** (class `lobster`), at both levels: Ultralytics picks each run's `best.pt` on it (in
@@ -77,6 +87,15 @@ mAP50 as the primary metric for these runs only; earlier experiments keep their 
 Comparisons with E001/E007 show both (mAP50-95 / mAP50: E001 0.6115 / 0.8527, E007 0.5993 / 0.8423).
 Why (for the report, D-038 point 8): trajectories are built from box positions, so box tightness matters
 as well as finding the lobster; mAP50-95 measures both. Neither is a tracking metric (CLAUDE.md rule 9).
+
+**Model A round 2 E020–E029 (D-040), declared 2026-11-12 before any of these runs:** round 1 selected
+**yolo26m** (E012/E014/E017, val mAP50-95 mean 0.61127, range 0.01415; D-038 point 4 read as "the top model
+against each smaller one", D-040 point 1). Round 2 runs five combinations C1–C5 on yolo26m and yolo26l, all
+with a 30-epoch schedule that is not stopped early (D-040 point 2). Selection metric unchanged (val mAP50-95). A
+round-2 run replaces the yolo26m round-1 configuration only if its val mAP50-95 is above **0.62542** (mean +
+range); among runs above it the highest is selected and declared alone. Otherwise E012, E014 and E017 are the
+final candidates (demo model E017). Val mAP50, P, R and Ultralytics' confusion matrix counts are reported next
+to it and do not select. LIMITATION: up to 19 configurations selected on 324 val images; round 2 is single-seed.
 
 **E006 (Tritonia sea slugs, D-030), declared before any result:** selection metric val mAP50 of class
 `sea_slug`; also reported per class: P, R, mAP50-95 on val, and false positives on the confirmed-negative
@@ -205,11 +224,14 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | E008 | 2026-11-10 | E006 | imgsz 640 → 1280 only | v3 | — | — | not mAP (D-033): val point AP 0.317; point P / R / F1 0.436 / 0.379 / 0.406 at conf 0.12; 100 epochs; best.pt recorded; Kaggle; registered; not a final candidate (below 0.403) |
 | E009 | 2026-11-10 | E006 | dataset v3 → v5 only (D-035) | v5 | — | — | not mAP (D-033): val point AP 0.274; point P / R / F1 0.340 / 0.333 / 0.337 at conf 0.06; Kaggle; not registered (run record lost); not a final candidate (below 0.403) |
 | E010 | 2026-11-12 | E006 | dataset v3 → v7 only: fixed 20 × 17 px box on every cross (D-036, D-037) | v7 | — | — | not mAP (D-033): val point AP 0.496; point P / R / F1 0.614 / 0.458 / 0.524 at conf 0.16; 100 epochs; best.pt recorded; Kaggle; registered; final candidate; tested once 2026-11-12 |
-| E042 | 2026-11-12 | E010 | D-042 baseline seed 1 | v7 | — | — | not mAP (D-033): val point AP 0.478; point P / R / F1 0.698 / 0.392 / 0.502 at conf 0.28; 100 epochs; best.pt recorded; Kaggle; registered |
-| E043 | 2026-11-12 | E010 | D-042 baseline seed 2 | v7 | — | — | not mAP (D-033): val point AP 0.493; point P / R / F1 0.552 / 0.516 / 0.534 at conf 0.17; 100 epochs; best.pt recorded; Kaggle; registered |
-| E044 | 2026-11-12 | E010 | D-042 arm A, seed 0 | v7 | — | — | not mAP (D-033): val point AP 0.435; point P / R / F1 0.574 / 0.405 / 0.475 at conf 0.14; 176 epochs; best.pt recorded; Kaggle; registered |
-| E045 | 2026-11-12 | E010 | D-042 arm A, seed 1 | v7 | — | — | not mAP (D-033): val point AP 0.494; point P / R / F1 0.547 / 0.497 / 0.520 at conf 0.15; 97 epochs; best.pt recorded; Kaggle; registered |
-| E046 | 2026-11-12 | E010 | D-042 arm A, seed 2 | v7 | — | — | not mAP (D-033): val point AP 0.463; point P / R / F1 0.728 / 0.386 / 0.504 at conf 0.25; 165 epochs; best.pt recorded; Kaggle; registered |
+| E011 | 2026-11-11 | E007 | yolo26s seed 0, ≤60 epochs, patience 10 (D-038 round 1) | v4 | 0.8320 | 0.5999 | 41 epochs (early stop, best epoch 31); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-040) |
+| E012 | 2026-11-12 | E007 | yolo26m seed 0, ≤60 epochs, patience 10 (D-038 round 1) | v4 | 0.8408 | 0.6030 | 27 epochs (early stop, best epoch 17); best.pt recorded; Kaggle, two runs in parallel; registered; round-1 selected configuration (yolo26m, D-040) |
+| E013 | 2026-11-11 | E007 | yolo26l seed 0, ≤60 epochs, patience 10 (D-038 round 1) | v4 | 0.8495 | 0.6124 | 34 epochs (early stop, best epoch 24); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-040) |
+| E014 | 2026-11-12 | E007 | yolo26m seed 1, ≤60 epochs, patience 10 (D-038 round 1) | v4 | 0.8481 | 0.6136 | 26 epochs (early stop, best epoch 16); best.pt recorded; Kaggle, two runs in parallel; registered; round-1 selected configuration (yolo26m, D-040) |
+| E015 | 2026-11-12 | E007 | yolo26l seed 1, ≤60 epochs, patience 10 (D-038 round 1) | v4 | 0.8538 | 0.6160 | 27 epochs (early stop, best epoch 17); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-040) |
+| E016 | 2026-11-12 | E007 | yolo26s seed 1, ≤60 epochs, patience 10 (D-038 round 1) | v4 | 0.8325 | 0.5965 | 27 epochs (early stop, best epoch 17); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-040) |
+| E017 | 2026-11-12 | E007 | yolo26m seed 2, ≤60 epochs, patience 10 (D-038 round 1) | v4 | 0.8509 | 0.6172 | 40 epochs (early stop, best epoch 30); best.pt recorded; Kaggle, two runs in parallel; registered; round-1 selected configuration (yolo26m, D-040) |
+| E019 | 2026-11-12 | E007 | yolo26s seed 2, ≤60 epochs, patience 10 (D-038 round 1) | v4 | 0.8410 | 0.5965 | 26 epochs (early stop, best epoch 16); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-040) |
 | E030 | 2026-11-12 | E010 | D-042 arm B, seed 0 | v7 | — | — | not mAP (D-033): val point AP 0.472; point P / R / F1 0.516 / 0.523 / 0.519 at conf 0.12; 100 epochs; best.pt recorded; Kaggle; registered |
 | E031 | 2026-11-12 | E010 | D-042 arm B, seed 1 | v7 | — | — | not mAP (D-033): val point AP 0.448; point P / R / F1 0.458 / 0.503 / 0.480 at conf 0.14; 100 epochs; best.pt recorded; Kaggle; registered |
 | E032 | 2026-11-12 | E010 | D-042 arm B, seed 2 | v7 | — | — | not mAP (D-033): val point AP 0.496; point P / R / F1 0.535 / 0.542 / 0.539 at conf 0.16; 100 epochs; best.pt recorded; Kaggle; registered |
@@ -222,6 +244,11 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | E039 | 2026-11-13 | E010 | D-041 v8, seed 0 | v8 | — | — | not mAP (D-033): val point AP 0.509; point P / R / F1 0.677 / 0.451 / 0.541 at conf 0.23; 35 epochs (early stop); best.pt recorded; Kaggle; registered |
 | E040 | 2026-11-13 | E010 | D-041 v8, seed 1 | v8 | — | — | not mAP (D-033): val point AP 0.461; point P / R / F1 0.596 / 0.425 / 0.496 at conf 0.15; 43 epochs (early stop); best.pt recorded; Kaggle; registered |
 | E041 | 2026-11-13 | E010 | D-041 v8, seed 2 | v8 | — | — | not mAP (D-033): val point AP 0.502; point P / R / F1 0.597 / 0.523 / 0.558 at conf 0.18; 59 epochs (early stop); best.pt recorded; Kaggle; registered |
+| E042 | 2026-11-12 | E010 | D-042 baseline seed 1 | v7 | — | — | not mAP (D-033): val point AP 0.478; point P / R / F1 0.698 / 0.392 / 0.502 at conf 0.28; 100 epochs; best.pt recorded; Kaggle; registered |
+| E043 | 2026-11-12 | E010 | D-042 baseline seed 2 | v7 | — | — | not mAP (D-033): val point AP 0.493; point P / R / F1 0.552 / 0.516 / 0.534 at conf 0.17; 100 epochs; best.pt recorded; Kaggle; registered |
+| E044 | 2026-11-12 | E010 | D-042 arm A, seed 0 | v7 | — | — | not mAP (D-033): val point AP 0.435; point P / R / F1 0.574 / 0.405 / 0.475 at conf 0.14; 176 epochs; best.pt recorded; Kaggle; registered |
+| E045 | 2026-11-12 | E010 | D-042 arm A, seed 1 | v7 | — | — | not mAP (D-033): val point AP 0.494; point P / R / F1 0.547 / 0.497 / 0.520 at conf 0.15; 97 epochs; best.pt recorded; Kaggle; registered |
+| E046 | 2026-11-12 | E010 | D-042 arm A, seed 2 | v7 | — | — | not mAP (D-033): val point AP 0.463; point P / R / F1 0.728 / 0.386 / 0.504 at conf 0.25; 165 epochs; best.pt recorded; Kaggle; registered |
 
 E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
 The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
@@ -557,6 +584,28 @@ Matching: IoU ≥ 0.5, each run at its own val-chosen operating confidence (OBSE
   optimistic; one seed per run; red-light val is 2 sessions / 31 boxes; `21_MACK_10` holds 465 of
   1,010 val boxes; the enhancement step's own cost is not timed. The two records carry the earlier
   limitation wording "Val chose E001's checkpoint", which means each run's checkpoint.
+
+### Model A tuning round 1 (E011–E019, D-038 / D-040)
+
+Kaggle version "D-039 round 1 E011-E019 (fix)", commit cf7bea9, 2× Tesla T4 with one run per GPU; 8 of 9
+runs finished, E018 not run (time). Val (324 v1 frames), best.pt, OBSERVED from the archived run records:
+
+| Model | Runs (seed 0 / 1 / 2) | Val mAP50-95 mean (range) | Val mAP50 mean | P mean | R mean |
+|---|---|---|---|---|---|
+| yolo26s | E011 / E016 / E019 | 0.5976 (0.0034) | 0.8352 | 0.7790 | 0.7794 |
+| yolo26m | E012 / E014 / E017 | 0.6113 (0.0142) | 0.8466 | 0.7730 | 0.8040 |
+| yolo26l | E013 / E015 / — | 0.6142 (0.0036) | 0.8517 | 0.7824 | 0.8206 |
+
+Selected: **yolo26m** (D-040 point 1). E001 0.6115 / 0.8527, E007 0.5993 / 0.8423 (mAP50-95 / mAP50).
+Ultralytics' val confusion matrices (best.pt; counts read from `val_best/confusion_matrix.png`, its internal
+operating point; 1010 val boxes), found / missed / false alarms: E011 793/217/231, E016 847/163/384,
+E019 830/180/249; E012 800/210/226, E014 849/161/332, E017 839/171/256; E013 859/151/272, E015 853/157/275.
+Mean per model: s 823/187/288, m 829/181/271, l 856/154/274 (yolo26l finds about 27 more lobsters than yolo26m
+at a similar false-alarm count; reported, not used to select).
+No run completed its schedule: all stopped by patience at epoch 26–41 of 60, best epochs 16–31 with the
+learning rate still 0.0010–0.0015 (of 0.002), and mosaic was never switched off (close_mosaic from epoch 51).
+This is the reason for the round-2 schedule (D-040 point 2). Seconds per epoch with two runs in parallel:
+m 189–201, l 202–206, s 188–201 (E017 ran alone at the end: 168). Kaggle quota: 12:00 of 30 h after round 1 (two GPUs counted once).
 
 ## Test-evaluation log
 
