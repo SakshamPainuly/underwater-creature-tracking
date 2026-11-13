@@ -1398,3 +1398,44 @@ Short, dated records of project decisions. New dataset versions must reference a
 - **Consequences:** 14 configs E030–E038 and E042–E046, the notebook, docs/EXPERIMENTS.md rows and the declaration below,
   all before any run. No change to v7, E006, E010 or any earlier result.
 
+## D-043 — Model A round-2 result: E027 (yolo26l, C4) selected and declared final candidate (2026-11-13, accepted)
+- **Status:** accepted 2026-11-13. Mechanical application of the accepted D-040 point 4 rule, fixed before any
+  round-2 run; the user approved registering round 2 and declaring the run the rule selects ("go ahead").
+  Extends D-040; supersedes D-038 point 7 / D-040 point 4's fallback (E012, E014, E017 are no longer the final
+  candidates). Nothing else in D-038–D-040 changes.
+- **Context (OBSERVED):**
+  1. Round 2 ran in Kaggle version "D-040 round 2 E020-E029 (97810a5)" (2× Tesla T4, two runs in parallel; Cell 1
+     00:34 UTC 2026-11-13, last run finished about 9.0 h later, inside the 9.5 h deadline). All 10 runs completed 30
+     epochs at commit 97810a5 (git dirty False in every run_record). All 10 packages match their sha256 locally;
+     run records and `results.csv` are archived in `experiments/records/E020`–`E029` and registered.
+  2. Val mAP50-95 of best.pt (bar 0.62542 = round-1 yolo26m mean 0.61127 + range 0.01415):
+
+     | Combination | yolo26m | yolo26l |
+     |---|---|---|
+     | C1 schedule only (control) | E020 0.6150 | E021 0.6171 |
+     | C2 + AdamW lr0 0.001 | E022 0.6197 | E023 0.6172 |
+     | C3 + mixup 0.1 | E024 0.6179 | E025 0.6227 |
+     | C4 + AdamW lr0 0.001, weight_decay 0.001, mixup 0.1 | E026 0.6219 | **E027 0.6280** |
+     | C5 + freeze 10 | E028 0.5799 | E029 0.5899 |
+
+  3. Only E027 clears the bar (0.6280, margin 0.0026). E027 val: mAP50 0.8537, P 0.7792, R 0.8307; Ultralytics val
+     confusion matrix of best.pt (read from `val_best/confusion_matrix.png`, same caveat as D-040): 847 found /
+     163 missed / 239 false alarms of 1010 val boxes (round-1 yolo26m mean 829 / 181 / 271). best.pt sha256
+     821bb767a2378269e212f94bedbb21385b6d678a0db2efb686d78d1b16634bea.
+  4. Patterns (single seeds, INFERRED, not tested): the completed schedule alone (C1) is within round-1 seed noise
+     for both models (m 0.6150 vs mean 0.61127; l 0.6171 vs mean 0.61422); C4 is the best combination for both
+     models; the frozen backbone (C5) is clearly worse for both (−0.03 to −0.04).
+- **Decision:**
+  1. **E027 is selected** (D-040 point 4: the only, hence the highest, run above the bar) and **declared alone** in
+     `experiments/final_candidates.csv` before any test evaluation: one seed, no mean or range.
+  2. **Final test (D-038 point 7, one run):** E027 is evaluated once on the v1 test and once on Zenodo `sk`, with the
+     operating confidence fixed on val; mAP50-95, mAP50, P, R reported. `scripts/final_test_eval.py` cannot evaluate
+     Zenodo `sk` yet; that change is a separate PR before the test run. E001 (v1) is compared on val (E027 0.6280 vs
+     E001 0.6115) and on its existing test result.
+  3. **Demo model:** E027 best.pt (replaces E017).
+- **LIMITATIONS:** single seed; the margin over the bar (0.0026) is smaller than round-1 yolo26m's seed range
+  (0.01415), so another seed of the same configuration could fall below it; 19 configurations were compared on the
+  same 324 val images, so E027's val score is optimistic and only its test result is unbiased. v1 limitations apply
+  (test sessions share sites with train sessions; substrate/visibility metadata mostly missing; zExtra excluded).
+- **Consequences:** E020–E029 registered with archived records; docs/EXPERIMENTS.md rows and result updated;
+  E027 row in `experiments/final_candidates.csv`. No test evaluation yet. Kaggle use about 9 h for round 2.
