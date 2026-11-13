@@ -107,7 +107,7 @@ to it and do not select. LIMITATION: up to 19 configurations selected on 324 val
 | C4 + AdamW lr0 0.001, weight_decay 0.001, mixup 0.1 | E026 0.6219 | **E027 0.6280** |
 | C5 + freeze 10 | E028 0.5799 | E029 0.5899 |
 
-Only **E027** (yolo26l, C4) is above the bar 0.62542 (0.6280, margin 0.0026): it is selected and declared alone (val mAP50 0.8537, P 0.7792, R 0.8307; confusion matrix 847 found / 163 missed / 239 false alarms of 1010 val boxes, round-1 yolo26m mean 829 / 181 / 271). It replaces E012/E014/E017 as the final candidate and the demo model. LIMITATION: single seed, small margin, and one of 19 configurations compared on the same 324 val images, so its val score is optimistic; only its test evaluation is unbiased.
+Only **E027** (yolo26l, C4) is above the bar 0.62542 (0.6280, margin 0.0026): it is selected and declared alone (val mAP50 0.8537, P 0.7792, R 0.8307; confusion matrix 847 found / 163 missed / 239 false alarms of 1010 val boxes, round-1 yolo26m mean 829 / 181 / 271). It replaces E012/E014/E017 as the final candidate and the demo model. LIMITATION: single seed, small margin, and one of 19 configurations compared on the same 324 val images, so its val score is optimistic; only its test evaluation is unbiased. Final test (2026-11-13, once per target, Test-evaluation log): v1 test mAP50-95 0.6966 (mAP50 0.9096); Zenodo `sk` mAP50-95 0.3892 (mAP50 0.5663).
 
 **E006 (Tritonia sea slugs, D-030), declared before any result:** selection metric val mAP50 of class
 `sea_slug`; also reported per class: P, R, mAP50-95 on val, and false positives on the confirmed-negative
@@ -251,7 +251,7 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | E024 | 2026-11-13 | E012 | yolo26m seed 0, 30 epochs, patience 30, C3 + mixup 0.1 (D-040 round 2) | v4 | 0.8494 | 0.6179 | 30 epochs (schedule complete, best epoch 23); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-043) |
 | E025 | 2026-11-13 | E013 | yolo26l seed 0, 30 epochs, patience 30, C3 + mixup 0.1 (D-040 round 2) | v4 | 0.8602 | 0.6227 | 30 epochs (schedule complete, best epoch 25); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-043) |
 | E026 | 2026-11-13 | E012 | yolo26m seed 0, 30 epochs, patience 30, C4 + AdamW lr0 0.001, weight_decay 0.001, mixup 0.1 (D-040 round 2) | v4 | 0.8515 | 0.6219 | 30 epochs (schedule complete, best epoch 20); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-043) |
-| E027 | 2026-11-13 | E013 | yolo26l seed 0, 30 epochs, patience 30, C4 + AdamW lr0 0.001, weight_decay 0.001, mixup 0.1 (D-040 round 2) | v4 | 0.8537 | 0.6280 | 30 epochs (schedule complete, best epoch 25); best.pt recorded; Kaggle, two runs in parallel; registered; **selected; declared final candidate (D-043)**; val confusion matrix 847 found / 163 missed / 239 false alarms of 1010 |
+| E027 | 2026-11-13 | E013 | yolo26l seed 0, 30 epochs, patience 30, C4 + AdamW lr0 0.001, weight_decay 0.001, mixup 0.1 (D-040 round 2) | v4 | 0.8537 | 0.6280 | 30 epochs (schedule complete, best epoch 25); best.pt recorded; Kaggle, two runs in parallel; registered; **selected; declared final candidate (D-043)**; val confusion matrix 847 found / 163 missed / 239 false alarms of 1010; final test 2026-11-13: v1 test mAP50-95 0.6966, Zenodo `sk` 0.3892 (Test-evaluation log) |
 | E028 | 2026-11-13 | E012 | yolo26m seed 0, 30 epochs, patience 30, C5 + freeze 10 (D-040 round 2) | v4 | 0.8313 | 0.5799 | 30 epochs (schedule complete, best epoch 25); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-043) |
 | E029 | 2026-11-13 | E013 | yolo26l seed 0, 30 epochs, patience 30, C5 + freeze 10 (D-040 round 2) | v4 | 0.8428 | 0.5899 | 30 epochs (schedule complete, best epoch 25); best.pt recorded; Kaggle, two runs in parallel; registered; not selected (D-043) |
 | E030 | 2026-11-12 | E010 | D-042 arm B, seed 0 | v7 | — | — | not mAP (D-033): val point AP 0.472; point P / R / F1 0.516 / 0.523 / 0.519 at conf 0.12; 100 epochs; best.pt recorded; Kaggle; registered |
@@ -638,6 +638,8 @@ m 189–201, l 202–206, s 188–201 (E017 ran alone at the end: 168). Kaggle q
 | 2026-10-18 | E005 | Final held-out test evaluation of the declared candidate after registration, with the recovered epoch-41 best.pt (D-027) | mAP50 0.8788; mAP50-95 0.6604; precision @ val-chosen conf 0.619 = 0.8411; recall = 0.7712; F1 = 0.8046 |
 | 2026-11-10 | E006 | Final held-out test evaluation of the declared Tritonia candidate (D-033): point eval against the MTrackJ crosses, 27 frames of the 3 test days, val threshold | not mAP (D-033): test point AP 0.248; point P / R / F1 @ val-chosen conf 0.06 = 0.3594 / 0.3622 / 0.3608 (128 predictions, 127 crosses, 46 matched) |
 | 2026-11-12 | E010 | Final held-out test evaluation of the second declared Tritonia candidate (val point AP 0.496 > E006's 0.403): point eval against the MTrackJ crosses, the same 27 test frames, val threshold | not mAP (D-033): test point AP 0.2145; point P / R / F1 @ val-chosen conf 0.16 = 0.3563 / 0.2441 / 0.2897 (87 predictions, 127 crosses, 31 matched) |
+| 2026-11-13 | E027 | Final held-out test evaluation of the declared Model A candidate (D-043), v1 test (`--target test`) | mAP50 0.9096; mAP50-95 0.6966; precision @ val-chosen conf 0.269 = 0.8478; recall = 0.8426; F1 = 0.8452 |
+| 2026-11-13 | E027 | Final held-out evaluation of the same candidate on the new-site Zenodo `sk` frames (`--target test_zenodo_sk`, D-031, D-043) | mAP50 0.5663; mAP50-95 0.3892; precision @ val-chosen conf 0.269 = 0.4341; recall = 0.6224; F1 = 0.5115 |
 
 E006 test evaluation (2026-11-10, OBSERVED in the Kaggle cell 18 output pasted by Anu): Kaggle interactive session (notebook `anusidhu7/notebookc47ea7c413`), evaluation commit `b1738df`, registered `best.pt` sha256 `6f6710d1…` (checked by cell 18; attached from the private Kaggle dataset `anusidhu7/uwct-e006-weights`, a copy of the local registered run folder, because the latest output of the training notebook holds a later re-run's `best.pt`), val threshold conf 0.06, attempt 1. Per-day test scores are in `test_point_scores.json` in the session output; not yet archived in the repo. LIMITATIONS: crosses are the ground truth and point precision is a lower bound (whether every slug was clicked is UNKNOWN, D-029); 27 frames from 3 days of one setup (new days, not new sites); training boxes are automatic and cover about half of the crosses (D-033). Test is lower than val (F1 0.361 vs 0.476, point AP 0.248 vs 0.403). The result changes neither the model nor the threshold.
 
@@ -646,6 +648,54 @@ E010 test evaluation (2026-11-12, OBSERVED in the Kaggle cell 18 output pasted b
 - Per test day (point P / R / F1, matched / crosses, predictions): 20130520 0.368 / 0.350 / 0.359 (7 / 20, 19); 20130521 0.217 / 0.370 / 0.274 (10 / 27, 46); 20130528 0.636 / 0.175 / 0.275 (14 / 80, 22). E006's per-day test scores were not archived, so the comparison is overall only.
 - E006 vs E010 on test (OBSERVED): point AP 0.248 vs 0.215; F1 0.361 vs 0.290; precision about equal (0.359 vs 0.356), recall lower for E010 (0.362 vs 0.244, 46 vs 31 matched). On val E010 was higher (0.496 vs 0.403). Test never chooses: both results are reported, and neither the models nor the thresholds change.
 - INFERRED: the val gain of E010 did not carry over to the test days; with 27 frames per split and one run per arm, the val difference was partly day-specific or noise (on val E010 was better on one day and worse on another). LIMITATIONS as for E006: crosses are the ground truth and point precision is a lower bound (D-029); 27 frames from 3 days of one setup (new days, not new sites); the fixed 20 × 17 px boxes are not drawn slug outlines (D-036).
+
+E027 test evaluations (2026-11-13, OBSERVED in the two final-test records and the notebook log): Kaggle
+notebook `sakshampainuly007/notebookc7645e72e4` (`notebooks/kaggle_final_test_E027.ipynb`), evaluation commit
+`a060c70` (clean; training commit `97810a5`), dataset v4 fingerprint `bbd4a8b1…` (frozen registry verified; all
+4 raw checks passed; `verify_yolo_dataset.py` printed VERIFIED, including `test_zenodo_sk` 428 / 285 / 143),
+`best.pt` sha256 `821bb767…` (equal to `run_record.json`; copied from the round-2 notebook output), operating
+confidence 0.269 (max mean F1 on val), one T4, attempt 1 for each target (`attempts.jsonl`: one start and one end
+each). Records: `experiments/records/E027/final_test_record.json` (8,814 B, sha256 `ac0e7aa2…`, v1 test) and
+`experiments/records/E027/final_test_zenodo_sk_record.json` (10,000 B, sha256 `f7252c70…`, Zenodo `sk`). Plots,
+prediction examples and the package `E027_final_test_package.zip` (sha256 `c72921ca…`, matches the notebook) are
+off-repo in `D:/uwct_runs/final_test_E027/`.
+
+| metric | E001 v1 test | E027 v1 test | E027 Zenodo `sk` |
+|---|---:|---:|---:|
+| images (negative) / boxes | 348 (27) / 1,512 | 348 (27) / 1,512 | 428 (285) / 143 |
+| mAP50 | 0.8974 | 0.9096 | 0.5663 |
+| mAP50-95 | 0.6832 | 0.6966 | 0.3892 |
+| operating conf (chosen on val) | 0.298 | 0.269 | 0.269 |
+| precision / recall / F1 @ operating conf | 0.8447 / 0.8127 / 0.8284 | 0.8478 / 0.8426 / 0.8452 | 0.4341 / 0.6224 / 0.5115 |
+| Ultralytics P / R (max-F1 conf on the evaluated split) | 0.8309 / 0.8208 | 0.8434 / 0.8477 | 0.7322 / 0.4895 |
+| confusion matrix TP / FP / FN (Ultralytics) | 1261 / 263 / 251 | 1289 / 232 / 223 | 90 / 119 / 53 |
+| E027 val mAP50-95 (for reference) | 0.6115 | 0.6280 | 0.6280 |
+
+- OBSERVED: on the v1 test E027 is higher than E001 on every metric in the table (mAP50-95 +0.0134), with fewer
+  false positives and fewer missed boxes. Test is higher than val for both models (E027 0.6966 vs 0.6280).
+- OBSERVED: on Zenodo `sk` mAP50-95 falls to 0.3892 and precision at the val-chosen confidence to 0.434; the
+  Ultralytics confusion matrix shows 119 false positives against 90 found lobsters, and 53 of 143 lobsters missed.
+- INFERRED: the detector does not transfer well to a new site, and the val-chosen operating confidence is too low
+  for `sk` (the max-F1 confidence on `sk` itself gives P 0.732 / R 0.490, but choosing it on `sk` is not allowed).
+- UNKNOWN — requires the per-image predictions, which the records do not keep: how many of the false positives fall
+  on the 285 lobster-free `sk` images and on the 27 negative v1 test images.
+- Declared before the run: these numbers are reported and change neither the model, the threshold nor the
+  selection (D-043). The comparison with E001 is not a selection: E001 and E027 differ in dataset (v1 → v4), model
+  size and tuning, and each is one seed.
+
+E027 test-evaluation limitations:
+
+- v1 test: sessions share sites (mostly also dates) with train sessions, so it measures new-session, not new-site
+  generalization (D-007); 13_SHRI_12 + 21_SUB6_03 hold 1,135 of 1,512 test boxes (D-008); substrate/visibility
+  metadata is mostly missing; zExtra is excluded.
+- Zenodo `sk` is the only new-site measurement: one site (other country, camera setup and image size, D-031),
+  labels from the Zenodo dataset, not our annotators; 143 boxes on 143 images, so false positives on the 285
+  lobster-free images weigh heavily (D-032). Training used Zenodo `mpa`, but no `sk` or `sk`-derived image.
+- Single seed; E027 was chosen among 19 configurations on the same 324 val images, so its val score is optimistic
+  (D-043); the test scores are the unbiased estimate.
+- Ultralytics-reported P / R use the confidence that maximizes F1 on the evaluated split; the operating point uses
+  the val-chosen 0.269.
+- Test results were not used for training, threshold selection, or model choice.
 
 E001 test-evaluation limitations:
 

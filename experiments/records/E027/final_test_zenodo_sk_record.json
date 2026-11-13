@@ -1,0 +1,257 @@
+{
+  "schema": "uwct.final_test_record/1",
+  "created_utc": "2026-11-13T12:32:42+00:00",
+  "label": "FINAL TEST EVALUATION",
+  "split": "test",
+  "target": "test_zenodo_sk",
+  "data_file": "data_test_zenodo_sk.yaml",
+  "experiment_id": "E027",
+  "run_name": "E027",
+  "declaration": {
+    "experiment_id": "E027",
+    "declared_utc": "2026-11-13T11:46:53Z",
+    "decision": "candidate",
+    "reason": "E027 YOLO26l round-2 C4 (AdamW lr0 0.001, weight_decay 0.001, mixup 0.1, 30 epochs) on v4 declared for the held-out final test after registration: only round-2 run above the D-040 bar (val mAP50-95 0.6280 > 0.62542); single seed (D-043); best.pt sha256 821bb767..."
+  },
+  "training_git_commit": "97810a5d71654981301ff19a95981a27664ac24c",
+  "evaluation_git": {
+    "commit": "a060c7091662a8279e99d443168c0718c12a3131",
+    "branch": "p4/colab-baseline",
+    "dirty": false
+  },
+  "run_record_best_sha256": "821bb767a2378269e212f94bedbb21385b6d678a0db2efb686d78d1b16634bea",
+  "evaluated_best_sha256": "821bb767a2378269e212f94bedbb21385b6d678a0db2efb686d78d1b16634bea",
+  "weights_recovery": null,
+  "dataset": {
+    "version": "v4",
+    "dataset_kind": "lobster_mixed",
+    "status": "frozen",
+    "frozen_registry_verified": true,
+    "fingerprint": "bbd4a8b172fd590b18d2e8c26be05c85cb3c3246a2e60a3b3513590b931cd13f",
+    "image_source": "mixed",
+    "mixed_manifest_sha256": "578de534dbbbe7bff2e57608b79cef6363d45a376ba0538db2d5b274f33606c6",
+    "dataset_dir": "/tmp/uwct_yolo/lobster_mixed_v4",
+    "splits_used_for_training": [
+      "train",
+      "val"
+    ],
+    "counts": {
+      "train": {
+        "images": 4111,
+        "positive": 3721,
+        "negative": 390,
+        "instances": 11784
+      },
+      "val": {
+        "images": 324,
+        "positive": 269,
+        "negative": 55,
+        "instances": 1010
+      }
+    },
+    "test_counts": {
+      "images": 428,
+      "positive": 143,
+      "negative": 285,
+      "instances": 143
+    }
+  },
+  "operating_conf": {
+    "value": 0.26926926926926925,
+    "chosen_on": "val",
+    "rule": "max mean F1 on val"
+  },
+  "metrics": {
+    "ultralytics_reported": {
+      "precision": 0.7322269883949807,
+      "recall": 0.48951048951048953,
+      "map50": 0.5662510155173601,
+      "map50_95": 0.38918232042337736,
+      "results_dict": {
+        "metrics/precision(B)": 0.7322269883949807,
+        "metrics/recall(B)": 0.48951048951048953,
+        "metrics/mAP50(B)": 0.5662510155173601,
+        "metrics/mAP50-95(B)": 0.38918232042337736,
+        "fitness": 0.38918232042337736
+      }
+    },
+    "at_val_conf": {
+      "conf": 0.26926926926926925,
+      "precision": 0.4341417996289154,
+      "recall": 0.6223776223776224,
+      "f1": 0.5114911006834562
+    },
+    "confusion_matrix": {
+      "matrix": [
+        [
+          90.0,
+          119.0
+        ],
+        [
+          53.0,
+          0.0
+        ]
+      ],
+      "axes": "rows = predicted, cols = true; classes + background (Ultralytics)"
+    },
+    "speed_ms_per_image": {
+      "preprocess": 0.7930277943922375,
+      "inference": 19.01987860280339,
+      "loss": 0.0005584696267968841,
+      "postprocess": 0.6562261658876506
+    },
+    "val_for_threshold": {
+      "precision": 0.7791807285837348,
+      "recall": 0.8306930693069307,
+      "map50": 0.8537401320028682,
+      "map50_95": 0.6279603999242002,
+      "results_dict": {
+        "metrics/precision(B)": 0.7791807285837348,
+        "metrics/recall(B)": 0.8306930693069307,
+        "metrics/mAP50(B)": 0.8537401320028682,
+        "metrics/mAP50-95(B)": 0.6279603999242002,
+        "fitness": 0.6279603999242002
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/predictions/zenodo__original__kso__sk_cam1_120824_rec017_frame_0027_jpeg.rf.7c41674d8cb1e1ecea72b7f6a2592527.jpg",
+      "size": 66667,
+      "sha256": "a4d80c702983bf8844ce9cc70afd70e093800f6f1a8fdd51e5ce3d3065c5c1c8"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/predictions/zenodo__original__kso__sk_cam2_120824_rec037_frame_0023_jpeg.rf.087bdf29ecbc9d41d5ab79033469824f.jpg",
+      "size": 55494,
+      "sha256": "51dc7a880839a0d5c6c5a1e169e56a28d9130076acf39459cc2abc80c2fe5976"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/predictions/zenodo__original__kso__sk_cam3_120824_rec024_frame_0023_jpeg.rf.56054bbb371db7e10fc0ab01d6410a5f.jpg",
+      "size": 27881,
+      "sha256": "2d02910d3876830ebd6d548b30f5371fee2d4078d4c8f5fa5a4e51a0bf167db6"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/predictions/zenodo__original__kso__sk_cam4_190824_rec056_frame_0016_jpeg.rf.ed557596e79d56970c5e01df563395c5.jpg",
+      "size": 36511,
+      "sha256": "ea83117534643325a3c4414d363b0f4728ed9def6acf15ef290e287fd74bb38f"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/predictions/zenodo__original__kso__sk_cam5_190824_rec067_frame_0021_jpeg.rf.d63b262cfca3dc6d6e94bd104ac370dd.jpg",
+      "size": 44880,
+      "sha256": "cae6324ef4b51045710c7c2f8bc045dec6f6ba37229f97e1090e51c96d1734fa"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/predictions/zenodo__original__kso__sk_cam7_120924_rec002_frame_0036_jpeg.rf.637af8463b3a42cf190b3fcb713abbb3.jpg",
+      "size": 33272,
+      "sha256": "0940aed22ec8f02caf30ae3150dc7544e3e2027732d2f426f08b99cdd90b32d8"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/predictions/zenodo__original__kso__sk_cam8_120924_rec032_frame_0040_jpeg.rf.859a47924f781b36deac0ae60df346db.jpg",
+      "size": 29103,
+      "sha256": "e9cb91e684a2ad5c472a052ddad08de2c756a45f0a64a129363f6bc9bc5b463d"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/predictions/zenodo__original__kso__sk_cam9_120924_rec022_frame_0044_jpeg.rf.3c5d4607270c50b1b86039407e8b31d0.jpg",
+      "size": 42514,
+      "sha256": "f30640d64623120ae4dd5bb6db2ef77013686b6771ddaf7ebef3276f3422410c"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/BoxF1_curve.png",
+      "size": 108814,
+      "sha256": "436ea7ba38b992a771470a261e031ce469986242c267d2dfce06c22c1bb3f241"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/BoxPR_curve.png",
+      "size": 89968,
+      "sha256": "0137b8ab6ae1968f389251e3dbba2750f7b1177b737361b3b52174d74db5a8fc"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/BoxP_curve.png",
+      "size": 113318,
+      "sha256": "adbb14df5a997375a598d4b923bc118e50f89bd1bd2401ea931fa4fd51ef4297"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/BoxR_curve.png",
+      "size": 107988,
+      "sha256": "823157b72277c8b3416d5773481c7741612f9a5fbb93362d42f5ef814cdb18c3"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/confusion_matrix.png",
+      "size": 94431,
+      "sha256": "8137b910c00cc46d4e326f804e29de00efdd2f29f0020761afcbbd996bf1585d"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/confusion_matrix_normalized.png",
+      "size": 99313,
+      "sha256": "0cf1fa651658c0d1e4879e96bfdaf2de4186c0d68a4fc68f590de51e521ef862"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/val_batch0_labels.jpg",
+      "size": 320301,
+      "sha256": "4ff0ac04997d1c81e046ace1b2f76c7770417d63e2b80a817dc174d69f244f97"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/val_batch0_pred.jpg",
+      "size": 353277,
+      "sha256": "ada7c1b2b841ddbe9c98d60fbaa4b8b2deb99a63fabf592eeefea29699f762db"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/val_batch1_labels.jpg",
+      "size": 303630,
+      "sha256": "ad81ca1e1dda64c0cba1f0d41aff133644e632b564123427f689b5ed2b5249e0"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/val_batch1_pred.jpg",
+      "size": 308302,
+      "sha256": "dcbb6f41a6a6f79219fb822edb4e99a9e54c7cdd486befd8d05d497647ddda53"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/val_batch2_labels.jpg",
+      "size": 392457,
+      "sha256": "9283f299fe0d188c8a96234ef2d360b946c361a76446e9eb4c53e74f9470575b"
+    },
+    {
+      "path": "/kaggle/working/uwct_runs/E027/final_test_zenodo_sk/test/val_batch2_pred.jpg",
+      "size": 393145,
+      "sha256": "a55e27157c3c7795b1745db3d88baeca9d1ed26b70aa691f8c8a104c0c52c941"
+    }
+  ],
+  "attempts_including_this_one": 1,
+  "environment": {
+    "timestamp_utc": "2026-11-13T12:32:42+00:00",
+    "os": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "python": "3.13.16",
+    "cpu_count": 4,
+    "torch": "2.11.0+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "cudnn_version": 92700,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      }
+    ],
+    "ultralytics": "8.4.155",
+    "nvidia_smi": [
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      },
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      }
+    ]
+  },
+  "limitations": [
+    "Zenodo sk is an external new site (other country, camera setup and image size; D-031): the only new-site measurement, but one site only.",
+    "sk labels come from the Zenodo dataset, not from our annotators; 428 images, of which 143 contain a lobster (143 boxes, D-032), so false positives on lobster-free images weigh heavily.",
+    "Training used Zenodo mpa (the other Zenodo site) but no sk image or sk-derived image (D-031).",
+    "ultralytics_reported precision/recall are at the confidence that maximizes F1 on sk itself (Ultralytics convention); the operating point is at_val_conf, chosen on our val split."
+  ],
+  "log_to": "docs/EXPERIMENTS.md -> Test-evaluation log"
+}
