@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-r"""Run a declared tracker-setting grid on the val detections and apply the declared selection (D-043 phase 4).
+r"""Run a declared tracker-setting grid on the val detections and apply the declared selection (D-044 phase 4).
 
     python scripts/sweep_tritonia_tracking.py --config configs/tracking/T001_tritonia_val_grid.json \
         --detections D:\uwct_tritonia\runs\d043_val_detections\d043_val_detections --out D:\uwct_tritonia\runs\T001

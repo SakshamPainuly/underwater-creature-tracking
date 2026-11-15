@@ -1398,7 +1398,9 @@ Short, dated records of project decisions. New dataset versions must reference a
 - **Consequences:** 14 configs E030–E038 and E042–E046, the notebook, docs/EXPERIMENTS.md rows and the declaration below,
   all before any run. No change to v7, E006, E010 or any earlier result.
 
-## D-043 — Tritonia sparse-frame tracking: E010 detections → per-camera tracks → trajectories, scored against the MTrackJ tracks (2026-11-13, proposed)
+## D-044 — Tritonia sparse-frame tracking: E010 detections → per-camera tracks → trajectories, scored against the MTrackJ tracks (2026-11-13, proposed)
+
+> **Renumbered 2026-11-14** (CLAUDE.md §10, before PR #27 merges): numbered **D-043** until then; `p4/colab-baseline` (#29) had meanwhile used D-043 for the Model A round-2 result. Content otherwise unchanged. Everything produced under the old number keeps it: the configs `configs/tracking/T001_*.json` and `T002_*.json` (their sha256 is in the run records), the archived records in `experiments/records/T001/`, `T002/` and `tracking_d043/`, `data/processed/tritonia_tracking/*/sequence.json`, the charts in `docs/reports/tritonia_tracking/` and the off-repo files on D:. The phase-6 final test ran with `--final D-043`; the scripts now take `--final D-044`, and `tritonia_tracking_report.py` accepts test results recorded under either number. Tracking run IDs T001 / T002 are unchanged.
 - **Status:** proposed by Anu on `anu/e006-results`. The plan below (phases 1–6, HOTA as selection metric, an
   own standard-library tracker) is user-approved (Anu, 2026-11-13, "proceed"). Tracking runs get their own ID
   series `T001`, `T002`, … (Saksham agreed, as reported by Anu, 2026-11-13): configs in `configs/tracking/`,
@@ -1422,9 +1424,9 @@ Short, dated records of project decisions. New dataset versions must reference a
      (frame, sha256), `gt_points.csv` (day, camera, track, frame, x, y) and `sequence.json`
      (`scripts/make_tritonia_sequence.py`, `src/tracking/sequences.py`). A track's camera is the camera
      holding most of its points. The small files are kept in `data/processed/tritonia_tracking/val/`. Test
-     days are extracted only for the final test (the script refuses `--split test` without `--final D-043`).
+     days are extracted only for the final test (the script refuses `--split test` without `--final D-044`).
   2. **Detections (phase 2, Kaggle GPU):** E010's registered `best.pt` on every val frame, imgsz 640,
-     conf 0.001, predictions saved per frame. The detector is fixed: no retraining in D-043.
+     conf 0.001, predictions saved per frame. The detector is fixed: no retraining in D-044.
   3. **Tracker and evaluation (phase 3, `src/tracking/`, local CPU, unit-tested):** per camera, detections
      are linked frame to frame by optimal assignment on point distance, with 4 settings (confidence
      threshold, distance gate in px, maximum gap in frames, minimum track length). Scores: **HOTA**, IDF1,

@@ -43,7 +43,7 @@ class DetectionChecksTest(unittest.TestCase):
         (self.seq / "sequence.json").write_text(json.dumps({**self.meta, "split": "test"}), encoding="utf-8")
         with self.assertRaises(D.DetectionError):
             D.load_sequence(self.seq)
-        D.load_sequence(self.seq, final="D-043")
+        D.load_sequence(self.seq, final="D-044")
 
     def test_weights_sha_and_prediction_summary(self):
         w = self.tmp / "best.pt"

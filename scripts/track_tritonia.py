@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-r"""Track Tritonia detections per camera and score them against the MTrackJ tracks (D-043 phase 3). Local CPU.
+r"""Track Tritonia detections per camera and score them against the MTrackJ tracks (D-044 phase 3). Local CPU.
 
     python scripts/track_tritonia.py --sequence data/processed/tritonia_tracking/val \
         --detections <unzipped d043_val_detections> --conf 0.16 --gate-px 12 --max-gap 8 --min-len 3 --out <new dir>
@@ -7,7 +7,7 @@ r"""Track Tritonia detections per camera and score them against the MTrackJ trac
 --mode tracker (default) links E010's detections; --mode no-link makes every detection its own track (floor);
 --mode gt feeds the clicks themselves through the tracker (ceiling: tracker alone; --detections not used, --conf
 ignored). Scores (HOTA, IDF1, MOTA, ...) only on clicked frames, per camera, per day, mean over days. Writes
-out/tracks.csv and out/scores.json. Refuses a test sequence without --final D-043 (rule 7). Val tuning only
+out/tracks.csv and out/scores.json. Refuses a test sequence without --final D-044 (rule 7). Val tuning only
 through the grid declared in docs/EXPERIMENTS.md (phase 4). Sparse-frame/timelapse analysis, not video tracking.
 """
 

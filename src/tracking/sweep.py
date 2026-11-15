@@ -1,4 +1,4 @@
-"""Declared tracker-setting grid on val and its selection rule (D-043 phase 4), standard library only.
+"""Declared tracker-setting grid on val and its selection rule (D-044 phase 4), standard library only.
 
 A grid config (configs/tracking/T###_*.json) lists the values of the 4 tracker settings; every combination is run
 on the same val detections. Selection (declared before the run, docs/EXPERIMENTS.md): highest mean-over-days HOTA;

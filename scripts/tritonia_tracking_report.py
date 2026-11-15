@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-r"""Charts and tables of the D-043 Tritonia tracking results, val vs the final test (reporting only).
+r"""Charts and tables of the D-044 Tritonia tracking results, val vs the final test (reporting only).
 
     python scripts/tritonia_tracking_report.py --test-run D:\uwct_tritonia\runs\T002_test \
         --test-refs D:\uwct_tritonia\runs\T002_test_ref_no-link D:\uwct_tritonia\runs\T002_test_ref_gt \
         --test-trajectories D:\uwct_tritonia\runs\T002_test_trajectories --out D:\uwct_tritonia\runs\T002_test_report
 
 Reads only logged results: val from experiments/records/T001/ and experiments/records/tracking_d043/phase5/, test
-from the given folders (scores.json / summary.json of the single final test, D-043 phase 6). Writes out/charts/*.svg
+from the given folders (scores.json / summary.json of the single final test, D-044 phase 6). Writes out/charts/*.svg
 (3 bar charts, dataviz reference palette slots 1-2: val blue, test orange) and out/tables.md + out/tables.csv.
 Nothing here changes a setting; the test result is reported, never used to choose (rule 7). Px only, no units.
 """
@@ -94,7 +94,8 @@ def main():
     tf, tc = load(args.test_refs[0] / "scores.json"), load(args.test_refs[1] / "scores.json")
     tt = load(args.test_trajectories / "summary.json")
     for s, want in ((ts, "tracker"), (tf, "no-link"), (tc, "gt")):
-        if s["split"] != "test" or s["final"] != "D-043" or s["source"]["mode"] != want:
+        # The single final test ran as "D-043" (this decision's number before the 2026-11-14 renumbering).
+        if s["split"] != "test" or s["final"] not in ("D-044", "D-043") or s["source"]["mode"] != want:
             sys.exit(f"FAILED: unexpected test result file (mode {s['source']['mode']}, split {s['split']})")
     if {k: ts["params"][k] for k in ("conf", "gate_px", "max_gap", "min_len")} != vs["params"]:
         sys.exit("FAILED: the test run did not use the T002 settings")
@@ -106,7 +107,7 @@ def main():
                      "clicks as detections": tc["mean_over_days"]["HOTA"]}}
     (args.out / "charts").mkdir(parents=True)
     legend = [("val (3 days, used to choose settings)", BLUE), ("final test (3 days, run once)", ORANGE)]
-    note = "Tritonia sparse-frame/timelapse tracking (15 s per frame), scored on clicked frames, 10 px; D-043."
+    note = "Tritonia sparse-frame/timelapse tracking (15 s per frame), scored on clicked frames, 10 px; D-044."
     charts = {
         "1_val_vs_test_metrics.svg": bar_chart(
             "T002 tracker: val vs final test", "Mean over 3 days; higher is better (0 to 1)", list(METRICS),
@@ -152,7 +153,7 @@ def main():
         wr = csv.DictWriter(f, fieldnames=keys, lineterminator="\n")
         wr.writeheader()
         wr.writerows({k: (round(v, 4) if isinstance(v, float) else v) for k, v in r.items()} for r in rows)
-    md = ["# Tritonia tracking (D-043): T002, val vs final test", "",
+    md = ["# Tritonia tracking (D-044): T002, val vs final test", "",
           "Final test run once (2026-11-13), settings frozen before it (T002 = T001's val choice: conf 0.16, gate 20 px, "
           "max gap 60, min length 10) on E010 detections. Scored on clicked frames, 10 px, cameras summed per day. "
           "Sparse-frame/timelapse analysis (15 s per frame); px only. Test sessions are new days of the same setup "

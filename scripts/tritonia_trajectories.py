@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-r"""Trajectory statistics and figures for Tritonia tracks vs the clicked tracks (D-043 phase 5). Local CPU.
+r"""Trajectory statistics and figures for Tritonia tracks vs the clicked tracks (D-044 phase 5). Local CPU.
 
     python scripts/tritonia_trajectories.py --sequence data/processed/tritonia_tracking/val \
         --frames D:\uwct_tritonia\sequences\val --tracks D:\uwct_tritonia\runs\T001\selected\tracks.csv \
@@ -8,7 +8,7 @@ r"""Trajectory statistics and figures for Tritonia tracks vs the clicked tracks 
 Writes out/trajectories_clicks.csv and out/trajectories_tracker.csv (one row per track: points, duration_s,
 path_px, net_px, median step speed px/s), out/summary.json (per day, matched-track comparison, inputs, git) and
 out/figures/<day>.svg (+ <day>_preview.png, a raster check image without text). Statistics use each day's clicked
-frames only. Px and px/s only (rule 9). Refuses an existing --out, and a test sequence unless --final D-043
+frames only. Px and px/s only (rule 9). Refuses an existing --out, and a test sequence unless --final D-044
 (the approved final test, reporting only: nothing may be tuned on it, rule 7).
 """
 
@@ -66,14 +66,14 @@ def main():
     ap.add_argument("--tracker-id", required=True)
     ap.add_argument("--match-px", type=float, default=10.0)
     ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument("--final", help="D-043, only for the approved final test (reporting)")
+    ap.add_argument("--final", help="D-044, only for the approved final test (reporting)")
     args = ap.parse_args()
     if args.out.exists():
         sys.exit(f"REFUSED: {args.out} already exists; choose a new folder")
     try:
         meta = T.load_meta(args.sequence)
-        if meta["split"] != "val" and not (meta["split"] == "test" and args.final == "D-043"):
-            sys.exit("REFUSED: val only, or the test sequence with --final D-043 (rule 7)")
+        if meta["split"] != "val" and not (meta["split"] == "test" and args.final == "D-044"):
+            sys.exit("REFUSED: val only, or the test sequence with --final D-044 (rule 7)")
         if sha256_file(args.tracks) != args.tracks_sha256:
             sys.exit(f"FAILED: {args.tracks} is not the tracks file named by --tracks-sha256")
         with open(args.sequence / "gt_points.csv", newline="", encoding="utf-8") as f:
@@ -126,7 +126,7 @@ def main():
             sys.exit(f"FAILED: {png} differs from the manifest")
         w, h, px = read_png_gray(png)
         sub = (f"Tracker {args.tracker_id}: conf 0.16, gate 20 px, max gap 60, min length 10 (val-selected, T001)."
-               + (" FINAL TEST, run once (D-043)." if meta["split"] == "test" else ""))
+               + (" FINAL TEST, run once (D-044)." if meta["split"] == "test" else ""))
         (args.out / "figures" / f"{day}.svg").write_text(
             J.day_svg(day, w, h, px, mid, gt_all, tr_all, cad, sub), encoding="utf-8")
         (args.out / "figures" / f"{day}_preview.png").write_bytes(J.preview_png(w, h, px, gt_all, tr_all, cad))
@@ -137,7 +137,7 @@ def main():
             wr = csv.DictWriter(f, fieldnames=FIELDS, lineterminator="\n")
             wr.writeheader()
             wr.writerows(rows)
-    summary.update({"decision": "D-043", "phase": 5 if meta["split"] == "val" else 6, "split": meta["split"],
+    summary.update({"decision": "D-044", "phase": 5 if meta["split"] == "val" else 6, "split": meta["split"],
                     "final": args.final, "git": git_state(),
                     "inputs": {"sequence_manifest_sha256": meta["manifest_sha256"],
                                "gt_points_sha256": meta["gt_points_sha256"], "tracks_sha256": args.tracks_sha256},

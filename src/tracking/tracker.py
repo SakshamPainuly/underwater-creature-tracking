@@ -1,9 +1,9 @@
-"""Point tracker for Tritonia sparse-frame/timelapse sequences (D-043 phase 3), standard library only.
+"""Point tracker for Tritonia sparse-frame/timelapse sequences (D-044 phase 3), standard library only.
 
 Per camera, frame by frame: detections at or above `conf` are assigned to open tracks by minimum total distance
 (optimal assignment) between each track's last position and the detection, only within `gate_px`. Unassigned
 detections open new tracks; a track not extended for more than `max_gap` frames is closed. Tracks with fewer than
-`min_len` detections are dropped. Constant-position model: Tritonia moves a median 2-4 px per click (D-043).
+`min_len` detections are dropped. Constant-position model: Tritonia moves a median 2-4 px per click (D-044).
 `no_link` is the floor reference: every detection is its own track. Deterministic for the same input.
 """
 

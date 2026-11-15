@@ -1,11 +1,11 @@
-"""Tracking metrics for points (D-043): HOTA, CLEAR (MOTA, ID switches, MT/PT/ML) and Identity (IDF1).
+"""Tracking metrics for points (D-044): HOTA, CLEAR (MOTA, ID switches, MT/PT/ML) and Identity (IDF1).
 
 Definitions follow TrackEval (Luiten et al., HOTA, IJCV 2021; Ristani et al., IDF1, 2016; Bernardin & Stiefelhagen,
 CLEAR MOT, 2008) with boxes replaced by points:
 - similarity of a prediction and a click at distance d: max(0, 1 - d / match_px) (match_px = 10, as D-033);
 - HOTA: global alignment score, optimal per-frame matching on alignment x similarity, 19 alphas 0.05..0.95;
 - CLEAR and Identity: a pair counts when d <= match_px.
-Only the given evaluation frames are scored (clicked frames, D-043). A sequence is one camera of one day.
+Only the given evaluation frames are scored (clicked frames, D-044). A sequence is one camera of one day.
 Inputs: frames (list of t), gt and pred as {t: [(id, x, y), ...]}. Results carry raw counts so sequences combine
 exactly (sums; AssA and LocA weighted by TP), as TrackEval combines sequences.
 """

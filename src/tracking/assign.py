@@ -1,4 +1,4 @@
-"""Optimal one-to-one assignment (Hungarian / Kuhn-Munkres with potentials), standard library only (D-043).
+"""Optimal one-to-one assignment (Hungarian / Kuhn-Munkres with potentials), standard library only (D-044).
 
 linear_sum_assignment(cost) minimises the total cost of a rectangular matrix and returns min(n, m) pairs (row, col),
 sorted. Costs must be finite: callers give forbidden pairs a large cost and drop them afterwards. O(n^2 m), n <= m.

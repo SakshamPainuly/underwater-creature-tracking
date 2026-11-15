@@ -1,10 +1,10 @@
 # Pipeline stages and file schemas
 
 Stages communicate through files (CLAUDE.md §7). This file documents the schemas as they are created; so far the
-Tritonia tracking stage (D-043). Frames are 15 s apart: sparse-frame/timelapse analysis, never "video tracking".
+Tritonia tracking stage (D-044). Frames are 15 s apart: sparse-frame/timelapse analysis, never "video tracking".
 Positions are in px of the 1056 × 480 montage; no physical units (rule 9).
 
-## Tritonia tracking (D-043)
+## Tritonia tracking (D-044)
 
 ```
 raw TIFF stack + MTrackJ .mdf  --make_tritonia_sequence.py-->  sequence folder (frames, manifest, ground truth)
@@ -12,7 +12,7 @@ sequence folder + E010 best.pt  --predict_tritonia_sequence.py (GPU)-->  detecti
 sequence folder + detections   --track_tritonia.py (CPU)-->  tracks.csv + scores.json
 ```
 
-Cameras: 3 × 2 montage, seams at x = 351.5 / 703.5 and y = 240 (OBSERVED, D-043); ids 0 1 2 top, 3 4 5 bottom
+Cameras: 3 × 2 montage, seams at x = 351.5 / 703.5 and y = 240 (OBSERVED, D-044); ids 0 1 2 top, 3 4 5 bottom
 (`tracking.sequences.camera_of`). A ground-truth track belongs to the camera holding most of its points; a
 detection to the camera its centre lies in.
 
@@ -49,4 +49,4 @@ Each score block holds HOTA, DetA, AssA, LocA, `HOTA_alpha` (19 alphas), MOTA, M
 GT_tracks, MT, PT, ML, IDF1, IDP, IDR, IDTP, IDFN, IDFP (`tracking.metrics`). Scored only on evaluation frames
 (frames with at least one click that day); a prediction matches a click at distance d with similarity
 max(0, 1 − d / match_px) (HOTA) or when d ≤ match_px (CLEAR, Identity). Days combine cameras by summing counts;
-`mean_over_days` is the unweighted mean of the per-day scores (the D-043 selection metric is its HOTA).
+`mean_over_days` is the unweighted mean of the per-day scores (the D-044 selection metric is its HOTA).

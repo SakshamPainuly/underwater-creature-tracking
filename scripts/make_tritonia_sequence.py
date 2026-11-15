@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-r"""Extract full-day Tritonia frame sequences + MTrackJ ground truth for tracking (D-043 phase 1).
+r"""Extract full-day Tritonia frame sequences + MTrackJ ground truth for tracking (D-044 phase 1).
 
     python scripts/make_tritonia_sequence.py --split val --split-version v8 \
         --out D:\uwct_tritonia\sequences\val [--root D:\uwct_tritonia\raw\tritonia]
@@ -23,7 +23,7 @@ from dataset_audit.mtrackj import MtrackjError, read_mdf
 from dataset_audit.versioning import version_dir
 from tracking.sequences import SequenceError, build_sequence
 
-DECISION = "D-043"
+DECISION = "D-044"
 
 
 def main():

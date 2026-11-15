@@ -551,7 +551,7 @@ the notebook's cell 9 summary (`d041_summary.json`).
 - LIMITATION: 27 val frames from 3 days of one setup; 3 seeds; 20130524 has only 15 crosses. Val numbers only
   (rule 7).
 
-### D-043: Tritonia tracking, phase 2 detections and phase 3 pipeline check (val, not tuned)
+### D-044: Tritonia tracking, phase 2 detections and phase 3 pipeline check (val, not tuned)
 
 Sparse-frame/timelapse analysis (15 s per frame), val days only; no test day was extracted or read.
 - **Phase 2 (OBSERVED):** E010's registered `best.pt` (sha256 `48d72b79…`, as `experiments/registry.csv`) on all 7,728
@@ -579,13 +579,13 @@ Sparse-frame/timelapse analysis (15 s per frame), val days only; no test day was
   conf 0.16 the detections match 36 % of the clicks (8,106 of 22,390) with 7,264 unmatched detections, so DetA is
   0.155. 20130529 is the best day and 20130524 the worst, as in E010's val point scores. With perfect detections
   (ceiling) the tracker still splits tracks (AssA 0.599, 517 tracks for 162): the maximum gap of 8 frames is shorter
-  than the click gaps (median 16 frames, D-043).
+  than the click gaps (median 16 frames, D-044).
 - INFERRED: improving detection matters more than tuning the tracker; phase 4 should include longer gaps.
 - LIMITATIONS: unmatched detections are an upper bound on false positives (UNKNOWN whether every slug was clicked,
   D-029); MOTA is negative because unmatched detections outnumber correct ones minus switches; 3 val days of one
   setup; val numbers only (rule 7).
 
-**Tritonia tracking grid T001 (D-043 phase 4), declared 2026-11-13 before the run:** config
+**Tritonia tracking grid T001 (D-044 phase 4), declared 2026-11-13 before the run:** config
 `configs/tracking/T001_tritonia_val_grid.json`, run by `scripts/sweep_tritonia_tracking.py` on the phase-2 val
 detections (E010, fixed) named by their sha256 in the config. Grid, every combination (81 settings): conf
 0.10 / 0.16 / 0.25 × gate 8 / 12 / 20 px × maximum gap 8 / 20 / 60 frames × minimum length 1 / 3 / 10 detections.
@@ -651,7 +651,7 @@ Dr. Wyeth's data).
 
 **Phase 6, final test of T002 (OBSERVED, 2026-11-13; run once, user-approved; logged below in the test-evaluation
 log):** T002 was declared in `experiments/final_candidates.csv` before any test frame was extracted. The 3 v8 test
-days (20130520, 20130521, 20130528; 6,316 frames, 15,105 clicks, 187 tracks) were extracted with `--final D-043`
+days (20130520, 20130521, 20130528; 6,316 frames, 15,105 clicks, 187 tracks) were extracted with `--final D-043` (this decision's number at the time; renumbered D-044 on 2026-11-14)
 (raw folder unchanged), uploaded privately and detected on Kaggle (Tesla T4, `notebooks/kaggle_tritonia_tracking_test.ipynb`
 at commit `f27e82e`, clean, 85 s; download sha256 `c915a6fb…`, byte-identical copy in
 `D:\uwct_tritonia\runs\d043_test_detections\`). Tracked once on this PC with the T002 settings read from its config
@@ -741,7 +741,7 @@ m 189–201, l 202–206, s 188–201 (E017 ran alone at the end: 168). Kaggle q
 | 2026-10-18 | E005 | Final held-out test evaluation of the declared candidate after registration, with the recovered epoch-41 best.pt (D-027) | mAP50 0.8788; mAP50-95 0.6604; precision @ val-chosen conf 0.619 = 0.8411; recall = 0.7712; F1 = 0.8046 |
 | 2026-11-10 | E006 | Final held-out test evaluation of the declared Tritonia candidate (D-033): point eval against the MTrackJ crosses, 27 frames of the 3 test days, val threshold | not mAP (D-033): test point AP 0.248; point P / R / F1 @ val-chosen conf 0.06 = 0.3594 / 0.3622 / 0.3608 (128 predictions, 127 crosses, 46 matched) |
 | 2026-11-12 | E010 | Final held-out test evaluation of the second declared Tritonia candidate (val point AP 0.496 > E006's 0.403): point eval against the MTrackJ crosses, the same 27 test frames, val threshold | not mAP (D-033): test point AP 0.2145; point P / R / F1 @ val-chosen conf 0.16 = 0.3563 / 0.2441 / 0.2897 (87 predictions, 127 crosses, 31 matched) |
-| 2026-11-13 | T002 | Final held-out test of the declared Tritonia tracker (D-043 phase 6; settings chosen on val by T001, frozen before test): E010 detections on all 6,316 frames of the 3 test days, tracked once, scored on the clicked frames | not mAP: mean HOTA 0.091 (DetA 0.067, AssA 0.122), IDF1 0.130, MOTA −0.444, 289 ID switches; val 0.168 / 0.238; clicks-as-detections reference 0.864 (records `experiments/records/T002/`) |
+| 2026-11-13 | T002 | Final held-out test of the declared Tritonia tracker (D-044 phase 6; settings chosen on val by T001, frozen before test): E010 detections on all 6,316 frames of the 3 test days, tracked once, scored on the clicked frames | not mAP: mean HOTA 0.091 (DetA 0.067, AssA 0.122), IDF1 0.130, MOTA −0.444, 289 ID switches; val 0.168 / 0.238; clicks-as-detections reference 0.864 (records `experiments/records/T002/`) |
 
 E006 test evaluation (2026-11-10, OBSERVED in the Kaggle cell 18 output pasted by Anu): Kaggle interactive session (notebook `anusidhu7/notebookc47ea7c413`), evaluation commit `b1738df`, registered `best.pt` sha256 `6f6710d1…` (checked by cell 18; attached from the private Kaggle dataset `anusidhu7/uwct-e006-weights`, a copy of the local registered run folder, because the latest output of the training notebook holds a later re-run's `best.pt`), val threshold conf 0.06, attempt 1. Per-day test scores are in `test_point_scores.json` in the session output; not yet archived in the repo. LIMITATIONS: crosses are the ground truth and point precision is a lower bound (whether every slug was clicked is UNKNOWN, D-029); 27 frames from 3 days of one setup (new days, not new sites); training boxes are automatic and cover about half of the crosses (D-033). Test is lower than val (F1 0.361 vs 0.476, point AP 0.248 vs 0.403). The result changes neither the model nor the threshold.
 

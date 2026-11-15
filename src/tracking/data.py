@@ -1,6 +1,6 @@
-"""Read a Tritonia sequence's ground truth and per-frame detections; run and score tracking per camera (D-043).
+"""Read a Tritonia sequence's ground truth and per-frame detections; run and score tracking per camera (D-044).
 
-Evaluation frames of a day = frames with at least one MTrackJ click in any camera (each day's own cadence, D-043).
+Evaluation frames of a day = frames with at least one MTrackJ click in any camera (each day's own cadence, D-044).
 A ground-truth point belongs to its track's camera (gt_points.csv); a detection to the camera its centre lies in.
 """
 

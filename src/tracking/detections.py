@@ -1,4 +1,4 @@
-"""Checks around E010 detection on a Tritonia sequence (D-043 phase 2), standard library only.
+"""Checks around E010 detection on a Tritonia sequence (D-044 phase 2), standard library only.
 
 The Ultralytics call itself lives in scripts/predict_tritonia_sequence.py (GPU side, CLAUDE.md §7). Here: verify the
 sequence folder against its manifest and the weights against their registered sha256 before any prediction, and
@@ -12,7 +12,7 @@ import hashlib
 import json
 from pathlib import Path
 
-FINAL_DECISION = "D-043"
+FINAL_DECISION = "D-044"
 
 
 class DetectionError(ValueError):

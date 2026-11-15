@@ -13,7 +13,7 @@ GRID = {"conf": [0.1, 0.16], "gate_px": [8, 12], "max_gap": [8], "min_len": [1, 
 
 
 def cfg(**over):
-    c = {"id": "T009", "decision": "D-043", "split": "val", "sequence": "x", "sequence_manifest_sha256": "a",
+    c = {"id": "T009", "decision": "D-044", "split": "val", "sequence": "x", "sequence_manifest_sha256": "a",
          "gt_points_sha256": "b", "detections": {}, "grid": GRID, "match_px": 10, "selection": "declared"}
     c.update(over)
     return c

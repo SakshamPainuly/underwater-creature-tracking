@@ -1,4 +1,4 @@
-"""Full-day Tritonia frame sequences and their MTrackJ ground-truth points (D-043 phase 1), standard library only.
+"""Full-day Tritonia frame sequences and their MTrackJ ground-truth points (D-044 phase 1), standard library only.
 
 A sequence is every page of a day's TIFF stack written as a PNG, plus the hand-clicked MTrackJ points of that
 day as tracking ground truth. Frames are 15 s apart: sparse-frame/timelapse analysis, not video tracking.

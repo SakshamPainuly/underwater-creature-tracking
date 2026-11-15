@@ -1,4 +1,4 @@
-"""Trajectory statistics and overlay figures for Tritonia tracks (D-043 phase 5), standard library only.
+"""Trajectory statistics and overlay figures for Tritonia tracks (D-044 phase 5), standard library only.
 
 Statistics are computed on each day's evaluation frames only (the clicked frames), so clicked and tracked paths are
 sampled alike. A step is two consecutive points of one track at most 2 x the day's click cadence apart; longer

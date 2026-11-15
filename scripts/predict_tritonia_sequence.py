@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-r"""Run a registered Tritonia detector on every frame of a sequence (D-043 phase 2). GPU side (Ultralytics).
+r"""Run a registered Tritonia detector on every frame of a sequence (D-044 phase 2). GPU side (Ultralytics).
 
     python scripts/predict_tritonia_sequence.py --sequence <dir with sequence.json, manifest.csv, images/> \
         --weights E010/train/weights/best.pt --weights-sha256 <registered sha> --out <new dir> [--limit 50]
 
 Checks first: the sequence against its manifest (every frame's sha256), the weights against the registered
-sha256, and refuses a test sequence without --final D-043 (rule 7). Then writes out/predictions/<frame>.txt
+sha256, and refuses a test sequence without --final D-044 (rule 7). Then writes out/predictions/<frame>.txt
 (`cls x y w h conf`, normalised, conf >= 0.001, as the D-033 point eval) and out/predictions.json.
 --limit N predicts only the first N frames (smoke test, CLAUDE.md §6); its output is not a result.
 """
@@ -40,7 +40,7 @@ def main():
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--limit", type=int, help="smoke test: only the first N frames")
-    ap.add_argument("--final", help="D-043, only for the approved final test")
+    ap.add_argument("--final", help="D-044, only for the approved final test")
     args = ap.parse_args()
     out = args.out.resolve()
     if out.exists():
@@ -78,7 +78,7 @@ def main():
     t_pred = time.time() - t1
     stems = [Path(r["image"]).stem for r in rows]
     record = {
-        "decision": "D-043", "phase": 2, "smoke": bool(args.limit), "split": meta["split"],
+        "decision": "D-044", "phase": 2, "smoke": bool(args.limit), "split": meta["split"],
         "final": args.final, "sequence": {"split_version": meta["split_version"], "days": sorted(meta["days"]),
                                           "manifest_sha256": meta["manifest_sha256"],
                                           "gt_points_sha256": meta["gt_points_sha256"]},
