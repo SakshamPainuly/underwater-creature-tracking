@@ -1,0 +1,40 @@
+{
+  "id": "T001",
+  "slug": "tritonia_val_grid",
+  "decision": "D-043",
+  "phase": 4,
+  "split": "val",
+  "sequence": "data/processed/tritonia_tracking/val",
+  "sequence_manifest_sha256": "f005f16e062d6e2fe3e1a07286cfa8066b4163f3c5999355cc9fe3d337b2b289",
+  "gt_points_sha256": "15f61b894fdb24ac26c9e56a7b6208eaf6a87ef48faaf94d9b79c38fd8d4c194",
+  "detections": {
+    "experiment": "E010",
+    "weights_sha256": "48d72b79770bf8085bf70530eae4c71648a0b6c88c1e3580b90ca84e98909ca5",
+    "predictions_json_sha256": "14f3ffd4bb6ccfb73f801bf83d3c11c38bfbc1f779d88eabacb014ab66a8be4d"
+  },
+  "grid": {
+    "conf": [
+      0.1,
+      0.16,
+      0.25
+    ],
+    "gate_px": [
+      8,
+      12,
+      20
+    ],
+    "max_gap": [
+      8,
+      20,
+      60
+    ],
+    "min_len": [
+      1,
+      3,
+      10
+    ]
+  },
+  "match_px": 10,
+  "selection": "highest mean-over-days HOTA (3 val days, cameras summed per day); results within 0.001 of the best are tied and broken by higher mean IDF1, then lower conf, smaller gate_px, smaller max_gap, smaller min_len",
+  "note": "81 settings; detections fixed (E010 on the val sequence, D-043 phase 2, record archived in experiments/records/tracking_d043/); val only. The selected setting becomes T002, the single final-test candidate (phase 6, separate approval)."
+}

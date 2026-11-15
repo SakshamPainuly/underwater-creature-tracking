@@ -573,6 +573,131 @@ the notebook's cell 9 summary (`d041_summary.json`).
 - LIMITATION: 27 val frames from 3 days of one setup; 3 seeds; 20130524 has only 15 crosses. Val numbers only
   (rule 7).
 
+### D-044: Tritonia tracking, phase 2 detections and phase 3 pipeline check (val, not tuned)
+
+Sparse-frame/timelapse analysis (15 s per frame), val days only; no test day was extracted or read.
+- **Phase 2 (OBSERVED):** E010's registered `best.pt` (sha256 `48d72b79…`, as `experiments/registry.csv`) on all 7,728
+  frames of the v8 val days, imgsz 640, conf 0.001; Kaggle Tesla T4, `notebooks/kaggle_tritonia_tracking_detect.ipynb`
+  at commit `a4629f0` (clean), ultralytics 8.4.155, torch 2.11.0+cu130; 10 s of checks (every frame's sha256, the
+  weights' sha256) and 103 s of prediction. Download `d043_val_detections.zip` (sha256 `c3e5ca82…`, 7,731 files),
+  kept in `D:\uwct_tritonia\runs\d043_val_detections\` (byte-identical to the zip); the record is archived as
+  `experiments/records/tracking_d043/phase2_val_predictions.json`. Recomputed from the files: 1,366,304 detections
+  at conf ≥ 0.001; 28,667 at conf ≥ 0.16 on 6,331 frames, as recorded.
+- **Phase 3 pipeline check (OBSERVED):** `scripts/track_tritonia.py` at the untuned defaults (conf 0.16 = E010's
+  val threshold, gate 12 px, maximum gap 8 frames, minimum length 3), with the two references; scored on the
+  4,604 clicked frames (22,390 clicks, 162 tracks), 10 px, per camera, cameras summed per day. Scores archived in
+  `experiments/records/tracking_d043/phase3_check/`. **Not a tuning result and not a selection:** the grid is
+  declared before phase 4.
+
+| run | tracks | mean over days: HOTA | DetA | AssA | IDF1 | MOTA | all days: ID switches | TP / FN / FP |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| no linking (floor) | 28,667 | 0.027 | 0.153 | 0.008 | 0.008 | −0.402 | 8,145 | 8,279 / 14,111 / 8,771 |
+| tracker, defaults | 1,281 | 0.143 | 0.155 | 0.134 | 0.179 | −0.067 | 868 | 8,106 / 14,284 / 7,264 |
+| clicks as detections (ceiling) | 517 | 0.765 | 0.983 | 0.599 | 0.697 | 0.963 | 525 | 21,985 / 405 / 0 |
+
+- Per day, tracker at defaults: HOTA 0.039 / 0.300 / 0.090 and IDF1 0.057 / 0.358 / 0.122 on 20130524 / 20130529 /
+  20130602.
+- OBSERVED: linking works (ID switches 8,145 → 868, HOTA 0.027 → 0.143), but **detection limits the result**: at
+  conf 0.16 the detections match 36 % of the clicks (8,106 of 22,390) with 7,264 unmatched detections, so DetA is
+  0.155. 20130529 is the best day and 20130524 the worst, as in E010's val point scores. With perfect detections
+  (ceiling) the tracker still splits tracks (AssA 0.599, 517 tracks for 162): the maximum gap of 8 frames is shorter
+  than the click gaps (median 16 frames, D-044).
+- INFERRED: improving detection matters more than tuning the tracker; phase 4 should include longer gaps.
+- LIMITATIONS: unmatched detections are an upper bound on false positives (UNKNOWN whether every slug was clicked,
+  D-029); MOTA is negative because unmatched detections outnumber correct ones minus switches; 3 val days of one
+  setup; val numbers only (rule 7).
+
+**Tritonia tracking grid T001 (D-044 phase 4), declared 2026-11-13 before the run:** config
+`configs/tracking/T001_tritonia_val_grid.json`, run by `scripts/sweep_tritonia_tracking.py` on the phase-2 val
+detections (E010, fixed) named by their sha256 in the config. Grid, every combination (81 settings): conf
+0.10 / 0.16 / 0.25 × gate 8 / 12 / 20 px × maximum gap 8 / 20 / 60 frames × minimum length 1 / 3 / 10 detections.
+**Selection metric: mean HOTA over the 3 val days** (cameras summed per day); results within 0.001 of the best are
+tied and broken by higher mean IDF1, then lower conf, smaller gate, smaller maximum gap, smaller minimum length.
+Reported next to it: DetA, AssA, LocA, IDF1, MOTA, ID switches, HOTA per day, scores on close-pair frames (two clicks
+within 10 px), and the no-linking and clicks-as-detections references at the selected setting. The selected
+setting is frozen as **T002**, the single final-test candidate: its test (phase 6) runs once, only after a separate
+user approval, and is logged here (rule 7). No second grid on val unless declared first. LIMITATIONS: 81 settings
+on 3 val days can partly fit noise; the gap values 20 / 60 were chosen after the phase-3 check showed tracks split
+at the click gaps (median 16 frames), so that check informed the grid (OBSERVED, stated here).
+
+**T001 result (OBSERVED, 2026-11-13):** run at commit `cb0c375` (clean, the declaration commit) on this PC, 81
+settings in 68 s; inputs checked against the config hashes. Output in `D:\uwct_tritonia\runs\T001\`
+(`selected/tracks.csv` sha256 `06716ee6…`); `run_record.json`, `grid_results.csv` and the selected setting's scores
+archived in `experiments/records/T001/`. **Selected by the declared rule: conf 0.16, gate 20 px, maximum gap 60
+frames, minimum length 10** (1 other setting within 0.001; IDF1 broke the tie). It is frozen as **T002**
+(`configs/tracking/T002_tritonia_final_candidate.json`), not run on test.
+
+| run | mean HOTA | DetA | AssA | IDF1 | MOTA | ID switches |
+|---|---:|---:|---:|---:|---:|---:|
+| no linking (floor, conf 0.16) | 0.027 | 0.153 | 0.008 | 0.008 | −0.402 | — |
+| phase-3 defaults (gate 12 px, gap 8, length 3), for comparison | 0.143 | 0.155 | 0.134 | 0.179 | −0.067 | 868 |
+| **T001 selected (E010 detections)** | **0.168** | 0.150 | 0.191 | 0.238 | −0.076 | 856 |
+| clicks as detections at the selected setting (ceiling) | 0.941 | 0.991 | 0.896 | 0.928 | 0.989 | — |
+
+- Per day (selected): HOTA 0.040 / 0.342 / 0.120, IDF1 0.063 / 0.457 / 0.192 on 20130524 / 20130529 / 20130602.
+  All days: TP 7,820, FN 14,570, FP 7,311; 344 tracks for 162 clicked tracks; MT / PT / ML 10 / 51 / 101.
+- Close-pair frames (414 camera-frames with two clicks within 10 px): IDF1 0.437, MOTA 0.251, 13 ID switches.
+- Mean HOTA over the grid by value: conf 0.10 / 0.16 / 0.25 → 0.140 / 0.155 / 0.147; gate 8 / 12 / 20 → 0.144 /
+  0.147 / 0.150; maximum gap 8 / 20 / 60 → 0.138 / 0.149 / 0.154; minimum length 1 / 3 / 10 → 0.146 / 0.148 /
+  0.148. Worst setting: conf 0.10, gate 8, gap 8, length 1 (0.121).
+- OBSERVED: the tracker settings move mean HOTA only from 0.121 to 0.168, while with perfect detections the
+  selected setting reaches 0.941. **Detection is the limit** (DetA 0.150; 35 % of clicks matched). The longer
+  maximum gap helps most.
+- LIMITATION: the selected gate, gap and length are the largest values in the grid, so the best setting may lie
+  outside it; by the declaration there is no second grid unless declared first. 81 settings on 3 val days; the
+  selected HOTA is optimistic for new days. Unmatched detections are an upper bound on false positives (D-029).
+  Val only (rule 7).
+
+**Phase 5, trajectories and figures (OBSERVED, 2026-11-13, val):** `scripts/tritonia_trajectories.py` at commit
+`93bd16f` (clean) on the T001-selected tracks (= T002 settings; `tracks.csv` sha256 `06716ee6…`). Statistics on
+each day's clicked frames only; a step longer than 2 × the click cadence is a gap, not path; px and px/s only
+(rule 9). Output in `D:\uwct_tritonia\runs\T002_val_trajectories\`; `summary.json` and the two per-track CSVs
+archived in `experiments/records/tracking_d043/phase5/`. Figures, one SVG per day (clicked tracks above, tracker
+below, on a lightened frame; per camera the 3 tracks with the largest extent coloured and labelled, others gray):
+`20130524.svg` (`57bf4005…`), `20130529.svg` (`2b46a698…`), `20130602.svg` (`9ca87c40…`). They stay off-repo (they embed frames of
+Dr. Wyeth's data).
+
+| day | clicked tracks: n, median points / path / net | tracker tracks: n, median points / path / net | clicked tracks with a tracker track covering ≥ half |
+|---|---|---|---:|
+| 20130524 | 39, 74 / 218 px / 153 px | 53, 17 / 16 px / 10 px | 0 of 39 |
+| 20130529 | 65, 45 / 320 px / 144 px | 168, 12 / 47 px / 39 px | 10 of 65 |
+| 20130602 | 58, 39 / 291 px / 127 px | 106, 14 / 38 px / 12 px | 2 of 58 |
+
+- Median step speed (median over tracks): clicks 0.20 / 0.17 / 0.22 px/s, tracker 0.06 / 0.12 / 0.06 px/s.
+- OBSERVED: tracker tracks are short pieces of the clicked paths (visible in the figures, e.g. one slug split into
+  two overlapping tracks). On 20130524 the tracker tracks barely move (median path 16 px over a median 25.5 min):
+  INFERRED stationary detections (bright specks, D-029) rather than slugs, consistent with that day's DetA 0.025.
+- LIMITATION: the speed comparison of matched tracks rests on 10 and 2 tracks (median ratio tracker / clicks 0.37
+  and 1.10) and is not a result. Speeds are per camera only (angled cameras, parallax) and in px/s; detection
+  jitter and stationary false detections bias the tracker statistics. Val only (rule 7).
+
+**Phase 6, final test of T002 (OBSERVED, 2026-11-13; run once, user-approved; logged below in the test-evaluation
+log):** T002 was declared in `experiments/final_candidates.csv` before any test frame was extracted. The 3 v8 test
+days (20130520, 20130521, 20130528; 6,316 frames, 15,105 clicks, 187 tracks) were extracted with `--final D-043` (this decision's number at the time; renumbered D-044 on 2026-11-14)
+(raw folder unchanged), uploaded privately and detected on Kaggle (Tesla T4, `notebooks/kaggle_tritonia_tracking_test.ipynb`
+at commit `f27e82e`, clean, 85 s; download sha256 `c915a6fb…`, byte-identical copy in
+`D:\uwct_tritonia\runs\d043_test_detections\`). Tracked once on this PC with the T002 settings read from its config
+(`D:\uwct_tritonia\runs\T002_test\`, `tracks.csv` sha256 `dd229f01…`). The two references (no linking;
+clicks as detections) were scored on the same test days for the report; they choose nothing. Records in
+`experiments/records/T002/`; charts (numbers only) in `docs/reports/tritonia_tracking/`; test trajectory figures
+(commit `d3576cd`, clean) in `D:\uwct_tritonia\runs\T002_test_trajectories\figures\` (`20130520.svg` `b7b8dc49…`,
+`20130521.svg` `32f9c410…`, `20130528.svg` `136c347a…`), off-repo as they embed frames.
+
+| T002, mean over 3 days | HOTA | DetA | AssA | IDF1 | MOTA | ID switches | clicks matched | no linking (HOTA) | clicks as detections (HOTA) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| val (chose the settings) | 0.168 | 0.149 | 0.191 | 0.238 | −0.076 | 856 | 34.9 % | 0.027 | 0.941 |
+| **final test** | **0.091** | 0.067 | 0.122 | 0.130 | −0.444 | 289 | 16.8 % | 0.032 | 0.864 |
+
+- Test per day: HOTA 0.084 / 0.064 / 0.123, IDF1 0.121 / 0.097 / 0.173 on 20130520 / 20130521 / 20130528.
+  All test days: TP 2,542, FN 12,563, FP 7,923; MT / PT / ML 2 / 53 / 132; 266 tracks for 187 clicked tracks.
+- OBSERVED: test is lower than val (HOTA 0.091 vs 0.168), mostly in detection (DetA 0.067 vs 0.149; 17 % of
+  clicks matched vs 35 %), as E010's own test point AP was lower than its val one (0.215 vs 0.496). With the
+  clicks as detections the same settings reach 0.864 on test: **detection, not the tracker, limits Tritonia
+  tracking**, on test as on val.
+- LIMITATIONS: test days are new days of the same setup (not new sites); 3 days; UNKNOWN whether every slug was
+  clicked, so unmatched detections are an upper bound on false positives; frames 15 s apart (sparse-frame/
+  timelapse analysis); px only. This result chooses nothing and changes no setting (rule 7).
+
 ### Val secondary metrics: E001 vs E004 (D-020)
 
 Val only; test not used. Both runs evaluated on 2026-10-11 in one Colab Tesla T4 session at commit
@@ -638,6 +763,7 @@ m 189–201, l 202–206, s 188–201 (E017 ran alone at the end: 168). Kaggle q
 | 2026-10-18 | E005 | Final held-out test evaluation of the declared candidate after registration, with the recovered epoch-41 best.pt (D-027) | mAP50 0.8788; mAP50-95 0.6604; precision @ val-chosen conf 0.619 = 0.8411; recall = 0.7712; F1 = 0.8046 |
 | 2026-11-10 | E006 | Final held-out test evaluation of the declared Tritonia candidate (D-033): point eval against the MTrackJ crosses, 27 frames of the 3 test days, val threshold | not mAP (D-033): test point AP 0.248; point P / R / F1 @ val-chosen conf 0.06 = 0.3594 / 0.3622 / 0.3608 (128 predictions, 127 crosses, 46 matched) |
 | 2026-11-12 | E010 | Final held-out test evaluation of the second declared Tritonia candidate (val point AP 0.496 > E006's 0.403): point eval against the MTrackJ crosses, the same 27 test frames, val threshold | not mAP (D-033): test point AP 0.2145; point P / R / F1 @ val-chosen conf 0.16 = 0.3563 / 0.2441 / 0.2897 (87 predictions, 127 crosses, 31 matched) |
+| 2026-11-13 | T002 | Final held-out test of the declared Tritonia tracker (D-044 phase 6; settings chosen on val by T001, frozen before test): E010 detections on all 6,316 frames of the 3 test days, tracked once, scored on the clicked frames | not mAP: mean HOTA 0.091 (DetA 0.067, AssA 0.122), IDF1 0.130, MOTA −0.444, 289 ID switches; val 0.168 / 0.238; clicks-as-detections reference 0.864 (records `experiments/records/T002/`) |
 | 2026-11-13 | E027 | Final held-out test evaluation of the declared Model A candidate (D-043), v1 test (`--target test`) | mAP50 0.9096; mAP50-95 0.6966; precision @ val-chosen conf 0.269 = 0.8478; recall = 0.8426; F1 = 0.8452 |
 | 2026-11-13 | E027 | Final held-out evaluation of the same candidate on the new-site Zenodo `sk` frames (`--target test_zenodo_sk`, D-031, D-043) | mAP50 0.5663; mAP50-95 0.3892; precision @ val-chosen conf 0.269 = 0.4341; recall = 0.6224; F1 = 0.5115 |
 

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" font-family="Segoe UI, Arial, sans-serif">
+<rect width="760" height="440" fill="#fcfcfb"/>
+<text x="16" y="28" font-size="17" font-weight="600" fill="#0b0b0b">T002 HOTA per day</text>
+<text x="16" y="48" font-size="12" fill="#52514e">Val days (blue) were used to choose the settings; test days (orange) only scored once</text>
+<rect x="16" y="62" width="12" height="12" rx="3" fill="#2a78d6"/>
+<text x="34" y="72" font-size="12" fill="#0b0b0b">val (3 days, used to choose settings)</text>
+<rect x="322.40000000000003" y="62" width="12" height="12" rx="3" fill="#eb6834"/>
+<text x="340.40000000000003" y="72" font-size="12" fill="#0b0b0b">final test (3 days, run once)</text>
+<line x1="56" y1="376.0" x2="740" y2="376.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="380.0" font-size="11" text-anchor="end" fill="#52514e">0.00</text>
+<line x1="56" y1="320.0" x2="740" y2="320.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="324.0" font-size="11" text-anchor="end" fill="#52514e">0.10</text>
+<line x1="56" y1="264.0" x2="740" y2="264.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="268.0" font-size="11" text-anchor="end" fill="#52514e">0.20</text>
+<line x1="56" y1="208.0" x2="740" y2="208.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="212.0" font-size="11" text-anchor="end" fill="#52514e">0.30</text>
+<line x1="56" y1="152.0" x2="740" y2="152.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="156.0" font-size="11" text-anchor="end" fill="#52514e">0.40</text>
+<line x1="56" y1="96.0" x2="740" y2="96.0" stroke="#e6e5e1" stroke-width="1"/>
+<text x="48" y="100.0" font-size="11" text-anchor="end" fill="#52514e">0.50</text>
+<path d="M95.9,376.0 V357.4 Q95.9,353.4 99.9,353.4 H126.1 Q130.1,353.4 130.1,357.4 V376.0 Z" fill="#2a78d6"/>
+<text x="113.0" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">20130524</text>
+<path d="M209.9,376.0 V188.2 Q209.9,184.2 213.9,184.2 H240.1 Q244.1,184.2 244.1,188.2 V376.0 Z" fill="#2a78d6"/>
+<text x="227.0" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">20130529</text>
+<path d="M323.9,376.0 V312.8 Q323.9,308.8 327.9,308.8 H354.1 Q358.1,308.8 358.1,312.8 V376.0 Z" fill="#2a78d6"/>
+<text x="341.0" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">20130602</text>
+<path d="M437.9,376.0 V333.0 Q437.9,329.0 441.9,329.0 H468.1 Q472.1,329.0 472.1,333.0 V376.0 Z" fill="#eb6834"/>
+<text x="455.0" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">20130520</text>
+<path d="M551.9,376.0 V344.1 Q551.9,340.1 555.9,340.1 H582.1 Q586.1,340.1 586.1,344.1 V376.0 Z" fill="#eb6834"/>
+<text x="569.0" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">20130521</text>
+<path d="M665.9,376.0 V310.9 Q665.9,306.9 669.9,306.9 H696.1 Q700.1,306.9 700.1,310.9 V376.0 Z" fill="#eb6834"/>
+<text x="683.0" y="396" font-size="12" text-anchor="middle" fill="#0b0b0b">20130528</text>
+<line x1="56" y1="376" x2="740" y2="376" stroke="#52514e" stroke-width="1"/>
+<text x="16" y="426" font-size="11" fill="#52514e">Tritonia sparse-frame/timelapse tracking (15 s per frame), scored on clicked frames, 10 px; D-043. Values in tables.md.</text>
+</svg>

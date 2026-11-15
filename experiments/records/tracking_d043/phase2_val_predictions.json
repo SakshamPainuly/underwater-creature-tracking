@@ -1,0 +1,54 @@
+{
+  "decision": "D-043",
+  "phase": 2,
+  "smoke": false,
+  "split": "val",
+  "final": null,
+  "sequence": {
+    "split_version": "v8",
+    "days": [
+      "20130524",
+      "20130529",
+      "20130602"
+    ],
+    "manifest_sha256": "f005f16e062d6e2fe3e1a07286cfa8066b4163f3c5999355cc9fe3d337b2b289",
+    "gt_points_sha256": "15f61b894fdb24ac26c9e56a7b6208eaf6a87ef48faaf94d9b79c38fd8d4c194"
+  },
+  "experiment": "E010",
+  "weights": {
+    "path": "/kaggle/input/datasets/anusidhu7/uwct-e010-weights/E010/train/weights/best.pt",
+    "sha256": "48d72b79770bf8085bf70530eae4c71648a0b6c88c1e3580b90ca84e98909ca5"
+  },
+  "predict_args": {
+    "conf": 0.001,
+    "imgsz": 640,
+    "batch": 16
+  },
+  "env": {
+    "ultralytics": "8.4.155",
+    "torch": "2.11.0+cu130",
+    "cuda": "13.0",
+    "gpu": "Tesla T4"
+  },
+  "git": {
+    "commit": "a4629f064cc94cb02c33b879fc3a35b3c87f10f0",
+    "dirty": false
+  },
+  "seconds": {
+    "checks": 10.0,
+    "predict": 102.6
+  },
+  "summary_conf_0.001": {
+    "frames": 7728,
+    "frames_with_detections": 7728,
+    "detections": 1366304,
+    "at_conf": 0.001
+  },
+  "summary_conf_0.16": {
+    "frames": 7728,
+    "frames_with_detections": 6331,
+    "detections": 28667,
+    "at_conf": 0.16
+  },
+  "note": "sparse-frame/timelapse frames 15 s apart; detections only, not yet tracks; not accuracy"
+}

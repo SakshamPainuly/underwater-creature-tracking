@@ -1,0 +1,92 @@
+{
+  "decision": "D-043",
+  "split_version": "v8",
+  "split": "val",
+  "root": "D:\\uwct_tritonia\\raw\\tritonia",
+  "note": "sparse-frame/timelapse frames, 15 s apart; ground truth = MTrackJ clicks",
+  "days": {
+    "20130524": {
+      "source_tif": "20130524all_15spf.tif",
+      "tif_bytes": 1223458459,
+      "width": 1056,
+      "height": 480,
+      "frames": 2413,
+      "click_cadence": 1,
+      "tracks": 39,
+      "gt_points": 2959,
+      "frames_with_points": 1683,
+      "tracks_per_camera": {
+        "0": 5,
+        "1": 10,
+        "2": 8,
+        "3": 6,
+        "4": 7,
+        "5": 3
+      },
+      "track_flags": {
+        "true": 39
+      }
+    },
+    "20130529": {
+      "source_tif": "20130529all_15spf.tif",
+      "tif_bytes": 1401932397,
+      "width": 1056,
+      "height": 480,
+      "frames": 2765,
+      "click_cadence": 2,
+      "tracks": 65,
+      "gt_points": 9476,
+      "frames_with_points": 1247,
+      "tracks_per_camera": {
+        "0": 9,
+        "1": 10,
+        "2": 10,
+        "3": 14,
+        "4": 11,
+        "5": 11
+      },
+      "track_flags": {
+        "false": 23,
+        "true": 42
+      }
+    },
+    "20130602": {
+      "source_tif": "20130602all_15spf.tif",
+      "tif_bytes": 1292921449,
+      "width": 1056,
+      "height": 480,
+      "frames": 2550,
+      "click_cadence": 2,
+      "tracks": 58,
+      "gt_points": 9955,
+      "frames_with_points": 1674,
+      "tracks_per_camera": {
+        "0": 8,
+        "1": 12,
+        "2": 8,
+        "3": 10,
+        "4": 7,
+        "5": 13
+      },
+      "track_flags": {
+        "false": 14,
+        "true": 44
+      }
+    }
+  },
+  "camera_layout": {
+    "seam_x": [
+      351.5,
+      703.5
+    ],
+    "seam_y": 240.0,
+    "ids": "0 1 2 top, 3 4 5 bottom"
+  },
+  "totals": {
+    "frames": 7728,
+    "gt_points": 22390,
+    "tracks": 162
+  },
+  "manifest_sha256": "f005f16e062d6e2fe3e1a07286cfa8066b4163f3c5999355cc9fe3d337b2b289",
+  "gt_points_sha256": "15f61b894fdb24ac26c9e56a7b6208eaf6a87ef48faaf94d9b79c38fd8d4c194"
+}
