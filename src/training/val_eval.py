@@ -209,6 +209,18 @@ def confusion_matrix(c: dict) -> dict:
     }
 
 
+def row_session(r: dict) -> str:
+    """Session of a build-manifest row. Mixed views (v4) have no session_id column: for our own
+    original images their group_id is the session (dataset_audit.model_a); any other val image
+    (Zenodo or derived) has no session in split_manifest.csv and is refused."""
+    if "session_id" in r:
+        return r["session_id"]
+    if (r.get("origin"), r.get("kind")) != ("ours", "original"):
+        raise ValEvalError(f"{r['filename']}: val image of origin {r.get('origin')!r} / kind "
+                           f"{r.get('kind')!r} has no session; val_eval covers our original images only")
+    return r["group_id"]
+
+
 def val_rows(build_rows: list, split_rows: list) -> list:
     """Val images with session and lighting; refuses anything that is not val."""
     lighting = {r["session_id"]: r["lighting_flag"] for r in split_rows}
@@ -216,10 +228,11 @@ def val_rows(build_rows: list, split_rows: list) -> list:
     for r in build_rows:
         if r["split"] != VAL_SPLIT:
             continue
-        if r["session_id"] not in lighting:
-            raise ValEvalError(f"{r['filename']}: session {r['session_id']} not in split_manifest.csv")
-        out.append({"filename": r["filename"], "session_id": r["session_id"],
-                    "lighting": "red_light_or_night" if lighting[r["session_id"]] == "True" else "not_flagged",
+        session = row_session(r)
+        if session not in lighting:
+            raise ValEvalError(f"{r['filename']}: session {session} not in split_manifest.csv")
+        out.append({"filename": r["filename"], "session_id": session,
+                    "lighting": "red_light_or_night" if lighting[session] == "True" else "not_flagged",
                     "negative": r["label_status"] == NEGATIVE_STATUS})
     if not out:
         raise ValEvalError("no val images in build_manifest.csv")
