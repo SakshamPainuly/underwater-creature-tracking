@@ -1,0 +1,17 @@
+# Local GUI environment (scripts/gui_app.py). CPU only -- never install these outside a virtual
+# environment, and never on a machine where CLAUDE.md rule 3 has not been waived for this purpose.
+#
+#   python -m venv .venv
+#   .venv/Scripts/python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+#   .venv/Scripts/python -m pip install -r requirements-gui.txt
+#
+# torch must come from the CPU index above: the default PyPI wheel pulls ~2.5 GB of CUDA libraries
+# that are useless without an NVIDIA GPU. Measured after installing this set: 0.26 s and 441 MB
+# peak per 1920x1080 image at imgsz 640 on a Ryzen 5 5500U.
+
+ultralytics==8.4.155   # same pin as requirements-gpu.txt, so local and Colab results agree
+streamlit==1.64.0
+
+# Installed from the CPU index, recorded here for reproducibility rather than resolved by pip:
+#   torch==2.14.0+cpu
+#   torchvision==0.29.0+cpu
