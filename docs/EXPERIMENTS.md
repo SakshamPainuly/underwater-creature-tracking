@@ -629,6 +629,61 @@ learning rate still 0.0010–0.0015 (of 0.002), and mosaic was never switched of
 This is the reason for the round-2 schedule (D-040 point 2). Seconds per epoch with two runs in parallel:
 m 189–201, l 202–206, s 188–201 (E017 ran alone at the end: 168). Kaggle quota: 12:00 of 30 h after round 1 (two GPUs counted once).
 
+### Val secondary metrics: E027 (D-020)
+
+Val only; test not used. E027's registered best.pt (sha256 `821bb767…`, checked by the notebook and by
+`val_eval.py`) evaluated on 2026-11-16 (record created 20:52 UTC) on Kaggle, notebook
+`sakshampainuly007/kaggle-val-eval-e027` (`notebooks/kaggle_val_eval_E027.ipynb`, version "val_eval_E027"), one
+Tesla T4, evaluation commit `966b16f` (clean); training commit `97810a5`; v4 view fingerprint `bbd4a8b1…` (matches
+the E007 config), 4 raw checks passed, VERIFIED. Record: `experiments/records/E027/val_eval_record.json`
+(16,218 B, sha256 `ecdbe93e…`); per-image CSV, predictions, plots and the package `E027_val_eval_package.zip`
+(sha256 `a81f123e…`, matches the notebook) are off-repo in `D:/uwct_runs/val_eval_E027/`. Matching: IoU ≥ 0.5,
+own matcher, at the val-chosen operating confidence (OBSERVED; E001 from its D-020 record above):
+
+| metric | E001 (v1) | E027 (v4) |
+|---|---:|---:|
+| operating conf | 0.298 | 0.269 |
+| Ultralytics val mAP50 / mAP50-95 | 0.8527 / 0.6115 | 0.8537 / 0.6280 |
+| TP / FP / FN | 809 / 208 / 201 | 838 / 239 / 172 |
+| precision / recall / F1 | 0.795 / 0.801 / 0.798 | 0.778 / 0.830 / 0.803 |
+| AP50 (own matcher) | 0.848 | 0.848 |
+| negative val images with a detection (of 55) | 16 (22 detections) | 19 (22 detections) |
+| red-light/night, 31 boxes: AP50 / P / R | 0.741 / 0.706 / 0.774 | 0.801 / 0.676 / 0.806 |
+| not flagged, 979 boxes: AP50 / P / R | 0.851 / 0.799 / 0.802 | 0.851 / 0.782 / 0.830 |
+| parameters / GFLOPs (640) | 9.95 M / 22.7 | 26.18 M / 93.5 |
+| inference, batch 1, median (T4) | 16.3 ms | 26.0 ms (29.0 ms total) |
+
+E027 per val session (boxes): AP50 / P / R, FP, negative images with a detection:
+
+| session (boxes) | AP50 | P | R | FP | negatives with a detection |
+|---|---:|---:|---:|---:|---|
+| 18_ALRA_08 (60) | 0.755 | 0.537 | 0.850 | 44 | 3 of 3 |
+| 19_SUB1_04 (3) | 0.834 | 0.500 | 1.000 | 3 | 3 of 33 |
+| 19_SUB2_07 (28) | 0.809 | 0.710 | 0.786 | 9 | 7 of 11 |
+| 21_MACK_10 (465) | 0.910 | 0.823 | 0.888 | 89 | none (0 negatives) |
+| 21_SUB6_07 (95) | 0.744 | 0.731 | 0.716 | 25 | 5 of 7 |
+| 21_SUB6_09 (125) | 0.840 | 0.722 | 0.872 | 42 | 1 of 1 |
+| 21_SUB6_10 (234) | 0.830 | 0.864 | 0.735 | 27 | none (0 negatives) |
+
+- OBSERVED: the Ultralytics val mAP50-95 0.6280 equals E027's registered value, which checks the run against the
+  round-2 record.
+- OBSERVED: at its operating confidence E027 finds 29 more of the 1,010 val boxes than E001 (838 vs 809), with
+  31 more false positives (239 vs 208); AP50 is the same (0.848). On the 55 lobster-free val images it puts
+  detections on 19 images (E001: 16), 22 detections in both cases.
+- OBSERVED: the red-light/night condition (31 boxes) is where E027 differs most: AP50 0.801 vs 0.741, recall 0.806
+  vs 0.774 (1 box more), precision 0.676 vs 0.706. 10 of its 19 negative images with a detection are red-light
+  images (10 of 44 red-light negatives; 9 of the 11 other negatives).
+- OBSERVED: 18_ALRA_08 has the lowest precision (0.537, 44 false positives for 51 found lobsters); 21_SUB6_07 and
+  21_SUB6_10 have the lowest recall (0.716, 0.735).
+- OBSERVED: E027 is about 2.6× the parameters and 4.1× the GFLOPs of E001; batch-1 inference on a T4 is 26.0 vs
+  16.3 ms (median, same GPU type).
+- Ultralytics' own val confusion matrix (847 found / 163 missed / 239 false alarms, round-2 section) uses its
+  internal operating point and matching; the own-matcher counts above are at the val-chosen 0.269. Both are recorded.
+- LIMITATION: val chose E027's checkpoint, its operating confidence and E027 itself among 19 configurations
+  (D-043), so these numbers are optimistic; one seed; red-light val is 2 sessions / 31 boxes and 21_MACK_10 holds
+  465 of 1,010 boxes; the E001 comparison is not a selection (different dataset, model size and tuning). These
+  results change neither the model, the threshold nor the selection.
+
 ## Test-evaluation log
 
 | Date | Experiment | Reason | Result |
