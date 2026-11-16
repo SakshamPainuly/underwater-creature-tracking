@@ -105,6 +105,22 @@ class ValOnlyTest(unittest.TestCase):
         self.assertEqual([r["lighting"] for r in rows], ["red_light_or_night", "not_flagged"])
         self.assertEqual([r["negative"] for r in rows], [False, True])
 
+    def test_mixed_view_rows_use_group_id_as_session(self):
+        mixed = [{"split": "train", "filename": "z.png", "origin": "zenodo", "kind": "original",
+                  "group_id": "mpa_cam1_110822", "label_status": "positive"},
+                 {"split": "val", "filename": "v.png", "origin": "ours", "kind": "original",
+                  "group_id": "S1", "label_status": "positive"},
+                 {"split": "val", "filename": "n.png", "origin": "ours", "kind": "original",
+                  "group_id": "S2", "label_status": "negative_confirmed"}]
+        rows = V.val_rows(mixed, self.split)
+        self.assertEqual([r["session_id"] for r in rows], ["S1", "S2"])
+        self.assertEqual([r["lighting"] for r in rows], ["red_light_or_night", "not_flagged"])
+        self.assertEqual([r["negative"] for r in rows], [False, True])
+        for origin, kind in (("zenodo", "original"), ("ours", "colour_change")):
+            bad = [{**mixed[1], "origin": origin, "kind": kind}]
+            with self.assertRaises(V.ValEvalError):
+                V.val_rows(bad, self.split)
+
     def test_unknown_session_and_empty_val_are_refused(self):
         with self.assertRaises(V.ValEvalError):
             V.val_rows(self.build, self.split[:1])
