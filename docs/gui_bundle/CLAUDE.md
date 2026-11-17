@@ -1,7 +1,8 @@
 # CLAUDE.md — DeepSight GUI folder (context for the assistant on Harsh's MacBook)
 
 This file is the full context for continuing the GUI work on this machine. Read it before changing
-anything. `README.md` has the setup commands; `HOW_THINGS_ARE_STORED.txt` lists every file.
+anything. `README.md` has the setup commands; `HOW_THINGS_ARE_STORED.txt` lists every file;
+`PACKAGING.md` is the plan for turning this prototype into a software package.
 
 ## 1. What this folder is
 
@@ -170,7 +171,16 @@ These come from the project's own rules and are why the numbers in the report ca
   to a few seconds per image for E027 (a large model: 52.9 MB, 26.2 M parameters).
 - If the browser does not open, go to http://localhost:8501.
 
-## 8. Reference documents in `docs/`
+## 8. Prototype, not a package
+
+This folder is a **prototype** demo GUI, not a deployed software package: it runs from this folder
+for one local user, finds its files by their position in the folder, and has only been checked on
+Windows. That is enough for the demo. If it should become a package (installable, one start
+command, weights downloaded and checked), follow `PACKAGING.md`: what is prototype-level today, the
+steps, a `pyproject.toml` starting point, and what must be confirmed before sharing it outside the
+team (lab data rights, the Ultralytics AGPL licence). Do not start that work unless asked.
+
+## 9. Reference documents in `docs/`
 
 - `final_report_data.md` (+ `figures/`, `final_report_experiments.csv`): every lobster number, with
   how it was computed and its limitations. Start here for anything about results. This is the

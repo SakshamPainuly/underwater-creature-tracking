@@ -11,6 +11,8 @@ CLAUDE.md                    Full context for an AI assistant or a person contin
                              what the project did, how the GUI is built, the rules.
                              Lobster only: teammates' species are sent separately.
 HOW_THINGS_ARE_STORED.txt    This file.
+PACKAGING.md                 Only for later: how to turn this prototype into a software package
+                             (installable, one start command), and what to confirm first.
 MANIFEST.json                Every file in this folder with its size and sha256, and the
                              repository commit the folder was exported from. Use it to check
                              that the copy arrived complete.
