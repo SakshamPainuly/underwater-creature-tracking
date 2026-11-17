@@ -39,5 +39,8 @@ Next time, only `source .venv/bin/activate` and step 4 are needed.
 ## Where things are
 
 `HOW_THINGS_ARE_STORED.txt` lists every folder and file. `CLAUDE.md` is the full context for an
-AI assistant (or a person) continuing the work: what the project did, how the GUI is built, the
-and the rules it keeps.
+AI assistant (or a person) continuing the work: what the project did, how the GUI is built and
+the rules it keeps.
+
+This is a **prototype** demo GUI, not a deployed software package. `PACKAGING.md` describes how
+to turn it into one, if that is ever wanted.
