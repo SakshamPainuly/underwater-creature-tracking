@@ -1,0 +1,30 @@
+{
+  "_comment": "Portable version of configs/gui_species.json, copied into the GUI bundle by scripts/export_gui_bundle.py. Every image source is a plain folder, so the GUI runs on a machine without data/raw or data/yolo. Format: src/detect/species.py.",
+  "species": [
+    {
+      "key": "lobster",
+      "label": "Lobster",
+      "animal": "lobster",
+      "icon": "🦞",
+      "models": [{"id": "E027"}, {"id": "E001"}],
+      "sources": [
+        {
+          "label": "zExtra samples — never seen (unlabelled)", "kind": "folder", "path": "samples/lobster/zextra",
+          "note": "**zExtra samples.** A few frames from the one set the model has never seen in any form: excluded from every dataset version, never labelled, never trained on, never evaluated (D-003). There is no ground truth here, so a miss and a correct rejection look identical."
+        },
+        {
+          "label": "val samples — used for tuning (labelled)", "kind": "folder", "path": "samples/lobster/images/val",
+          "note": "**val samples.** A few frames of the validation split, with their labels. Validation was used for threshold choice and model selection, so this is the legitimate place to explore what the sliders do."
+        },
+        {
+          "label": "test samples — held out (labelled)", "kind": "folder", "path": "samples/lobster/images/test", "held_out": true,
+          "note": "**test samples — HELD OUT.** A few frames of the v1 test split, with their labels. The test split was never used for training, tuning, threshold choice or model selection (rule 7); E027 and E001 were each evaluated on it exactly once. Look, but do not tune: keeping a slider value found here is threshold selection on test."
+        },
+        {
+          "label": "Zenodo sk samples — new site, held out (labelled)", "kind": "folder", "path": "samples/lobster/images/test_zenodo_sk", "held_out": true,
+          "note": "**Zenodo sk samples — HELD OUT, NEW SITE.** A few frames from the Zenodo sk site (another country and camera setup, D-031), with the Zenodo labels. Never used for training or tuning; only E027 was evaluated on the full set, once. Look, but do not tune."
+        }
+      ]
+    }
+  ]
+}

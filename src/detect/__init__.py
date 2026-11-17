@@ -24,6 +24,7 @@ from .predict import (
     draw_detections,
     draw_ground_truth,
     label_path_for,
+    list_folder_images,
     list_source_images,
     list_split_images,
     load_ground_truth,
@@ -51,6 +52,13 @@ from .models import (
     RecordedScores,
     model_by_id,
     recorded_scores,
+)
+from .species import (
+    SPECIES_CONFIG,
+    Source,
+    Species,
+    load_species,
+    parse_species,
 )
 from .sweet_spot import (
     DEFAULT_MATCH_IOU,
@@ -83,6 +91,7 @@ __all__ = [
     "draw_detections",
     "draw_ground_truth",
     "label_path_for",
+    "list_folder_images",
     "list_source_images",
     "list_split_images",
     "load_ground_truth",
@@ -106,6 +115,11 @@ __all__ = [
     "RecordedScores",
     "model_by_id",
     "recorded_scores",
+    "SPECIES_CONFIG",
+    "Source",
+    "Species",
+    "load_species",
+    "parse_species",
     "DEFAULT_MATCH_IOU",
     "IOU_SOURCE",
     "MATCH_IOU_SOURCE",

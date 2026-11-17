@@ -28,6 +28,12 @@ class ModelChoice:
     weights: Path  # relative to the repository root; weights are never committed
     image_source: str  # RAW_SOURCE or ENHANCED_SOURCE: what this model is shown
     description: str
+    # For a model whose settings are not in experiments/records (e.g. a teammate's model added
+    # through configs/gui_species.json): the values its owner declares, and where they come from.
+    declared_conf: float | None = None
+    declared_imgsz: int | None = None
+    declared_source: str = ""
+    scores_note: str = ""  # shown instead of the mAP line when the model is scored another way
 
 
 # First entry is the default. Order: final model, then the earlier ones it is compared with.
