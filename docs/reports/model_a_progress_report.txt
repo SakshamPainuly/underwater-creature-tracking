@@ -1,0 +1,760 @@
+================================================================================
+DEEPSIGHT - LOBSTER DETECTION: WHAT WE DID AFTER THE WEEK 2 TEAM DECK
+Model A: more data, model comparison, hyperparameter tuning, final model E027
+================================================================================
+
+Written 2026-11-17 from the committed project records (experiments/registry.csv,
+experiments/records/, docs/EXPERIMENTS.md, docs/DECISIONS.md,
+docs/reports/final_report_data.md) and the Kaggle notebook logs in D:/uwct_runs/.
+Nothing here is estimated unless it is marked so.
+
+Labels used: OBSERVED = read from a file or run. INFERRED = our reading of the
+observations. ASSUMPTION = taken as true without proof. LIMITATION = what the
+result does not show. UNKNOWN = not measured.
+
+Scope: lobster (class 0) only. Other species' work is reported by its owners.
+
+CONTENTS
+  1.  Where the Week 2 deck stopped
+  2.  Summary in ten lines
+  3.  Timeline after Week 2
+  4.  Data: training, validation and test sets (dataset v4)
+  5.  Settings used for training, validation and testing
+  6.  Performance metrics: which ones, and why
+  7.  The selection metric used to declare the best model, and the rules
+  8.  Experiment E007: does more data help?
+  9.  Tuning round 1: which model size? (E011-E019)
+  10. Tuning round 2: which training settings? (E020-E029)
+  11. Every experiment in one table
+  12. The best model: E027
+  13. Final test of E027 (held-out data, once)
+  14. Confusion matrices of the best model
+  15. Validation details of E027 (per session, empty images, red light)
+  16. Old GUI model (E001) vs new best model (E027)
+  17. Compute: Kaggle hours per experiment and in total
+  18. Why we did what we did (reasons for each step)
+  19. What did not help
+  20. GUI and hand-over work
+  21. Limitations and open questions
+  22. Where the files are
+
+
+--------------------------------------------------------------------------------
+1. WHERE THE WEEK 2 DECK STOPPED
+--------------------------------------------------------------------------------
+
+The Week 2 deck ("Deepsight Week 2 - Team deck") showed:
+  - E001  YOLO26s on raw images (dataset v1): the model running in the GUI.
+          Test mAP50 0.897, mAP50-95 0.683, P 0.845, R 0.813 (conf 0.298).
+  - E004  YOLO26s on Harsh's enhanced images (v2): slightly more precise, found
+          fewer lobsters (test mAP50-95 0.656). Enhancement did not help.
+  - E005  RT-DETR-L (Anu): test mAP50 0.879, mAP50-95 0.660. YOLO26s was higher.
+  - Harsh's new data prepared but NOT yet trained on: colour-change augmented
+    images, copy-paste synthetic images, DM_underwater diffusion images and the
+    public Zenodo dataset.
+  - Plan for "Model A": train on all five data sources, with the same validation
+    images and settings, to answer "does more data find more lobsters?".
+
+Everything below happened after that deck.
+
+
+--------------------------------------------------------------------------------
+2. SUMMARY IN TEN LINES
+--------------------------------------------------------------------------------
+
+1. Built dataset v4: our frames + Zenodo + Harsh's derived images, on OUR
+   session split, with a leakage check that removed 992 unsafe derived images.
+2. E007 (YOLO26s, all v4 data, E001's settings) did NOT beat E001 on validation
+   (val mAP50-95 0.5993 vs 0.6115): more data alone was not enough.
+3. Declared one selection metric before tuning: validation mAP50-95.
+4. Tuning round 1: 3 model sizes (s, m, l) x 3 seeds = 8 finished runs.
+5. Tuning round 2: 5 setting combinations x 2 sizes (m, l) = 10 runs.
+6. Only one run cleared the pre-declared bar (val mAP50-95 > 0.62542): E027
+   (YOLO26l, AdamW lr0 0.001, weight decay 0.001, mixup 0.1, 30 epochs).
+7. E027 final test on our held-out test set: mAP50-95 0.697, mAP50 0.910,
+   P 0.848, R 0.843, F1 0.845 (E001: 0.683 / 0.897 / 0.845 / 0.813 / 0.828).
+8. Against E001 on the same test: 28 more lobsters found, 31 fewer false boxes.
+9. At a new site (Zenodo sk, never trained on): mAP50-95 0.389, P 0.434. The
+   model does not transfer well to an unfamiliar site.
+10. Compute on Kaggle: 32.5 GPU-hours of training (19 runs), about 19.3 h of
+    Kaggle session time (quota). E027 is now the default model in the GUI.
+
+
+--------------------------------------------------------------------------------
+3. TIMELINE AFTER WEEK 2
+--------------------------------------------------------------------------------
+
+  Date (2026)   What                                                   Decision
+  ------------  -----------------------------------------------------  --------
+  Nov 3         Harsh's Model A delivery checked (sha256), leakage      D-031
+                found: his split had 5 of our 6 test sessions in his
+                train/val. Leakage check written.
+  Nov 3-4       Colour-change images redone by Harsh with v1-train      D-031
+                colours only. Dataset v4 built; plan accepted.
+  Nov 4         Training moved to Kaggle GPU (lab GPU dropped).         D-031
+  Nov 7         v4 frozen. E007 = all safe data at once (no data        D-032
+                ladder, user's choice).
+  Nov 8         E007 trained on Kaggle (1 x T4): 1.81 h.                -
+  Nov 11        Tuning plan and selection metric declared.              D-038
+  Nov 11-12     Tuning round 1, E011-E019 (2 x T4, 7.4 h session).      D-039
+  Nov 12        Round-1 result: yolo26m selected; round 2 designed.     D-040
+  Nov 13        Tuning round 2, E020-E029 (2 x T4, 9.05 h session).     D-040
+  Nov 13        E027 selected and declared final candidate.             D-043
+  Nov 13        Final test of E027: v1 test + Zenodo sk, once each.     D-043
+  Nov 16        E027 val-only evaluation (false positives on empty      D-020
+                images, per session, per lighting).
+  Nov 16-17     GUI switched to E027 (default), lobster-only GUI        -
+                folder exported for Harsh, report data pack built.
+
+
+--------------------------------------------------------------------------------
+4. DATA: TRAINING, VALIDATION AND TEST SETS (DATASET v4)
+--------------------------------------------------------------------------------
+
+4.1 The split rule (unchanged since v1)
+  The split unit is the RECORDING SESSION, never the single image. All frames
+  of a session sit in one split, so the model is never scored on near-copies of
+  training frames. The v1 split is frozen.
+
+  v1 split:      sessions   images   with lobster   empty   boxes
+    train           32       1,433      1,274         159    4,000
+    val              7         324        269          55    1,010
+    test             6         348        321          27    1,512
+    zExtra          11         436     not labelled -> never trained or scored
+
+  Validation sessions: 18_ALRA_08, 19_SUB1_04, 19_SUB2_07, 21_MACK_10,
+                       21_SUB6_07, 21_SUB6_09, 21_SUB6_10
+  Test sessions:       06_HERR_04, 06_HERR_08, 06_HERR_11, 13_SHRI_12,
+                       21_MACK_09, 21_SUB6_03
+
+4.2 What v4 adds (training split only)
+  - Zenodo record 15755673 (CC BY 4.0; Fiorina, Obst, Sundelof, Ljungberg,
+    Sande 2025), site "mpa": training. Site "sk": held out as a NEW-SITE test.
+  - Harsh's derived images: colour change (recoloured water), copy-paste
+    (lobsters pasted into other frames), DM_underwater diffusion copies.
+
+4.3 Rules that kept the test honest
+  - Harsh's own split, data.yaml and data_original_only.yaml were NOT used:
+    his split put 5 of our 6 test sessions in his train or val.
+  - Leakage check (scripts/check_leakage.py, must print LEAKAGE CHECK: PASSED
+    before any run): a derived image enters train only if EVERY image it was
+    made from (the background and every pasted lobster) is a train image.
+    992 derived images failed and were left out.
+  - No identical files across splits; 2 near-duplicate flags were checked by
+    eye and are different scenes (different dates, traps, seabed).
+  - Validation and test contain ONLY real, unmodified frames. They are
+    identical to v1, so E001, E004, E005 and E027 are scored on the same images.
+  - Harsh's AI label review: 90 excluded train frames and 31 low-confidence
+    "empty" train frames left out of TRAIN only. Val and test keep every frame.
+
+4.4 v4 images per split (OBSERVED, data/processed/v4/mixed_manifest.csv)
+
+  split           origin       original  colour  copy-paste  diffusion   total
+  --------------  -----------  --------  ------  ----------  ---------  ------
+  train           ours            1,312     192         516      1,312   3,332
+  train           Zenodo mpa        480      93         206          0     779
+  val             ours              324       0           0          0     324
+  test (v1)       ours              348       0           0          0     348
+  test_zenodo_sk  Zenodo sk         428       0           0          0     428
+
+  Train total: 4,111 images (3,721 with lobsters, 390 empty, 11,784 boxes),
+  about 2.9 x E001's 1,433 images.
+  Zenodo sk: 428 images (285 empty), 143 boxes.
+
+  Left out of v4: 992 derived images with a val/test ancestor (leakage),
+  90 label-review exclusions, 65 derived images built on a low-confidence
+  frame, 31 low-confidence empty frames, 24 Zenodo frames with no site.
+
+
+--------------------------------------------------------------------------------
+5. SETTINGS USED FOR TRAINING, VALIDATION AND TESTING
+--------------------------------------------------------------------------------
+
+5.1 Common to every Model A run
+  Framework       Ultralytics 8.4.155, torch 2.11.0+cu130, CUDA 13.0
+  Hardware        Kaggle, NVIDIA Tesla T4 (2 x T4 for the tuning rounds,
+                  one run per GPU)
+  Start weights   COCO-pretrained YOLO26 checkpoints (transfer learning, all
+                  layers fine-tuned except in combination C5)
+  Image size      640 px
+  Batch           16
+  Dataset         v4 (frozen), fingerprint bbd4a8b1..., verified in every run
+  Augmentation    Ultralytics defaults (mosaic 1.0, off for the last 10 epochs
+                  via close_mosaic 10), plus mixup where stated
+  Best checkpoint best.pt = epoch with the highest val mAP50-95
+                  (Ultralytics "fitness")
+
+5.2 Per stage
+  Stage        epochs  patience  optimizer               lr0     wd      mixup  freeze
+  -----------  ------  --------  ----------------------  ------  ------  -----  ------
+  E001 (old)   100     30        auto                    auto    0.0005  0      -
+  E007         100     30        auto (AdamW lr 0.002)   auto    0.0005  0      -
+  Round 1      60 max  10        auto (AdamW lr 0.002)   auto    0.0005  0      -
+  Round 2 C1   30      30        auto (AdamW lr 0.002)   auto    0.0005  0      -
+  Round 2 C2   30      30        AdamW, momentum 0.9     0.001   0.0005  0      -
+  Round 2 C3   30      30        auto (AdamW lr 0.002)   auto    0.0005  0.1    -
+  Round 2 C4   30      30        AdamW, momentum 0.9     0.001   0.001   0.1    -
+  Round 2 C5   30      30        auto (AdamW lr 0.002)   auto    0.0005  0      10
+
+  Round 1: model yolo26s / yolo26m / yolo26l, seeds 0 / 1 / 2.
+  Round 2: seed 0, model yolo26m and yolo26l.
+  Patience 30 with 30 epochs = no early stopping: the schedule always completes.
+
+5.3 Validation settings (used for every choice)
+  - 324 val images, 1,010 boxes, 55 empty images.
+  - Ultralytics val: P, R, mAP50, mAP50-95 of best.pt.
+  - Operating confidence: the confidence with the highest F1 on the val curve
+    (E027: 0.269; E001: 0.298). NMS IoU 0.7. Image size 640.
+  - Val-only evaluation (scripts/val_eval.py): predictions at conf 0.001, a
+    box counts as found at IoU >= 0.5 (greedy matching), counted at the
+    operating confidence; keeps per-image results so it can count false
+    detections on empty images and split results by session and lighting.
+
+5.4 Test settings (used once)
+  - Only a run declared in experiments/final_candidates.csv BEFORE testing can
+    be tested (scripts/final_test_eval.py refuses others).
+  - The operating confidence is fixed on val, then the test is run once per
+    target: v1 test (348 images, 1,512 boxes) and Zenodo sk (428 images,
+    143 boxes). Attempt 1 for both; logged in docs/EXPERIMENTS.md.
+  - best.pt checked by sha256 (821bb767...) before the test.
+  - The test was never used to choose a model, epoch, setting or threshold.
+
+5.5 Checks before every GPU job
+  Environment report -> raw-data check (all 4 raw folders) -> build the YOLO
+  dataset -> verify_yolo_dataset.py (must print VERIFIED) -> leakage check ->
+  smoke test (1 short epoch) -> real run. Each finished run is zipped with its
+  sha256; every package was re-checked after download.
+
+
+--------------------------------------------------------------------------------
+6. PERFORMANCE METRICS: WHICH ONES, AND WHY
+--------------------------------------------------------------------------------
+
+  Metric        What it means for lobster detection
+  ------------  ----------------------------------------------------------------
+  IoU           Overlap between a predicted box and the labelled box
+                (0 = none, 1 = identical).
+  Precision P   Of the boxes the model draws, the share that are real lobsters.
+                Low P = false alarms.
+  Recall R      Of the labelled lobsters, the share the model finds.
+                Low R = missed lobsters.
+  F1            Balance of P and R (harmonic mean). Used to pick the operating
+                confidence on val.
+  mAP50         Average precision over all confidence levels, a detection counts
+                when IoU >= 0.50. Answers "was the lobster found?".
+  mAP50-95      The same averaged over IoU 0.50, 0.55, ..., 0.95. Also rewards
+                tight, well-placed boxes.
+  TP / FP / FN  Found lobsters / false boxes / missed lobsters (confusion matrix).
+  False detections on empty images: how often the model "sees" a lobster in a
+                frame that has none.
+
+Why we report several: one number hides trade-offs. E004 had better precision
+but missed more lobsters; only P, R, mAP and the confusion counts together show
+that. Per-session and red-light results show where the model is weak.
+
+Not used: tracking metrics (IDF1, HOTA, MOTA). There are no ground-truth track
+IDs and the frames are 10-30 s apart, so tracking cannot be scored. No physical
+units (cm): there is no camera calibration, so everything is in pixels.
+
+
+--------------------------------------------------------------------------------
+7. THE SELECTION METRIC USED TO DECLARE THE BEST MODEL, AND THE RULES
+--------------------------------------------------------------------------------
+
+Selection metric: VALIDATION mAP50-95 (class lobster), declared on 2026-11-11
+before any tuning run (D-038). Before that, the project's selection metric was
+val mAP50; it was switched for Model A runs from E011 on.
+
+Why mAP50-95:
+  1. Trajectories are built from box positions in pixels, so we need the
+     lobster to be FOUND and the box to be PLACED WELL. mAP50 only checks the
+     first; mAP50-95 checks both.
+  2. Ultralytics already uses mAP50-95 to pick the best epoch (fitness), so one
+     criterion runs from "best epoch" to "best run" to "final model".
+  3. It is stricter, so small gains in box quality are not hidden.
+  mAP50, P, R and confusion counts are always reported next to it.
+
+Rules, fixed before the runs they govern:
+  - Seeds measure noise: round 1 ran each size with 3 seeds; the spread (range)
+    of the seeds is the noise level.
+  - The smaller model wins a tie: a bigger model is chosen only if its gain is
+    larger than the seed noise.
+  - Round 2 bar: a run replaces the round-1 choice only if its val mAP50-95 is
+    above 0.62542 = yolo26m seed mean 0.61127 + its seed range 0.01415.
+  - Test data never chooses anything; only the declared run is tested, once.
+  - Time-boxed queue: a run starts only if its worst case ends before the
+    Kaggle deadline, so no run is cut off; skipped runs are "not run (time)".
+  - Ultralytics model.tune() (genetic search) was not used: it needs dozens to
+    hundreds of runs, far beyond the Kaggle quota.
+
+
+--------------------------------------------------------------------------------
+8. EXPERIMENT E007: DOES MORE DATA HELP?
+--------------------------------------------------------------------------------
+
+Question: with E001's model and settings, does training on all safe v4 data
+(4,111 images instead of 1,433) find more lobsters?
+
+  Change vs E001:  dataset v1 -> v4 only (yolo26s, 100 epochs, patience 30)
+  Run:             Kaggle, 1 x T4, 6,498 s = 1.81 h, stopped at epoch 58,
+                   best epoch 28
+
+  Val result         E001 (v1)   E007 (v4)   change
+  mAP50-95           0.6115      0.5993      -0.012
+  mAP50              0.8527      0.8423      -0.010
+  Precision          0.7998      0.8021      +0.002
+  Recall             0.7901      0.7783      -0.012
+
+OBSERVED: 2.9 x more training images did not raise validation scores.
+OBSERVED: E007 peaked at epoch 28 while the learning rate was still high
+(about 0.0015 of 0.002) and val losses rose after it: INFERRED overfitting
+after epoch 28, and the 100-epoch schedule never got to its low-learning-rate
+phase. That is why the tuning rounds changed the schedule and model size.
+Not tested on the test set (not a final candidate).
+
+
+--------------------------------------------------------------------------------
+9. TUNING ROUND 1: WHICH MODEL SIZE? (E011-E019, D-038 / D-040)
+--------------------------------------------------------------------------------
+
+Design: yolo26s / m / l x seeds 0 / 1 / 2 on v4, at most 60 epochs, patience 10
+(stop 10 epochs after the last improvement). 9 runs planned, 8 finished, E018
+(yolo26l seed 2) "not run (time)". Kaggle 2 x T4, one run per GPU, commit
+cf7bea9, session 7.40 h.
+
+  run   model     seed  epochs  best   val P   val R   mAP50   mAP50-95  train h
+  ----  --------  ----  ------  -----  ------  ------  ------  --------  -------
+  E011  yolo26s   0     41      31     0.7626  0.7812  0.8320  0.5999    2.25
+  E016  yolo26s   1     27      17     0.7961  0.7498  0.8325  0.5965    1.42
+  E019  yolo26s   2     26      16     0.7785  0.8072  0.8410  0.5965    1.39
+  E012  yolo26m   0     27      17     0.7579  0.7990  0.8408  0.6030    1.43
+  E014  yolo26m   1     26      16     0.7944  0.7950  0.8481  0.6136    1.46
+  E017  yolo26m   2     40      30     0.7666  0.8178  0.8509  0.6172    1.87
+  E013  yolo26l   0     34      24     0.7806  0.8317  0.8495  0.6124    1.92
+  E015  yolo26l   1     27      17     0.7842  0.8095  0.8538  0.6160    1.54
+  E018  yolo26l   2     not run (time)
+
+  Per size     mAP50-95 mean   range    mAP50 mean   val confusion (mean)
+                                                     found / missed / false
+  yolo26s      0.5976          0.0034   0.8352       823 / 187 / 288
+  yolo26m      0.6113          0.0142   0.8466       829 / 181 / 271
+  yolo26l      0.6142          0.0036   0.8517       856 / 154 / 274
+  (confusion counts: Ultralytics val matrix of best.pt, its own operating point,
+   1,010 val boxes; reported, not used to select)
+
+Result (D-040): yolo26l had the highest mean, but its lead over yolo26m
+(0.0030) is smaller than yolo26m's seed range (0.0141): no evidence that l is
+better, so the smaller yolo26m was selected. yolo26s was clearly worse (gap
+0.0166, larger than both ranges). yolo26l was kept for round 2 at the user's
+request.
+
+Key observation that shaped round 2 (OBSERVED in results.csv): NO round-1 run
+completed its schedule. All stopped at epoch 26-41 of 60 with the learning rate
+still 0.0010-0.0015, and mosaic was never switched off. So no run had ever
+trained with a fully decayed learning rate or the final no-mosaic epochs.
+
+
+--------------------------------------------------------------------------------
+10. TUNING ROUND 2: WHICH TRAINING SETTINGS? (E020-E029, D-040 / D-043)
+--------------------------------------------------------------------------------
+
+Design: every run uses a 30-epoch schedule with patience 30, so it always
+completes: the learning rate decays fully and the last 10 epochs run without
+mosaic. 30 epochs because round-1 best epochs were 16-31 and ten runs had to fit
+two T4s within 9.5 h. Five combinations on yolo26m (parent E012) and yolo26l
+(parent E013), seed 0. Kaggle 2 x T4, commit 97810a5, session 9.05 h.
+
+  C1  schedule only (the control)
+  C2  + AdamW, lr0 0.001, momentum 0.9 (half of auto's 0.002)
+  C3  + mixup 0.1 (blends two training images: a regulariser against overfitting)
+  C4  + AdamW lr0 0.001, momentum 0.9, weight decay 0.001, mixup 0.1
+  C5  + freeze 10 (backbone frozen: only neck and head train)
+
+  run   model    combo  best ep  val P   val R   mAP50   mAP50-95  train h  bar?
+  ----  -------  -----  -------  ------  ------  ------  --------  -------  ----
+  E020  yolo26m  C1     29       0.7762  0.7921  0.8409  0.6150    1.73     no
+  E021  yolo26l  C1     26       0.7858  0.8000  0.8474  0.6171    1.74     no
+  E022  yolo26m  C2     23       0.7981  0.7921  0.8459  0.6197    1.72     no
+  E023  yolo26l  C2     25       0.7993  0.7924  0.8457  0.6172    1.73     no
+  E024  yolo26m  C3     23       0.7973  0.7980  0.8494  0.6179    1.80     no
+  E025  yolo26l  C3     25       0.8149  0.7941  0.8602  0.6227    1.82     no
+  E026  yolo26m  C4     20       0.7790  0.8097  0.8515  0.6219    1.81     no
+  E027  yolo26l  C4     25       0.7792  0.8307  0.8537  0.6280    1.82     YES
+  E028  yolo26m  C5     25       0.7775  0.7782  0.8313  0.5799    1.61     no
+  E029  yolo26l  C5     25       0.8038  0.7786  0.8428  0.5899    1.61     no
+
+  Bar: val mAP50-95 > 0.62542. All 10 completed 30 epochs.
+
+Result (D-043): only E027 cleared the bar (margin 0.0025) and was selected and
+declared alone as the final candidate, before any test evaluation.
+
+Patterns (single seeds, INFERRED, not tested):
+  - C4 (AdamW + weight decay + mixup) was the best combination for BOTH sizes.
+  - yolo26l beat yolo26m in 4 of 5 combinations.
+  - The completed schedule alone (C1) is within round-1 seed noise.
+  - Freezing the backbone (C5) is clearly worse (-0.03 to -0.04): the
+    pretrained COCO features need to adapt to underwater images.
+
+
+--------------------------------------------------------------------------------
+11. EVERY EXPERIMENT IN ONE TABLE (lobster)
+--------------------------------------------------------------------------------
+
+  run   model      data  what changed                         val mAP50  val mAP50-95  test
+  ----  ---------  ----  -----------------------------------  ---------  -----------  ----
+  E001  yolo26s    v1    first baseline (old GUI model)       0.8527     0.6115       yes
+  E004  yolo26s    v2    enhanced images                      0.8385     0.5864       yes
+  E005  RT-DETR-l  v1    other architecture (Anu)             0.8359     0.5884       yes
+  E007  yolo26s    v4    all safe Model A data                0.8423     0.5993       no
+  E011  yolo26s    v4    round 1, seed 0                      0.8320     0.5999       no
+  E012  yolo26m    v4    round 1, seed 0                      0.8408     0.6030       no
+  E013  yolo26l    v4    round 1, seed 0                      0.8495     0.6124       no
+  E014  yolo26m    v4    round 1, seed 1                      0.8481     0.6136       no
+  E015  yolo26l    v4    round 1, seed 1                      0.8538     0.6160       no
+  E016  yolo26s    v4    round 1, seed 1                      0.8325     0.5965       no
+  E017  yolo26m    v4    round 1, seed 2                      0.8509     0.6172       no
+  E018  yolo26l    v4    round 1, seed 2: not run (time)      -          -            no
+  E019  yolo26s    v4    round 1, seed 2                      0.8410     0.5965       no
+  E020  yolo26m    v4    round 2, C1 schedule only            0.8409     0.6150       no
+  E021  yolo26l    v4    round 2, C1 schedule only            0.8474     0.6171       no
+  E022  yolo26m    v4    round 2, C2 AdamW lr0 0.001          0.8459     0.6197       no
+  E023  yolo26l    v4    round 2, C2 AdamW lr0 0.001          0.8457     0.6172       no
+  E024  yolo26m    v4    round 2, C3 mixup 0.1                0.8494     0.6179       no
+  E025  yolo26l    v4    round 2, C3 mixup 0.1                0.8602     0.6227       no
+  E026  yolo26m    v4    round 2, C4 AdamW+wd+mixup           0.8515     0.6219       no
+  E027  yolo26l    v4    round 2, C4 AdamW+wd+mixup  (BEST)   0.8537     0.6280       yes
+  E028  yolo26m    v4    round 2, C5 freeze 10                0.8313     0.5799       no
+  E029  yolo26l    v4    round 2, C5 freeze 10                0.8428     0.5899       no
+
+  Not registered: E002 (imgsz 1280, planned, not run); E003 (RT-DETR with
+  mixed precision, diverged to NaN, rerun as E005).
+
+
+--------------------------------------------------------------------------------
+12. THE BEST MODEL: E027
+--------------------------------------------------------------------------------
+
+  Model           YOLO26l (COCO-pretrained), 26.18 M parameters, 93.5 GFLOPs
+  Data            v4 train (4,111 images)
+  Settings        30 epochs, patience 30, AdamW lr0 0.001, momentum 0.9,
+                  weight decay 0.001, mixup 0.1, mosaic 1.0 (off for the last
+                  10 epochs), batch 16, imgsz 640, seed 0
+  Training        Kaggle Tesla T4, 6,554 s = 1.82 h (sharing a 2 x T4 session)
+  Best epoch      25 of 30
+  Val             mAP50-95 0.6280, mAP50 0.8537, P 0.7792, R 0.8307
+  Operating conf  0.269 (max F1 on val)
+  Weights         best.pt 52.9 MB, sha256 821bb767a2378269...
+  Declared        2026-11-13 11:46 UTC (experiments/final_candidates.csv)
+
+
+--------------------------------------------------------------------------------
+13. FINAL TEST OF E027 (HELD-OUT DATA, ONCE)
+--------------------------------------------------------------------------------
+
+Kaggle, 2026-11-13, evaluation commit a060c70 (clean), attempt 1 per target.
+P / R / F1 at the val-chosen confidence 0.269.
+
+  Test set               images  boxes  mAP50  mAP50-95  P      R      F1
+  ---------------------  ------  -----  -----  --------  -----  -----  -----
+  v1 test (new sessions)    348  1,512  0.910  0.697     0.848  0.843  0.845
+  Zenodo sk (new site)      428    143  0.566  0.389     0.434  0.622  0.511
+
+All lobster models on the same v1 test:
+
+  model                  mAP50  mAP50-95  conf   P      R      F1     TP/FP/FN
+  ---------------------  -----  --------  -----  -----  -----  -----  --------------
+  E001 (yolo26s, v1)     0.897  0.683     0.298  0.845  0.813  0.828  1261 / 263 / 251
+  E004 (yolo26s, v2)     0.873  0.656     0.276  0.861  0.752  0.803  1165 / 190 / 347
+  E005 (RT-DETR-l, v1)   0.879  0.660     0.619  0.841  0.771  0.805  not comparable
+  E027 (yolo26l, v4)     0.910  0.697     0.269  0.848  0.843  0.845  1289 / 232 / 223
+
+OBSERVED: E027 is the best of the four on mAP50, mAP50-95, recall and F1
+(E004 keeps slightly higher precision).
+OBSERVED: test scores are higher than val for every model (E027 0.697 vs
+0.628). INFERRED: the test frames are easier than the val frames; compare
+models within one set only.
+OBSERVED at the new site: 119 false boxes against 90 lobsters found, 53 of 143
+missed. INFERRED: the val-chosen confidence is too low for sk (at sk's own
+best-F1 point Ultralytics reports P 0.732 / R 0.490, but picking a threshold on
+a test set is not allowed).
+
+
+--------------------------------------------------------------------------------
+14. CONFUSION MATRICES OF THE BEST MODEL
+--------------------------------------------------------------------------------
+
+Ultralytics confusion matrix of E027's best.pt (rows = predicted, columns =
+true). For a detector, "background predicted as background" (true negatives)
+is not defined, so that cell is empty.
+
+  (a) v1 TEST (348 images, 1,512 lobster boxes)
+
+                              TRUE lobster   TRUE background
+      PREDICTED lobster          1,289            232
+      PREDICTED background         223             -
+
+      Found 1,289 of 1,512 (85.3%), missed 223, false boxes 232.
+      E001 on the same test: 1,261 found / 251 missed / 263 false.
+      -> E027: +28 found, -28 missed, -31 false boxes.
+
+  (b) ZENODO sk, NEW SITE (428 images, 143 lobster boxes)
+
+                              TRUE lobster   TRUE background
+      PREDICTED lobster             90            119
+      PREDICTED background          53             -
+
+      Found 90 of 143 (62.9%), missed 53, false boxes 119.
+
+  (c) VALIDATION (324 images, 1,010 boxes), own matcher at conf 0.269, IoU 0.5
+
+                              TRUE lobster   TRUE background
+      PREDICTED lobster            838            239
+      PREDICTED background         172             -
+
+      E001 on val at its conf 0.298: 809 / 208 / 201.
+      Ultralytics' own val matrix for E027 (its internal operating point):
+      847 found / 163 missed / 239 false.
+
+  Note: the Ultralytics test matrices use Ultralytics' internal threshold (the
+  Week 2 deck quoted conf 0.25, IoU 0.45; the exact value in 8.4.155 is not
+  confirmed), not our operating confidence 0.269. Matrix images are in the
+  off-repo package E027_final_test_package.zip (sha256 c72921ca...) and in
+  docs/reports/figures/final_confusion.png.
+
+
+--------------------------------------------------------------------------------
+15. VALIDATION DETAILS OF E027 (PER SESSION, EMPTY IMAGES, RED LIGHT)
+--------------------------------------------------------------------------------
+
+Kaggle 2026-11-16, scripts/val_eval.py, conf 0.269, IoU >= 0.5.
+
+  Overall: TP 838 / FP 239 / FN 172; P 0.778, R 0.830, F1 0.803, AP50 0.848.
+  Empty val images with a false detection: 19 of 55 (22 detections);
+  E001: 16 of 55 (22 detections).
+
+  Per session        boxes  AP50   P      R      FP   empty images hit
+  -----------------  -----  -----  -----  -----  ---  ----------------
+  18_ALRA_08            60  0.755  0.537  0.850   44  3 of 3
+  19_SUB1_04             3  0.834  0.500  1.000    3  3 of 33
+  19_SUB2_07            28  0.809  0.710  0.786    9  7 of 11
+  21_MACK_10           465  0.910  0.823  0.888   89  (no empty images)
+  21_SUB6_07            95  0.744  0.731  0.716   25  5 of 7
+  21_SUB6_09           125  0.840  0.722  0.872   42  1 of 1
+  21_SUB6_10           234  0.830  0.864  0.735   27  (no empty images)
+
+  Lighting                      E001 AP50 / P / R      E027 AP50 / P / R
+  red light / night (31 boxes)  0.741 / 0.706 / 0.774  0.801 / 0.676 / 0.806
+  not flagged (979 boxes)       0.851 / 0.799 / 0.802  0.851 / 0.782 / 0.830
+
+OBSERVED: E027's largest gain over E001 is under red light (AP50 +0.06).
+OBSERVED: weakest precision in 18_ALRA_08 (44 false boxes for 51 lobsters).
+LIMITATION: val chose the model, checkpoint and threshold, so these numbers are
+optimistic; red light is only 2 sessions / 31 boxes.
+
+
+--------------------------------------------------------------------------------
+16. OLD GUI MODEL (E001) vs NEW BEST MODEL (E027)
+--------------------------------------------------------------------------------
+
+                                    OLD: E001               NEW: E027
+  --------------------------------  ----------------------  ----------------------
+  Model                             YOLO26s                 YOLO26l
+  Training data                     v1: 1,433 raw frames    v4: 4,111 images
+  Training settings                 100 ep, patience 30,    30 ep, AdamW lr0 0.001,
+                                    optimizer auto          wd 0.001, mixup 0.1
+  Training platform / time          Colab T4, 0.63 h*       Kaggle T4, 1.82 h
+  Val mAP50-95 / mAP50              0.6115 / 0.8527         0.6280 / 0.8537
+  TEST mAP50-95                     0.683                   0.697  (+0.013)
+  TEST mAP50                        0.897                   0.910  (+0.012)
+  TEST precision                    0.845                   0.848  (+0.003)
+  TEST recall                       0.813                   0.843  (+0.030)
+  TEST F1                           0.828                   0.845  (+0.017)
+  TEST found / false / missed       1261 / 263 / 251        1289 / 232 / 223
+  New site (Zenodo sk) mAP50-95     never evaluated         0.389
+  Operating confidence (val)        0.298                   0.269
+  Val: empty images with detection  16 of 55                19 of 55
+  Val red-light AP50                0.741                   0.801
+  Parameters / GFLOPs               9.95 M / 22.7           26.18 M / 93.5
+  Weights size                      20.3 MB                 52.9 MB
+  Inference, batch 1, T4 (median)   16.3 ms                 26.0 ms
+  * E001: recorded time of its last completed launch only; two interrupted
+    launches before it have no end time.
+
+In plain words: on new recording sessions E027 finds about 84% of lobsters (E001
+81%) and about 85% of its boxes are right, with fewer false boxes and fewer
+misses than E001. The price is a model 2.6 x larger and about 1.6 x slower per
+image. INFERRED, not tested: the gain comes from more data AND the larger,
+better-tuned model together; no run separates the two (E007, more data with the
+small model, was below E001 on val).
+
+
+--------------------------------------------------------------------------------
+17. COMPUTE: KAGGLE HOURS PER EXPERIMENT AND IN TOTAL
+--------------------------------------------------------------------------------
+
+17.1 Training time per run (OBSERVED, run_record.json -> duration; one T4 each)
+
+  run   hours     run   hours     run   hours
+  E007  1.81      E016  1.42      E024  1.80
+  E011  2.25      E017  1.87      E025  1.82
+  E012  1.43      E019  1.39      E026  1.81
+  E013  1.92      E020  1.73      E027  1.82
+  E014  1.46      E021  1.74      E028  1.61
+  E015  1.54      E022  1.72      E029  1.61
+                  E023  1.73
+
+  Phase                      runs   GPU-hours (training)
+  E007                          1    1.81
+  Round 1 (E011-E019)           8   13.29
+  Round 2 (E020-E029)          10   17.38
+  TOTAL on Kaggle              19   32.47 GPU-hours
+
+17.2 Kaggle session time (what the weekly quota counts; 2 GPUs count once)
+
+  Session                                        hours     source
+  E007 training session (interactive)            ~2.5      reported by the user (D-038);
+                                                           training itself 1.81 h
+  Round 1 (E011-E019, 2 x T4)                    7.40      notebook log
+  Round 2 (E020-E029, 2 x T4)                    9.05      notebook log
+  E027 final test (v1 test + sk)                 0.16      notebook log (9.5 min)
+  E027 val-only evaluation                       0.15      notebook log (9.2 min)
+  TOTAL Kaggle session time                      ~19.3 h
+
+  Round 1 and 2 ran two trainings in parallel (one per T4), so 30.7 GPU-hours
+  of tuning used only 16.5 h of quota. Not counted: smoke tests inside each
+  session (included in the session hours), a first round-1 launch on
+  2026-11-11 that failed a parent check and was stopped (duration UNKNOWN), and
+  dataset uploads. Quota after round 1: 12 of 30 h (meter, read by the user).
+  After all training and evaluation: very little quota was left (reported by
+  the user; the exact meter value was not recorded).
+
+17.3 Whole lobster project, all platforms
+  Colab T4 (E001, E004, E005)    3 runs     7.09 GPU-hours (lower bound:
+                                            6 interrupted launches not counted)
+  Kaggle T4 (E007-E029)         19 runs    32.47 GPU-hours
+  TOTAL                         22 runs    39.56 GPU-hours of recorded training
+
+
+--------------------------------------------------------------------------------
+18. WHY WE DID WHAT WE DID (REASONS FOR EACH STEP)
+--------------------------------------------------------------------------------
+
+  Step                         Reason
+  ---------------------------  ---------------------------------------------------
+  Rebuild Harsh's data on our  His split had 5 of our 6 test sessions in train/val.
+  own split + leakage check    Training on images made from test frames would make
+                               the test score meaningless.
+  Keep val/test unmodified     So every model (E001 ... E027) is scored on exactly
+                               the same real frames: a fair comparison.
+  Hold out Zenodo sk           Our test shares sites with train; sk is the only
+                               check on a truly new location.
+  E007: all data at once       Short deadline; the user chose one run over a data
+                               ladder (adding sources one at a time).
+  Change the schedule          E007 and round 1 peaked early with the learning rate
+                               still high and never reached the low-LR / no-mosaic
+                               phase; a complete 30-epoch schedule fixes that.
+  Try bigger models            YOLO26s may be too small for 4,111 varied images;
+                               round 1 tested s, m and l.
+  3 seeds per size             To know how much scores change by chance alone, so
+                               a "gain" smaller than that is not called a gain.
+  AdamW with lower lr0         Auto picked AdamW lr 0.002; half of it tests
+                               whether a gentler update fine-tunes better.
+  Mixup and weight decay       E007 overfit after epoch 28 (val loss rose);
+                               both are regularisers against overfitting.
+  Freeze backbone (C5)         Tests whether keeping COCO features fixed reduces
+                               overfitting; it did not (worse).
+  One metric (mAP50-95)        Avoids picking whichever metric looks best after the
+                               fact; it measures both finding and box placement.
+  Bar = mean + range           A single new run must beat the round-1 choice by more
+                               than seed noise to replace it.
+  Test once, declared first    Any test result that influences a choice is no longer
+                               an unbiased estimate.
+  Val-only evaluation          The final-test records keep no per-image results; val
+                               per-image results show false alarms on empty frames
+                               and weak sessions without touching the test set.
+
+
+--------------------------------------------------------------------------------
+19. WHAT DID NOT HELP
+--------------------------------------------------------------------------------
+
+  - Image enhancement (E004, before Week 2): fewer lobsters found.
+  - RT-DETR-L (E005): lower than YOLO26s on val and test.
+  - More data with the small model (E007): below E001 on val.
+  - yolo26s at any seed: clearly below m and l (round 1).
+  - Freezing the backbone (E028, E029): the worst runs of round 2.
+  - The completed schedule alone (C1): within seed noise.
+
+
+--------------------------------------------------------------------------------
+20. GUI AND HAND-OVER WORK
+--------------------------------------------------------------------------------
+
+  - GUI (Streamlit, scripts/gui_app.py) now uses E027 by default, at its
+    validated confidence 0.269; E001 and E004 are still selectable.
+  - Side-by-side mode: E027 and E001 on the same image, each at its own
+    validated settings.
+  - Zenodo sk frames can be browsed; ground-truth boxes are shown where labels
+    exist, with per-image agree / extra / missed counts (observations, not
+    metrics).
+  - Portable lobster-only GUI folder for Harsh's Mac (D:/DeepSight_GUI_for_Harsh,
+    exported from commit 917c23a): E027 + E001 weights, records, sample images,
+    full README with data, splits, experiments and results; GUI check passed on
+    Windows (not yet run on a Mac).
+  - Report data pack: docs/reports/final_report_data.md + 6 figures +
+    final_report_experiments.csv.
+
+
+--------------------------------------------------------------------------------
+21. LIMITATIONS AND OPEN QUESTIONS
+--------------------------------------------------------------------------------
+
+  - v1 test sessions share sites (mostly also dates) with training sessions:
+    the v1 test measures NEW SESSIONS at known sites, not new sites. Zenodo sk
+    is the only new-site test, and there the model is weak.
+  - 19 configurations were compared on the same 324 val images, so E027's val
+    score is optimistic. Its margin over the bar (0.0025) is smaller than seed
+    noise (0.014): another seed of the same settings could fall below it.
+    Only the test results are unbiased.
+  - One seed of the final configuration; leave-site-out cross-validation was
+    planned but deferred.
+  - Round-2 runs are single-seed, so the "patterns" in section 10 are not proven.
+  - Training labels partly rest on an AI label review that no person checked;
+    up to 29 train frames have a lobster without a box.
+  - Substrate and visibility metadata are mostly missing; zExtra (436 frames)
+    has no labels and is only shown in the GUI.
+  - UNKNOWN: false detections on the 27 empty v1 test images and 285 empty sk
+    images, and per-session test results (the test records keep no per-image
+    predictions; measuring them would need a new decision).
+  - Kaggle quota: very little was left after all runs (user-reported).
+    INFERRED: that is why a second seed and cross-validation were not run.
+  - No tracking metrics, no physical units (see section 6).
+
+
+--------------------------------------------------------------------------------
+22. WHERE THE FILES ARE
+--------------------------------------------------------------------------------
+
+  In the repository
+    experiments/registry.csv            one row per registered run
+    experiments/records/E0xx/           run_record.json (+ results.csv) per run;
+                                        E027: final_test_record.json,
+                                        final_test_zenodo_sk_record.json,
+                                        val_eval_record.json
+    experiments/final_candidates.csv    declared final candidates
+    configs/experiments/E0xx_*.yaml     the config of every run
+    docs/EXPERIMENTS.md                 run log, observations, test log
+    docs/DECISIONS.md                   D-031, D-032, D-038 - D-040, D-043
+    docs/reports/final_report_data.md   full report data pack (+ figures/)
+    notebooks/kaggle_train_E007_model_a.ipynb, kaggle_tuning_E011_E019.ipynb,
+    kaggle_tuning_round2_E020_E029.ipynb, kaggle_final_test_E027.ipynb,
+    kaggle_val_eval_E027.ipynb          the Kaggle notebooks
+
+  Off the repository (D:/uwct_runs/)
+    E007/, round1/, round2/             run packages (zip + sha256), weights
+    final_test_E027/                    test package c72921ca..., notebook log
+    val_eval_E027/                      val-eval package a81f123e..., notebook log
+
+================================================================================
+END
+================================================================================
