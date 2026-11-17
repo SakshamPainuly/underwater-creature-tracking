@@ -1,0 +1,22 @@
+{
+  "_comment": "Species, models and image sources offered by scripts/gui_app.py. Format: src/detect/species.py. This is the repository version (needs data/raw and data/yolo on this machine); the portable version for another machine is configs/gui_species_bundle.json.",
+  "species": [
+    {
+      "key": "lobster",
+      "label": "Lobster",
+      "animal": "lobster",
+      "icon": "🦞",
+      "models": [{"id": "E027"}, {"id": "E001"}, {"id": "E004"}],
+      "sources": [
+        {
+          "label": "zExtra — never seen (unlabelled)", "kind": "raw", "name": "zExtra",
+          "note": "**zExtra** is the one set the model has never seen in any form — excluded from every dataset version, never labelled, never trained on, never evaluated (D-003). It is the honest answer to *how does this behave on data it has never met*. There is no ground truth here, so a miss and a correct rejection look identical."
+        },
+        {"label": "test split — held out (labelled)", "kind": "split", "name": "test"},
+        {"label": "Zenodo sk — new site, held out (labelled)", "kind": "split", "name": "test_zenodo_sk"},
+        {"label": "val split — used for tuning (labelled)", "kind": "split", "name": "val"},
+        {"label": "train split — fitted on (labelled)", "kind": "split", "name": "train"}
+      ]
+    }
+  ]
+}

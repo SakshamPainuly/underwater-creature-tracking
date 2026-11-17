@@ -131,6 +131,26 @@ def list_source_images(source: str = "zExtra", limit: int | None = None) -> list
     raise DetectError(f"Unknown source '{source}'. Known sources: {known}.")
 
 
+def list_folder_images(folder: str | os.PathLike[str], limit: int | None = None) -> list[Path]:
+    """List the images of any folder, sorted by name. Read-only.
+
+    A relative path resolves against the project root. Used for the "folder" sources of
+    configs/gui_species.json, so the GUI also runs on a machine without the raw dataset.
+    """
+    path = Path(folder)
+    if not path.is_absolute():
+        path = PROJECT_ROOT / path
+    if not path.is_dir():
+        raise DetectError(
+            f"Image folder not found: {path}\n"
+            "Create it and put images in it, or change the path in configs/gui_species.json."
+        )
+    files = sorted(p for p in path.iterdir() if p.suffix.lower() in IMAGE_SUFFIXES)
+    if not files:
+        raise DetectError(f"No images found in {path}")
+    return files[:limit] if limit else files
+
+
 def load_model(weights: str | os.PathLike[str] | None = None) -> Any:
     """Load the Ultralytics model for CPU inference. Raises DetectError with a usable message."""
     path = resolve_weights(weights)
@@ -239,18 +259,35 @@ def detections_csv_rows(
     return rows
 
 
+# Windows has arial.ttf; macOS names the same font Arial.ttf (Pillow's lookup is case-sensitive)
+# and always has Helvetica; most Linux systems have DejaVu.
+LABEL_FONTS = ("arial.ttf", "Arial.ttf", "Helvetica.ttc", "DejaVuSans.ttf")
+
+
+def _label_font(size: int) -> Any:
+    """A scalable font for box labels on any platform; falls back to Pillow's built-in font."""
+    from PIL import ImageFont
+
+    for name in LABEL_FONTS:
+        try:
+            return ImageFont.truetype(name, size=size)
+        except OSError:
+            continue
+    try:  # pragma: no cover - depends on the fonts installed
+        return ImageFont.load_default(size=size)  # Pillow >= 10.1
+    except TypeError:  # pragma: no cover
+        return ImageFont.load_default()
+
+
 def draw_detections(image: Any, detections: Sequence[Detection], show_confidence: bool = True) -> Any:
     """Return a copy of `image` (PIL) with boxes and labels drawn. Never modifies the original."""
-    from PIL import ImageDraw, ImageFont
+    from PIL import ImageDraw
 
     canvas = image.convert("RGB").copy()
     draw = ImageDraw.Draw(canvas)
     # Scale line and text with image size so a 1920x1080 frame and a thumbnail both stay readable.
     thickness = max(2, round(min(canvas.size) / 300))
-    try:
-        font = ImageFont.truetype("arial.ttf", size=max(14, round(min(canvas.size) / 45)))
-    except OSError:  # pragma: no cover - font availability is platform-dependent
-        font = ImageFont.load_default()
+    font = _label_font(max(14, round(min(canvas.size) / 45)))
 
     for d in detections:
         draw.rectangle((d.x1, d.y1, d.x2, d.y2), outline=(0, 229, 160), width=thickness)

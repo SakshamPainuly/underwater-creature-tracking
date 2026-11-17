@@ -36,6 +36,7 @@ class SweetSpot:
     experiment_id: str | None  # None: checkpoint not found in the committed records
     conf_source: str
     imgsz_source: str
+    conf_declared: bool = False  # True: conf comes from configs/gui_species.json, not a record
 
     @property
     def known(self) -> bool:
@@ -70,10 +71,26 @@ def find_experiment_for_checkpoint(weights_sha256: str, records_root: Path = REC
     return None
 
 
-def sweet_spot_for_sha256(weights_sha256: str, records_root: Path = RECORDS_ROOT) -> SweetSpot:
-    """Look up the validated settings for a checkpoint by its sha256. Unknown -> project defaults."""
+def sweet_spot_for_sha256(weights_sha256: str, records_root: Path = RECORDS_ROOT,
+                          declared_conf: float | None = None, declared_imgsz: int | None = None,
+                          declared_source: str = "") -> SweetSpot:
+    """Look up the validated settings for a checkpoint by its sha256. Unknown -> project defaults.
+
+    `declared_*` are the settings a model's owner wrote in configs/gui_species.json. They are used
+    only where the committed records have no value, and the GUI says that they are declared.
+    """
     exp = find_experiment_for_checkpoint(weights_sha256, records_root)
+    declared_text = (f"declared for this model in configs/gui_species.json "
+                     f"({declared_source or 'no source given'}); not read from a project record.")
     if exp is None:
+        if declared_conf is not None:
+            imgsz = declared_imgsz or DEFAULT_IMGSZ
+            return SweetSpot(
+                conf=round(float(declared_conf), 3), iou=DEFAULT_IOU, imgsz=imgsz, match_iou=DEFAULT_MATCH_IOU,
+                experiment_id=None, conf_source=declared_text,
+                imgsz_source=declared_text if declared_imgsz else f"not declared: project default {DEFAULT_IMGSZ} px.",
+                conf_declared=True,
+            )
         return SweetSpot(
             conf=DEFAULT_CONF, iou=DEFAULT_IOU, imgsz=DEFAULT_IMGSZ, match_iou=DEFAULT_MATCH_IOU,
             experiment_id=None,
@@ -84,6 +101,7 @@ def sweet_spot_for_sha256(weights_sha256: str, records_root: Path = RECORDS_ROOT
 
     folder = Path(records_root) / exp
     conf, conf_source = DEFAULT_CONF, f"{exp} has no val-chosen confidence on record; E001's {DEFAULT_CONF} is used."
+    conf_declared = False
     for name in ("val_eval_record.json", "final_test_record.json"):
         rec = _read_json(folder / name) or {}
         value = rec.get("operating_conf")
@@ -93,6 +111,9 @@ def sweet_spot_for_sha256(weights_sha256: str, records_root: Path = RECORDS_ROOT
             conf = round(float(value), 3)
             conf_source = f"{exp}'s operating confidence, chosen on val by max F1 ({name})."
             break
+    else:
+        if declared_conf is not None:
+            conf, conf_source, conf_declared = round(float(declared_conf), 3), declared_text, True
 
     run = _read_json(folder / "run_record.json") or {}
     imgsz = (run.get("train_args") or {}).get("imgsz")
@@ -102,12 +123,16 @@ def sweet_spot_for_sha256(weights_sha256: str, records_root: Path = RECORDS_ROOT
         imgsz, imgsz_source = DEFAULT_IMGSZ, f"{exp}'s training size is not on record; default {DEFAULT_IMGSZ} px."
 
     return SweetSpot(conf=conf, iou=DEFAULT_IOU, imgsz=imgsz, match_iou=DEFAULT_MATCH_IOU,
-                     experiment_id=exp, conf_source=conf_source, imgsz_source=imgsz_source)
+                     experiment_id=exp, conf_source=conf_source, imgsz_source=imgsz_source,
+                     conf_declared=conf_declared)
 
 
-def sweet_spot_for(weights: str | os.PathLike[str], records_root: Path = RECORDS_ROOT) -> SweetSpot:
+def sweet_spot_for(weights: str | os.PathLike[str], records_root: Path = RECORDS_ROOT,
+                   declared_conf: float | None = None, declared_imgsz: int | None = None,
+                   declared_source: str = "") -> SweetSpot:
     """Hash the checkpoint file and return its validated settings."""
-    return sweet_spot_for_sha256(file_sha256(weights), records_root)
+    return sweet_spot_for_sha256(file_sha256(weights), records_root, declared_conf, declared_imgsz,
+                                 declared_source)
 
 
 IOU_SOURCE = (f"{DEFAULT_IOU}: the NMS IoU used for every reported val and test number "

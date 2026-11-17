@@ -1,0 +1,76 @@
+DeepSight GUI folder: how things are stored
+===========================================
+
+Copy this whole folder to the other computer. Keep the folder structure as it is: the app finds
+everything by its position inside this folder (no absolute paths anywhere).
+
+TOP LEVEL
+---------
+README.md                    Start here: the commands to install and run the app.
+CLAUDE.md                    Full context for an AI assistant or a person continuing the work:
+                             what the project did, how the GUI is built, the rules.
+                             Lobster only: teammates' species are sent separately.
+HOW_THINGS_ARE_STORED.txt    This file.
+MANIFEST.json                Every file in this folder with its size and sha256, and the
+                             repository commit the folder was exported from. Use it to check
+                             that the copy arrived complete.
+requirements-gui.txt         The Python packages the app needs (versions pinned).
+
+THE APP
+-------
+scripts/gui_app.py           The app. Run it with:  streamlit run scripts/gui_app.py
+scripts/gui_check.py         Setup check. Run it first:  python scripts/gui_check.py
+src/detect/                  The app's logic (detection, drawing, settings, species file reader).
+configs/gui_species.json     THE FILE TO EDIT. Lists the lobster models (name, weights file,
+                             validated settings) and the image folders.
+
+MODELS (weights)
+----------------
+weights/E027_best.pt         Lobster, final model (YOLO26l, 52.9 MB). The default.
+weights/E001_best.pt         Lobster, first baseline (YOLO26s, 20.3 MB). Used for the
+                             side-by-side comparison with E027. Can be deleted if not wanted.
+
+RECORDS (where the app reads validated settings and scores from)
+-----------------------------------------------------------------
+experiments/records/E027/    run_record.json              training record; holds the sha256 of best.pt
+                             val_eval_record.json         validation evaluation; holds the confidence 0.269
+                             final_test_record.json       test result on our test images
+                             final_test_zenodo_sk_record.json   test result at the new site
+experiments/records/E001/    the same kinds of record for the baseline (confidence 0.298)
+Do not edit these files. The app recognises a weights file by comparing its sha256 with
+run_record.json, then reads that model's settings from the same folder.
+
+SAMPLE IMAGES (so "Browse a source" works without the dataset)
+---------------------------------------------------------------
+samples/lobster/zextra/                  10 frames the model has never seen; no labels exist.
+samples/lobster/images/val/              10 validation frames ...
+samples/lobster/labels/val/              ... and their label files (YOLO format, same file name).
+samples/lobster/images/test/             10 held-out test frames, with labels in labels/test/.
+samples/lobster/images/test_zenodo_sk/   10 frames from the held-out new site (Zenodo sk),
+                                         with labels in labels/test_zenodo_sk/.
+
+The samples are a small demo subset, evenly spread over each set. They are for looking at, not
+for training or scoring. Rule for labels: an image at  .../images/<name>/x.png  has its label at
+.../labels/<name>/x.txt . An empty label file means "confirmed no animal"; no label file means
+"not labelled".
+Zenodo images: Zenodo record 15755673, CC BY 4.0 (Fiorina, Obst, Sundelof, Ljungberg, Sande 2025).
+
+REFERENCE DOCUMENTS
+-------------------
+docs/final_report_data.md            Every lobster number, how it was computed, its limitations
+                                     (lobster-only copy of the report pack).
+docs/final_report_experiments.csv    One row per lobster experiment with its settings and scores.
+docs/figures/                        The charts of the data pack.
+docs/DATASET.md                      The lobster data card.
+
+NOT IN THIS FOLDER
+------------------
+- The Python environment (.venv): it is created on each computer (README.md, step 2).
+- The full dataset and the training code: they stay in the project repository.
+- Anything about the other species: each teammate sends their own work separately.
+- The decision log and the full experiment log (docs/DECISIONS.md, docs/EXPERIMENTS.md): they stay
+  in the project repository.
+
+WHAT TO ADD, AND WHERE
+----------------------
+More images to browse  ->  any folder; add it as a "folder" source in configs/gui_species.json

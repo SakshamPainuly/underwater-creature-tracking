@@ -25,24 +25,23 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from detect import (  # noqa: E402  (path setup must precede the import)
     ENHANCED_SOURCE,
-    HELD_OUT_SPLITS,
     IOU_SOURCE,
-    MODELS,
+    RAW_SOURCE,
     checkpoint_image_source,
     dataset_for_split,
     index_all_enhanced,
-    LIMITATIONS,
     MATCH_IOU_SOURCE,
-    SPLIT_STATUS,
     DetectError,
     detect,
     detections_csv_rows,
     draw_detections,
     draw_ground_truth,
+    list_folder_images,
     list_source_images,
     list_split_images,
     load_ground_truth,
     load_model,
+    load_species,
     match_detections,
     recorded_scores,
     resolve_weights,
@@ -50,23 +49,22 @@ from detect import (  # noqa: E402  (path setup must precede the import)
     to_yolo_lines,
 )
 
-st.set_page_config(page_title="Lobster detector", page_icon="🦞", layout="wide")
+st.set_page_config(page_title="DeepSight detector", page_icon="🦞", layout="wide")
 
 # Streamlit drops a widget's value on any run that stops before drawing it (e.g. while a missing
-# checkpoint stops the page). Re-assigning keeps the chosen source and images across such runs.
+# checkpoint stops the page). Re-assigning keeps the chosen species, source, images and slider values
+# across such runs, so the sliders never fall back silently to their minimum.
 for _key in [k for k in st.session_state
-             if k in ("source", "model_choice") or str(k).startswith(("pick_", "compare_"))]:
+             if k in ("species_choice", "conf", "iou", "imgsz", "match_iou")
+             or str(k).startswith(("source_", "model_choice_", "pick_", "compare_"))]:
     st.session_state[_key] = st.session_state[_key]
 
-# label -> (kind, name). "raw" reads a configured raw source; "split" reads a built YOLO split.
-SOURCES = {
-    "zExtra — never seen (unlabelled)": ("raw", "zExtra"),
-    "test split — held out (labelled)": ("split", "test"),
-    "Zenodo sk — new site, held out (labelled)": ("split", "test_zenodo_sk"),
-    "val split — used for tuning (labelled)": ("split", "val"),
-    "train split — fitted on (labelled)": ("split", "train"),
-}
-MODEL_LABELS = [m.label for m in MODELS]
+# Species, their models and their image sources come from configs/gui_species.json (src/detect/species.py).
+try:
+    SPECIES = load_species()
+except DetectError as exc:
+    st.error(str(exc))
+    st.stop()
 NO_COMPARE = "none"
 
 
@@ -80,6 +78,8 @@ def _model(weights: str):
 def _images(kind: str, name: str) -> list[str]:
     if kind == "raw":
         return [str(p) for p in list_source_images(name)]
+    if kind == "folder":
+        return [str(p) for p in list_folder_images(name)]
     return [str(p) for p in list_split_images(name, dataset_for_split(name))]
 
 
@@ -90,9 +90,17 @@ def _enhanced_index() -> dict[str, Path]:
 
 
 @st.cache_data(show_spinner="Looking up the checkpoint's validated settings...")
-def _sweet_spot(weights: str, size: int, mtime: float):
+def _sweet_spot(weights: str, size: int, mtime: float, declared_conf=None, declared_imgsz=None,
+                declared_source: str = ""):
     """Hash the checkpoint once per file version (size + mtime) and look up its validated settings."""
-    return sweet_spot_for(weights)
+    return sweet_spot_for(weights, declared_conf=declared_conf, declared_imgsz=declared_imgsz,
+                          declared_source=declared_source)
+
+
+def _sweet_spot_of(model_choice, path, stat):
+    """Validated settings of a model's checkpoint; the owner's declared values fill gaps in the records."""
+    return _sweet_spot(str(path), stat.st_size, stat.st_mtime, model_choice.declared_conf,
+                       model_choice.declared_imgsz, model_choice.declared_source)
 
 
 IMGSZ_CHOICES = [320, 480, 640, 960, 1280]
@@ -134,7 +142,20 @@ def _csv_bytes(rows: list[dict[str, object]]) -> bytes:
     return buffer.getvalue().encode("utf-8")
 
 
-st.title("Lobster detector")
+species = SPECIES[0]
+if len(SPECIES) > 1:  # the selector appears only when the species file lists more than one animal
+    with st.sidebar:
+        st.header("Species")
+        SPECIES_LABELS = [f"{s.icon} {s.label}".strip() for s in SPECIES]
+        species = SPECIES[SPECIES_LABELS.index(st.radio(
+            "Animal", SPECIES_LABELS, key="species_choice",
+            help="Each species has its own models, image sources and limitations.",
+        ))]
+MODELS = species.models
+MODEL_LABELS = [m.label for m in MODELS]
+ANIMAL = species.animal
+
+st.title(f"{species.label} detector")
 st.caption(
     "Qualitative inspection of a trained YOLO detector. What you see here is an observation, "
     "not a measurement: no accuracy score is computed in this app."
@@ -145,12 +166,12 @@ with st.sidebar:
     # copies of the same images (D-017). Each is shown only the image type it was evaluated on.
     st.header("Model")
     chosen_model = MODELS[MODEL_LABELS.index(st.radio(
-        "Detector", MODEL_LABELS, key="model_choice",
-        help="E027 is the final model. E001 is the first baseline, the GUI's earlier default. "
-             "E004 is shown Harsh's enhanced images.",
+        "Detector", MODEL_LABELS, key=f"model_choice_{species.key}",
+        help="The first model is the species' current best. For lobster: E027 is the final model, "
+             "E001 the first baseline, and E004 is shown Harsh's enhanced images.",
     ))]
     st.caption(chosen_model.description)
-    st.caption(recorded_scores(chosen_model.experiment_id).caption())
+    st.caption(chosen_model.scores_note or recorded_scores(chosen_model.experiment_id).caption())
     source = chosen_model.image_source
     enhanced = source == ENHANCED_SOURCE
     paired_weights, paired_exp = chosen_model.weights, chosen_model.experiment_id
@@ -158,18 +179,19 @@ with st.sidebar:
     weights_input = st.text_input(
         "Checkpoint",
         value=str(paired_weights).replace("\\", "/"),
-        key=f"weights_{paired_exp}",  # each model remembers its own checkpoint
-        help=f"{paired_exp}'s best.pt. Relative to the repository root, or an absolute path. "
+        key=f"weights_{species.key}_{paired_exp}",  # each model remembers its own checkpoint
+        help=f"{paired_exp}'s best.pt. Relative to the project folder, or an absolute path. "
              "Weights are never committed.",
     )
     try:
         weights_path, stat = _checkpoint(weights_input)
         st.caption(f"{weights_path.name} — {stat.st_size / 1e6:.1f} MB")
     except DetectError as exc:
-        st.error(str(exc))
-        st.info(f"{paired_exp}'s best.pt location and sha256 are in "
-                f"`experiments/records/{paired_exp}/run_record.json`. Put the file at "
-                f"`{str(paired_weights).replace(chr(92), '/')}`, or pick another model.")
+        st.error(f"Checkpoint not found for {paired_exp}: `{weights_input}`")
+        st.info(f"Put {paired_exp}'s best.pt at `{str(paired_weights).replace(chr(92), '/')}` "
+                "(relative to the project folder), or type its path above, or pick another model or "
+                f"species. If the run is on record, its sha256 is in "
+                f"`experiments/records/{paired_exp}/run_record.json`.")
         st.stop()
 
     # Optional second model on the same image, at that model's own validated settings.
@@ -178,7 +200,7 @@ with st.sidebar:
     compare_model, compare_path, compare_sweet = None, None, None
     if len(compare_choices) > 1:
         compare_label = st.selectbox(
-            "Compare side by side with", compare_choices, key=f"compare_{paired_exp}",
+            "Compare side by side with", compare_choices, key=f"compare_{species.key}_{paired_exp}",
             help="Runs a second model on the same image, at that model's own validated settings "
                  "(its val-chosen confidence and training size). The sliders below move only the "
                  "first model.",
@@ -187,26 +209,34 @@ with st.sidebar:
             compare_model = MODELS[MODEL_LABELS.index(compare_label)]
             try:
                 compare_path, compare_stat = _checkpoint(str(compare_model.weights))
-                compare_sweet = _sweet_spot(str(compare_path), compare_stat.st_size, compare_stat.st_mtime)
+                compare_sweet = _sweet_spot_of(compare_model, compare_path, compare_stat)
             except DetectError as exc:
                 st.warning(f"No side-by-side: {exc}")
                 compare_model = None
 
     # Validated slider values for THIS checkpoint (sha256 -> experiments/records/<id>/).
-    sweet = _sweet_spot(str(weights_path), stat.st_size, stat.st_mtime)
+    sweet = _sweet_spot_of(chosen_model, weights_path, stat)
     if st.session_state.get("sweet_spot_for") != (str(weights_path), stat.st_size, stat.st_mtime):
         _apply_sweet_spot(sweet)  # new checkpoint (or first run): start at its sweet spot
         st.session_state["sweet_spot_for"] = (str(weights_path), stat.st_size, stat.st_mtime)
     if sweet.known:
         st.caption(f"Recognised as **{sweet.experiment_id}** from its sha256.")
         trained_on = checkpoint_image_source(sweet.experiment_id)
-        if trained_on and trained_on != source:
+        if trained_on in (RAW_SOURCE, ENHANCED_SOURCE) and source in (RAW_SOURCE, ENHANCED_SOURCE) \
+                and trained_on != source:
             st.warning(f"{sweet.experiment_id} was trained on {trained_on} images, but "
                        f"{'enhanced' if enhanced else 'raw'} images are shown. This pairing was never "
                        f"evaluated; {paired_exp} is the matching model.")
+        if sweet.conf_declared:
+            st.caption("Its confidence setting is declared in configs/gui_species.json, not read from "
+                       "an evaluation record.")
+    elif sweet.conf_declared:
+        st.info("This checkpoint is not in experiments/records. Its slider values are the ones its "
+                "owner declared in configs/gui_species.json.")
     else:
-        st.warning("This checkpoint is not in experiments/records, so its sliders start at E001's "
-                   "settings, which were not validated for it.")
+        st.warning("This checkpoint is not in experiments/records and no settings are declared for it, "
+                   "so its sliders start at the lobster baseline E001's settings, which were not "
+                   "validated for it.")
 
     st.header("Detection settings")
     st.button("Reset to sweet spot", on_click=_apply_sweet_spot, args=(sweet,), width="stretch",
@@ -215,7 +245,7 @@ with st.sidebar:
         IMGSZ_CHOICES = sorted(IMGSZ_CHOICES + [sweet.imgsz])
     conf = st.slider(
         "Confidence threshold", 0.01, 0.99, step=0.01, key="conf",
-        help=f"Sweet spot {sweet.conf}: {sweet.conf_source} Lower finds more lobsters and invents more.",
+        help=f"Sweet spot {sweet.conf}: {sweet.conf_source} Lower finds more {ANIMAL}s and invents more.",
     )
     iou = st.slider("NMS IoU", 0.1, 0.95, step=0.05, key="iou",
                     help=f"Sweet spot {IOU_SOURCE} How much two boxes may overlap before one is "
@@ -227,7 +257,8 @@ with st.sidebar:
 
     st.header("Ground truth")
     show_truth = st.checkbox("Overlay labelled boxes", value=True,
-                             help="Available for the built splits only. zExtra has no labels.")
+                             help="Available where label files exist (the labelled splits and sample "
+                                  "folders). Unlabelled sources such as zExtra have none.")
     match_iou = st.slider("Match IoU", 0.1, 0.95, step=0.05, key="match_iou",
                           help=f"Sweet spot {MATCH_IOU_SOURCE} How much a prediction must overlap a "
                                "labelled box to count as the same object, for the per-image "
@@ -244,7 +275,7 @@ with st.sidebar:
         st.caption("✓ All sliders at the validated sweet spot.")
 
     st.header("What this cannot tell you")
-    for item in LIMITATIONS:
+    for item in species.limitations:
         st.caption(f"• {item}")
 
 tab_browse, tab_upload = st.tabs(["Browse a source", "Upload an image"])
@@ -252,21 +283,24 @@ tab_browse, tab_upload = st.tabs(["Browse a source", "Upload an image"])
 image = None
 image_name = ""
 image_path: Path | None = None
+kind, name = "", ""
 
 with tab_browse:
-    label = st.radio("Source", list(SOURCES), horizontal=False, key="source")
-    kind, name = SOURCES[label]
-
-    if kind == "raw":
-        st.markdown(
-            "**zExtra** is the one set the model has never seen in any form — excluded from every "
-            "dataset version, never labelled, never trained on, never evaluated (D-003). It is the "
-            "honest answer to *how does this behave on data it has never met*. There is no ground "
-            "truth here, so a miss and a correct rejection look identical."
-        )
+    paths: list[str] = []
+    if not species.sources:
+        st.info(f"No image source is configured for {species.label}. Use the Upload tab, or add a "
+                "folder source for this species in configs/gui_species.json.")
     else:
-        (st.warning if name in HELD_OUT_SPLITS else st.info)(f"**{name} split** — {SPLIT_STATUS[name]}")
-        if name in HELD_OUT_SPLITS and abs(conf - sweet.conf) > 1e-9:
+        source_labels = [s.label for s in species.sources]
+        picked = species.sources[source_labels.index(
+            st.radio("Source", source_labels, horizontal=False, key=f"source_{species.key}"))]
+        kind, name = picked.kind, picked.name
+
+        if kind == "split":
+            (st.warning if picked.held_out else st.info)(f"**{name} split** — {picked.note}")
+        elif picked.note:
+            (st.warning if picked.held_out else st.markdown)(picked.note)
+        if picked.held_out and abs(conf - sweet.conf) > 1e-9:
             who = sweet.experiment_id or "the model"
             st.error(
                 f"The confidence slider is at {conf:.2f}, not {who}'s frozen operating point "
@@ -275,16 +309,15 @@ with tab_browse:
                 "is forbidden (CLAUDE.md rule 7). Choose thresholds on val."
             )
 
-    try:
-        paths = _images(kind, name)
-    except DetectError as exc:
-        paths = []
-        st.warning(str(exc))
+        try:
+            paths = _images(kind, name)
+        except DetectError as exc:
+            st.warning(str(exc))
 
     if paths:
         names = [Path(p).name for p in paths]
         chosen_name = st.selectbox(
-            f"Image ({len(paths)} available)", names, key=f"pick_{kind}_{name}",
+            f"Image ({len(paths)} available)", names, key=f"pick_{species.key}_{kind}_{name}",
             help="Type to filter. Filenames start with the session ID.",
         )
         chosen = Path(paths[names.index(chosen_name)])
@@ -325,7 +358,9 @@ if image is None:
     st.stop()
 
 truth = None
-if image_path is not None and kind == "split":  # raw sources (zExtra) have no label files
+# Raw sources (zExtra) have no label files. A folder source has them only when it follows the
+# images/ <-> labels/ convention of the built splits.
+if image_path is not None and (kind == "split" or (kind == "folder" and "images" in image_path.parts)):
     try:
         truth = load_ground_truth(image_path, image.width, image.height)
     except DetectError as exc:  # a malformed label file must be visible, not silently ignored
@@ -414,7 +449,7 @@ else:
         else:
             st.info(
                 "Nothing above the threshold. Lower it to see what the model considered and rejected — "
-                "absence here is not evidence that no lobster is present."
+                f"absence here is not evidence that no {ANIMAL} is present."
             )
 
 rows = detections_csv_rows(detections, image_name, conf, imgsz)

@@ -1,0 +1,18 @@
+# GUI environment for this folder (scripts/gui_app.py). CPU inference; no GPU needed.
+#
+#   python3 -m venv .venv
+#   source .venv/bin/activate                 (Windows: .venv\Scripts\activate)
+#   python -m pip install --upgrade pip
+#   python -m pip install torch==2.14.0 torchvision==0.29.0
+#   python -m pip install -r requirements-gui.txt
+#
+# macOS: the normal PyPI torch wheel is the right one (no CUDA to avoid).
+# Windows / Linux without an NVIDIA GPU: add  --index-url https://download.pytorch.org/whl/cpu
+# to the torch line, otherwise pip downloads about 2.5 GB of CUDA libraries.
+#
+# torch 2.14.0 / torchvision 0.29.0 are the versions the lobster results were checked with on
+# Windows. If pip cannot find exactly these for this machine, install the newest torch and
+# torchvision instead; keep ultralytics pinned, because the checkpoints were trained with it.
+
+ultralytics==8.4.155
+streamlit==1.64.0
