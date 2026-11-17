@@ -6,6 +6,10 @@
 Reads experiments/registry.csv, experiments/records/ and data/processed/v4/mixed_manifest.csv;
 writes docs/reports/final_report_data.md, docs/reports/final_report_experiments.csv and
 docs/reports/figures/final_*.png. CPU, a few seconds. Deterministic: same records -> same files.
+
+    .venv/Scripts/python scripts/make_final_report.py --lobster-only --out docs/reports/lobster_only
+
+writes the lobster-only copy that scripts/export_gui_bundle.py ships (no other species' runs).
 """
 
 import argparse
@@ -23,9 +27,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", type=Path, default=PROJECT_ROOT, help="repository root (inputs)")
     parser.add_argument("--out", type=Path, default=PROJECT_ROOT / "docs" / "reports")
+    parser.add_argument("--lobster-only", action="store_true",
+                        help="leave out the other species' runs (the copy shipped in the GUI bundle)")
     args = parser.parse_args()
     try:
-        report = build_final_report(args.root, args.out)
+        report = build_final_report(args.root, args.out, lobster_only=args.lobster_only)
     except ReportError as e:
         print(f"REPORT NOT BUILT: {e}")
         sys.exit(1)

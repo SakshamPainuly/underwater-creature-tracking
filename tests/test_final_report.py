@@ -84,6 +84,19 @@ class FinalReportFromCommittedFiles(unittest.TestCase):
             self.assertIn(heading, md)
         self.assertNotRegex(md, r"\d\s?(cm|mm)\b|\d\s(m|m/s)\b")  # rule 9: no physical units ("yolo26m" is fine)
 
+    def test_lobster_only_copy_leaves_out_the_other_species(self):
+        md = render_markdown(self.inputs, lobster_only=True)
+        rows = experiments_rows(self.inputs, lobster_only=True)
+        self.assertNotIn("tritonia", md.lower())
+        self.assertNotIn("Tritonia", {r["group"] for r in rows})
+        self.assertNotIn("## 10.", md)
+        phases = phase_hours(self.inputs, lobster_only=True)
+        self.assertEqual(sum(p["runs"] for p in phases), len(rows))
+        self.assertIn(f"**{sum(p['gpu_hours'] for p in phases):.2f}**", md)  # total recomputed, not edited
+        self.assertEqual(render_markdown(self.inputs), render_markdown(self.inputs, lobster_only=False))
+        for name in FIGURES:
+            self.assertIn(f"figures/{name}", md)
+
     def test_quoted_numbers_are_still_in_their_sources(self):
         for key, quote in QUOTED.items():
             path, text = quote["check"]

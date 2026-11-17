@@ -220,19 +220,21 @@ def v4_exclusions(inputs: dict) -> dict[str, int]:
     return dict(sorted(out.items(), key=lambda kv: (-kv[1], kv[0])))
 
 
-def phase_hours(inputs: dict) -> list[dict[str, Any]]:
+def phase_hours(inputs: dict, lobster_only: bool = False) -> list[dict[str, Any]]:
     rows = []
     for label, exps, platform in PHASES:
+        if lobster_only and exps == TRITONIA:
+            continue
         rows.append({"phase": label, "platform": platform, "runs": len(exps),
                      "gpu_hours": sum(train_hours(inputs, e) for e in exps),
                      "interrupted": sum(interrupted_launches(inputs, e) for e in exps)})
     return rows
 
 
-def experiments_rows(inputs: dict) -> list[dict[str, str]]:
+def experiments_rows(inputs: dict, lobster_only: bool = False) -> list[dict[str, str]]:
     """One row per registered run covered by the pack, for the CSV export (deterministic order)."""
     order = list(V1_BASELINES) + [MODEL_A_FIRST] + [e for runs in ROUND1.values() for e in runs]
-    order += [e for row in ROUND2 for e in row[2:]] + list(TRITONIA)
+    order += [e for row in ROUND2 for e in row[2:]] + ([] if lobster_only else list(TRITONIA))
     group = {e: "v1 baseline" for e in V1_BASELINES}
     group[MODEL_A_FIRST] = "Model A first run"
     group.update({e: "Model A round 1" for runs in ROUND1.values() for e in runs})
@@ -424,9 +426,9 @@ def _mix(a: str, b: str, t: float) -> str:
     return "#" + "".join(f"{round(x + (y - x) * t):02x}" for x, y in zip(ca, cb))
 
 
-def fig_gpu_hours(inputs, path: Path) -> None:
+def fig_gpu_hours(inputs, path: Path, lobster_only: bool = False) -> None:
     plt = _plt()
-    rows = phase_hours(inputs)
+    rows = phase_hours(inputs, lobster_only)
     fig, ax = plt.subplots(figsize=(8.5, 3.6))
     ys = list(range(len(rows)))[::-1]
     for y, row in zip(ys, rows):
@@ -443,9 +445,10 @@ def fig_gpu_hours(inputs, path: Path) -> None:
     _save(fig, path)
 
 
-def make_figures(inputs, fig_dir: Path) -> list[Path]:
+def make_figures(inputs, fig_dir: Path, lobster_only: bool = False) -> list[Path]:
     fig_dir.mkdir(parents=True, exist_ok=True)
-    makers = (fig_round1, fig_round2, fig_training_curves, fig_test_comparison, fig_confusion, fig_gpu_hours)
+    gpu_hours = lambda i, p: fig_gpu_hours(i, p, lobster_only)  # noqa: E731
+    makers = (fig_round1, fig_round2, fig_training_curves, fig_test_comparison, fig_confusion, gpu_hours)
     paths = []
     for name, maker in zip(FIGURES, makers):
         maker(inputs, fig_dir / name)
@@ -461,7 +464,8 @@ def _f4(x: float) -> str:
     return f"{x:.4f}"
 
 
-def render_markdown(inputs: dict, fig_rel: str = "figures") -> str:
+def render_markdown(inputs: dict, fig_rel: str = "figures", lobster_only: bool = False) -> str:
+    """The pack as Markdown. `lobster_only` leaves out the other species' runs (the GUI bundle copy)."""
     reg, tests, sk = inputs["registry"], inputs["tests"], inputs["sk"]
     summ, bar = round1_summary(inputs), round2_bar(inputs)
     fin = tests[FINAL]
@@ -470,7 +474,7 @@ def render_markdown(inputs: dict, fig_rel: str = "figures") -> str:
     cc = {e: test_confusion(tests[e]) for e in TESTED}
     skc = test_confusion(sk)
     e005 = QUOTED["E005_test"]["values"]
-    phases = phase_hours(inputs)
+    phases = phase_hours(inputs, lobster_only)
     lobster_h = sum(r["gpu_hours"] for r in phases if "Tritonia" not in r["phase"])
     all_h = sum(r["gpu_hours"] for r in phases)
     r2_vals = {row[c]: val_map(inputs, row[c]) for row in ROUND2 for c in (2, 3)}
@@ -496,6 +500,10 @@ def render_markdown(inputs: dict, fig_rel: str = "figures") -> str:
       "This is source material for the report and slides, not the report itself. Claims are marked OBSERVED / "
       "INFERRED / LIMITATION (CLAUDE.md §3).")
     w("")
+    if lobster_only:
+        w("*Lobster-only copy (built with `--lobster-only`): the other species' runs and section 10 are left out; "
+          "`docs/EXPERIMENTS.md` and `docs/DECISIONS.md` named below are in the project repository.*")
+        w("")
     w("> **Key numbers (OBSERVED)**")
     w(">")
     w(f"> - **Final model {FINAL}** (YOLO26l, dataset v4, round-2 combination C4) on the held-out v1 test: "
@@ -512,8 +520,12 @@ def render_markdown(inputs: dict, fig_rel: str = "figures") -> str:
     w(f"> - **Tuning:** {sum(len(r) for r in ROUND1.values())} round-1 runs (3 sizes × 3 seeds, 1 skipped for time) "
       f"+ {len(r2_vals)} round-2 runs (5 combinations × 2 sizes); one run cleared the pre-declared bar "
       f"{bar:.5f}: {', '.join(above)}.")
-    w(f"> - **Compute:** {lobster_h:.1f} GPU-hours of recorded training for the lobster detector, "
-      f"{all_h:.1f} including the Tritonia sea-slug runs (completed launches only).")
+    if lobster_only:
+        w(f"> - **Compute:** {lobster_h:.1f} GPU-hours of recorded training for the lobster detector "
+          f"(completed launches only).")
+    else:
+        w(f"> - **Compute:** {lobster_h:.1f} GPU-hours of recorded training for the lobster detector, "
+          f"{all_h:.1f} including the Tritonia sea-slug runs (completed launches only).")
     w("")
 
     # 1 -----------------------------------------------------------------------------------------
@@ -532,8 +544,9 @@ def render_markdown(inputs: dict, fig_rel: str = "figures") -> str:
         ["Model A tuning (Nov 11–13)", "round 1 size × seed, round 2 combinations, E027 selected", "D-038–D-040, D-043"],
         ["Final test (Nov 13)", "E027 on v1 test and Zenodo sk, once each", "D-043"],
         ["E027 val-only evaluation (Nov 16)", "false positives on empty val images, per session / lighting", "D-020"],
+    ] + ([] if lobster_only else [
         ["Tritonia sea slugs (Anu, Nov)", "second species, timelapse, point evaluation", "D-029/D-030, D-033–D-037, D-041/D-042"],
-    ], align="lll"))
+    ]), align="lll"))
     w("")
 
     # 2 -----------------------------------------------------------------------------------------
@@ -596,7 +609,8 @@ def render_markdown(inputs: dict, fig_rel: str = "figures") -> str:
              rows, align="lllrrrrrl"))
     w("")
     w("Not registered: E002 (imgsz 1280, planned, not run), E003 (RT-DETR with AMP: diverged to NaN, rerun as "
-      "E005, D-025), E018 (yolo26l seed 2: not run, round-1 time limit), E009 (Tritonia, run record lost).")
+      "E005, D-025), E018 (yolo26l seed 2: not run, round-1 time limit)"
+      + ("." if lobster_only else ", E009 (Tritonia, run record lost)."))
     w("")
 
     # 4 -----------------------------------------------------------------------------------------
@@ -838,15 +852,16 @@ def render_markdown(inputs: dict, fig_rel: str = "figures") -> str:
     w("")
 
     # 10 ----------------------------------------------------------------------------------------
-    w("## 10. Second species: Tritonia sea slugs (Anu)")
-    w("")
-    tri_h = next(r["gpu_hours"] for r in phases if "Tritonia" in r["phase"])
-    tp = QUOTED["tritonia_test_point_ap"]["values"]
-    w(f"{len(TRITONIA)} registered runs (datasets v3–v8, {tri_h:.1f} GPU-hours), scored by point AP against the "
-      f"clicked MTrackJ crosses (D-033), not by box mAP. Final tests: E006 point AP {tp['E006']} and E010 "
-      f"{tp['E010']} (quoted). The tracking work (T002) was in open PR #27 on 2026-11-13, not yet on the integration "
-      f"branch, so it is not covered here.")
-    w("")
+    if not lobster_only:
+        w("## 10. Second species: Tritonia sea slugs (Anu)")
+        w("")
+        tri_h = next(r["gpu_hours"] for r in phases if "Tritonia" in r["phase"])
+        tp = QUOTED["tritonia_test_point_ap"]["values"]
+        w(f"{len(TRITONIA)} registered runs (datasets v3–v8, {tri_h:.1f} GPU-hours), scored by point AP against "
+          f"the clicked MTrackJ crosses (D-033), not by box mAP. Final tests: E006 point AP {tp['E006']} and E010 "
+          f"{tp['E010']} (quoted). The tracking work (T002) was in open PR #27 on 2026-11-13, not yet on the "
+          f"integration branch, so it is not covered here.")
+        w("")
 
     # 11 ----------------------------------------------------------------------------------------
     w("## 11. Open gaps (UNKNOWN until measured)")
@@ -865,6 +880,7 @@ def render_markdown(inputs: dict, fig_rel: str = "figures") -> str:
     w("")
     w(_table(["number", "value", "source"], [
         [key.replace("_", " "), json.dumps(q.get("values", q.get("value"))), q["source"]] for key, q in QUOTED.items()
+        if not (lobster_only and key.startswith("tritonia"))
     ], align="lll"))
     w("")
     w("Ultralytics' own plots (PR curves, confusion matrices, sample predictions) are off-repo with the run "
@@ -874,19 +890,20 @@ def render_markdown(inputs: dict, fig_rel: str = "figures") -> str:
     return "\n".join(out)
 
 
-def write_experiments_csv(inputs: dict, path: Path) -> None:
-    rows = experiments_rows(inputs)
+def write_experiments_csv(inputs: dict, path: Path, lobster_only: bool = False) -> None:
+    rows = experiments_rows(inputs, lobster_only)
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
 
-def build_final_report(root: Path, out_dir: Path) -> Path:
+def build_final_report(root: Path, out_dir: Path, lobster_only: bool = False) -> Path:
+    """Write the pack to `out_dir`. `lobster_only` leaves out the other species (copy for the GUI bundle)."""
     inputs = load_inputs(root)
     out_dir.mkdir(parents=True, exist_ok=True)
-    make_figures(inputs, out_dir / "figures")
-    write_experiments_csv(inputs, out_dir / "final_report_experiments.csv")
+    make_figures(inputs, out_dir / "figures", lobster_only)
+    write_experiments_csv(inputs, out_dir / "final_report_experiments.csv", lobster_only)
     report = out_dir / "final_report_data.md"
-    report.write_text(render_markdown(inputs), encoding="utf-8")
+    report.write_text(render_markdown(inputs, lobster_only=lobster_only), encoding="utf-8")
     return report
