@@ -1439,3 +1439,93 @@ Short, dated records of project decisions. New dataset versions must reference a
   (test sessions share sites with train sessions; substrate/visibility metadata mostly missing; zExtra excluded).
 - **Consequences:** E020–E029 registered with archived records; docs/EXPERIMENTS.md rows and result updated;
   E027 row in `experiments/final_candidates.csv`. No test evaluation yet. Kaggle use about 9 h for round 2.
+
+## D-045 — Tritonia background-contrast images (bgc1, dataset v9) × model size (yolo26s / m / l): E047–E061 (2026-11-23, proposed)
+- **Status:** proposed by Anu on `anu/tritonia-preproc-size`. The plan was approved by Anu on 2026-11-23 ("yes go
+  ahead"): the bgc1 method as described below, Kaggle data only, the 5-arm × 3-seed grid and the D-041/D-042
+  selection rule. The parameter values in PARAMS were proposed by Claude, not derived from data. Anu has not yet
+  reviewed the wording of this entry. Freezing v9 needs a separate explicit approval (rule 4).
+  - Number: D-044 is taken by the unmerged `anu/tritonia-tracking` branches, so this entry is D-045. Renumber if
+    either collides on `origin/p4/colab-baseline` before the PR (§10).
+- **Context (OBSERVED):**
+  - E010 (v7, yolo26s) is the Tritonia reference: mean val point AP 0.489 over 3 seeds, seed range 0.018 (D-042).
+  - Four training settings (D-042) and 28× more frames from the same days (D-041, v8) gave no evidence of a gain.
+  - Every Tritonia run so far used yolo26s, so model size has never been varied on Tritonia. Image preprocessing
+    has never been tried on Tritonia either (D-017/E004 was lobster images only).
+  - DATASET_TRITONIA.md (2026-11-03): cameras are fixed; frames are 1056 × 480 8-bit grayscale; slugs are about
+    12–20 px. At a clicked point the frame is about +15 grey levels above that pixel's median over distant
+    frames, and the excess is mostly gone 8 frames (2 min) later.
+- **Decision:**
+  1. **Method bgc1** (`src/dataset_audit/tritonia_bgc.py`, `PARAMS`, fixed here and never tuned on val, rule 7).
+     Each frame becomes a 3-channel PNG:
+     - **R:** the original frame.
+     - **G:** `max(0, frame − background) × 4`, clipped to 0–255.
+     - **B:** CLAHE of the frame (clip 1.5, 8 × 8 tiles, D-018's settings, on the whole montage).
+     - **Background:** the per-pixel median of up to 20 other frames of the **same recording day**, taken nearest
+       to the fixed offsets ±20, ±44, …, ±240 frames (±5 min to ±1 h). A frame is used only if it lies within 15
+       frames of its target and at least 20 frames from the frame itself. A frame with fewer than 8 background
+       frames is an error, not a weaker background.
+     - Same-day only and day = split unit, so no frame of another split ever enters a background (rule 5).
+  2. **Background sources (Kaggle, read-only inputs):**
+     - Train days: the batch-2 frames (`uwct-tritonia-v8-inputs/tritonia_label_batch2`; ≥ 5 frames apart,
+       irregular).
+     - Val days: every frame (`uwct-tritonia-tracking-val`).
+     - Test days: every frame (`uwct-tritonia-tracking-test`). Test frames are processed so v9 is complete; they
+       are evaluated only under point 6.
+     - A frame found in two sources must have the same sha256 there. The realised offsets differ by source
+       (sparse train days, dense val/test days). `preprocess_report.json` reports the mean |realised − target|
+       offset per split, so this can be checked.
+  3. **Dataset v9** (`scripts/make_tritonia_bgc_version.py`):
+     - v7's 150 frames, day split (split_manifest.csv byte for byte), label statuses and boxes (label source
+       `tritonia_boxes_fixed2`). Only `image_sha256` changes, and only for a processed frame whose
+       `source_png_sha256` equals v7's.
+     - `parent: null` (a Tritonia lineage), `derived_from: v7`, `preprocessing` (method, params, report sha256).
+       `preprocess_manifest.csv` (neighbour frames per frame) is part of the version.
+     - Built on Kaggle by `notebooks/kaggle_tritonia_preprocess.ipynb` (CPU). The processed frames are uploaded
+       as a private Kaggle dataset (`uwct-tritonia-v9-inputs`, with `tritonia_boxes_fixed2`). The draft is
+       committed and frozen only after approval.
+  4. **Experiments** (each config names one parent and one changed variable; everything else as E010):
+
+     | arm | images | model | seeds 0 / 1 / 2 | parents | changed |
+     |---|---|---|---|---|---|
+     | baseline | v7 | yolo26s | E010 / E042 / E043 (registered, not re-run) | — | — |
+     | M | v7 | yolo26m | E047 / E048 / E049 | E010 / E042 / E043 | model |
+     | L | v7 | yolo26l | E050 / E051 / E052 | E010 / E042 / E043 | model |
+     | S-bgc | v9 | yolo26s | E053 / E054 / E055 | E010 / E042 / E043 | dataset v7 → v9 |
+     | M-bgc | v9 | yolo26m | E056 / E057 / E058 | E047 / E048 / E049 | dataset v7 → v9 |
+     | L-bgc | v9 | yolo26l | E059 / E060 / E061 | E050 / E051 / E052 | dataset v7 → v9 |
+
+     - E047–E052 are committed now.
+     - E053–E061 are committed after v9 is frozen, because a config must name a frozen version and its
+       fingerprint. They are not changed in any other way.
+  5. **Selection** (as D-041/D-042):
+     - Metric: **val point AP** on all 27 val frames, 153 crosses, 10 px one to one, each run at its own best-val-F1
+       threshold, at the run's imgsz (640).
+     - An arm **wins** only if its 3-seed mean exceeds the baseline mean 0.489 by more than the larger of 0.018 and
+       its own seed range. Fewer than 3 finished seeds cannot win.
+     - If several arms win, the highest mean is selected.
+     - The 2 × 3 table (images × size) is reported descriptively; image × size interactions are not a selection
+       rule.
+     - Point P / R / F1, per day, and Ultralytics' val metrics (against the fixed boxes, not accuracy, D-033) are
+       reported next to it.
+  6. **Test:** only if an arm wins. The seed with the highest val point AP is declared in
+     `experiments/final_candidates.csv`. It is tested once, only after a separate user approval, with its own val
+     threshold, and the evaluation is logged. Test never chooses (rule 7). If no arm wins, E010 stays the
+     reference.
+- **LIMITATIONS:**
+  - 27 val frames from 3 days and 5 arms compared on them: the best arm can still be partly chosen by noise.
+  - Different neighbour density between training days (sparse batch-2 frames) and val/test days (every frame)
+    gives slightly different backgrounds; reported, not removed.
+  - A slug that stays still for about an hour fades into the background in G (R still shows it).
+  - The burned-in timestamps change every frame and show up in G. Masking was considered but not done: their
+    pixel positions have not been measured, and guessing them is not allowed. The model sees them as background in
+    every training frame.
+  - At inference (GUI, tracking) a frame needs its day's neighbouring frames. A single uploaded image cannot be
+    processed the same way.
+  - All days are from one setup: results measure new days, not new sites. Point precision is a lower bound (D-029).
+- **Consequences:**
+  - New: `src/dataset_audit/tritonia_bgc.py`, `scripts/preprocess_tritonia_bgc.py`,
+    `scripts/make_tritonia_bgc_version.py`, `tests/test_tritonia_bgc.py`, configs E047–E052,
+    `notebooks/kaggle_tritonia_preprocess.ipynb`, docs/EXPERIMENTS.md declaration and rows.
+  - Later, after approvals: v9 frozen, E053–E061, the GPU training notebook.
+  - No change to v1–v8, E010 or earlier results.

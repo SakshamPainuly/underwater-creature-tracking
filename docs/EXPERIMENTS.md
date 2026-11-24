@@ -78,6 +78,21 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E044 | `configs/experiments/E044_seaslug_ep200_seed0.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-042 arm A, together the stopping rule); dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 176 epochs; registered; val point AP 0.435; not a final candidate (D-042: no arm wins) |
 | E045 | `configs/experiments/E045_seaslug_ep200_seed1.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-042 arm A, together the stopping rule); seed 0 → 1; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 97 epochs; registered; val point AP 0.494; not a final candidate (D-042: no arm wins) |
 | E046 | `configs/experiments/E046_seaslug_ep200_seed2.yaml` | E010 | train_args.epochs 100 → 200 and patience 30 → 50 (D-042 arm A, together the stopping rule); seed 0 → 2; dataset v7, otherwise as E010 | completed 2026-11-12 on Kaggle (Tesla T4, one of two in parallel); 165 epochs; registered; val point AP 0.463; not a final candidate (D-042: no arm wins) |
+| E047 | `configs/experiments/E047_seaslug_m_seed0.yaml` | E010 | model yolo26s.pt → yolo26m.pt only (D-045 arm M); dataset v7, seed 0, otherwise as E010 | planned; not run |
+| E048 | `configs/experiments/E048_seaslug_m_seed1.yaml` | E042 | model yolo26s.pt → yolo26m.pt only (D-045 arm M); dataset v7, seed 1, otherwise as E010 | planned; not run |
+| E049 | `configs/experiments/E049_seaslug_m_seed2.yaml` | E043 | model yolo26s.pt → yolo26m.pt only (D-045 arm M); dataset v7, seed 2, otherwise as E010 | planned; not run |
+| E050 | `configs/experiments/E050_seaslug_l_seed0.yaml` | E010 | model yolo26s.pt → yolo26l.pt only (D-045 arm L); dataset v7, seed 0, otherwise as E010 | planned; not run |
+| E051 | `configs/experiments/E051_seaslug_l_seed1.yaml` | E042 | model yolo26s.pt → yolo26l.pt only (D-045 arm L); dataset v7, seed 1, otherwise as E010 | planned; not run |
+| E052 | `configs/experiments/E052_seaslug_l_seed2.yaml` | E043 | model yolo26s.pt → yolo26l.pt only (D-045 arm L); dataset v7, seed 2, otherwise as E010 | planned; not run |
+| E053 | config after v9 is frozen (D-045 point 4) | E010 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 0 | planned; config not yet committed |
+| E054 | config after v9 is frozen (D-045 point 4) | E042 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 1 | planned; config not yet committed |
+| E055 | config after v9 is frozen (D-045 point 4) | E043 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 2 | planned; config not yet committed |
+| E056 | config after v9 is frozen (D-045 point 4) | E047 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 0 | planned; config not yet committed |
+| E057 | config after v9 is frozen (D-045 point 4) | E048 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 1 | planned; config not yet committed |
+| E058 | config after v9 is frozen (D-045 point 4) | E049 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 2 | planned; config not yet committed |
+| E059 | config after v9 is frozen (D-045 point 4) | E050 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 0 | planned; config not yet committed |
+| E060 | config after v9 is frozen (D-045 point 4) | E051 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 1 | planned; config not yet committed |
+| E061 | config after v9 is frozen (D-045 point 4) | E052 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 2 | planned; config not yet committed |
 
 **Model A tuning E011–E024 (D-038), declared 2026-11-11 before any of these runs:** the selection metric
 is **val mAP50-95** (class `lobster`), at both levels: Ultralytics picks each run's `best.pt` on it (in
@@ -179,6 +194,28 @@ the seed with the highest val point AP is the candidate; a test of it only after
 once with its own val threshold and reported beside E006's and E010's (test never chooses). LIMITATIONS: 27 val
 frames from 3 days; added frames are 75 s apart and partly redundant; unclicked slugs in added frames are
 background examples (D-029).
+
+**Tritonia background-contrast images × model size E047–E061 (D-045), declared 2026-11-23 before any of these runs:**
+five arms, each 3 seeds:
+- M: yolo26m on v7 (E047–E049).
+- L: yolo26l on v7 (E050–E052).
+- S-bgc / M-bgc / L-bgc: yolo26s / m / l on v9, which is v7 with bgc1 images: original / brighter-than-background
+  / CLAHE channels (E053–E055, E056–E058, E059–E061).
+- Each run changes one variable from its parent (model, or dataset v7 → v9); everything else is as E010.
+
+Reference = the D-042 baseline (E010, E042, E043: mean val point AP 0.489, seed range 0.018), not re-run.
+
+Selection metric and rule as D-041/D-042:
+- **Val point AP** on all 27 val frames, 153 crosses, 10 px one to one, each run at its own best-val-F1 threshold.
+- An arm wins only if its **3-seed mean** exceeds 0.489 by more than the larger of 0.018 and its own seed range.
+- Several winners → the highest mean. Fewer than 3 finished seeds cannot win.
+- The images × size table is descriptive only.
+- If an arm wins, its seed with the highest val point AP is the candidate. It is tested once, only after a separate
+  user approval; test never chooses.
+
+LIMITATIONS:
+- Five arms compared on 27 val frames from 3 days.
+- Backgrounds use sparser neighbour frames on training days than on val/test days (D-045).
 
 E001–E003 and E005 use frozen dataset v1 (fingerprint `9f2bf8573df4354e1373786967a1155802e4cdbfe127e1f07fd3fdb1983ef810`).
 E004 uses dataset v2 (fingerprint `8a0d4194d1f7fb3972ad33b09cf570988aebb5350c5d856851056c961528626e`):
