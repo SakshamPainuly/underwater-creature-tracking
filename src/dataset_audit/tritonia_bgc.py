@@ -45,7 +45,8 @@ PARAMS = {
     "window_frames": 240,        # 1 h on each side: follows slow lighting changes
     "n_per_side": 10,            # up to 20 neighbours
     "target_tol_frames": 15,     # nearest available frame within this many frames of a target offset
-    "min_neighbours": 8,         # fewer -> the frame is not processed (error, never a weaker background)
+    "min_neighbours": 7,         # fewer -> the frame is not processed (error, never a weaker background);
+                                 # 8 -> 7 before any image was made (D-045 amendment): one training frame had 7
     "gain": 4.0,                 # +15 grey levels -> 60
     "clahe_clip": 1.5,
     "clahe_tiles": 8,

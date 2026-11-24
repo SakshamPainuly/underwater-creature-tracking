@@ -1463,7 +1463,7 @@ Short, dated records of project decisions. New dataset versions must reference a
      - **B:** CLAHE of the frame (clip 1.5, 8 × 8 tiles, D-018's settings, on the whole montage).
      - **Background:** the per-pixel median of up to 20 other frames of the **same recording day**, taken nearest
        to the fixed offsets ±20, ±44, …, ±240 frames (±5 min to ±1 h). A frame is used only if it lies within 15
-       frames of its target and at least 20 frames from the frame itself. A frame with fewer than 8 background
+       frames of its target and at least 20 frames from the frame itself. A frame with fewer than 7 background
        frames is an error, not a weaker background.
      - Same-day only and day = split unit, so no frame of another split ever enters a background (rule 5).
   2. **Background sources (Kaggle, read-only inputs):**
@@ -1512,6 +1512,15 @@ Short, dated records of project decisions. New dataset versions must reference a
      `experiments/final_candidates.csv`. It is tested once, only after a separate user approval, with its own val
      threshold, and the evaluation is logged. Test never chooses (rule 7). If no arm wins, E010 stays the
      reference.
+- **Amendment (2026-11-23, before any image was made and before any run; approved by Anu, "go with option 1"):**
+  - `min_neighbours` 8 → 7, for all frames.
+  - Reason (OBSERVED): the Kaggle plan-only run at commit `8c78cab` failed on one frame only. That frame is
+    `20130522all_15spf_t0791.png` (a training day), with 7 background frames; the batch-2 frames are irregular there.
+    Every other frame already had at least 8.
+  - Effect: the rule only rejects frames, so the change admits this one frame and changes nothing else.
+  - Alternatives not taken: a wider tolerance would change many backgrounds; dropping the frame would break "v7's
+    frames, only the images change"; more frames from the TIFF stack are not on Kaggle.
+  - Not chosen on val or on any result (rule 7).
 - **LIMITATIONS:**
   - 27 val frames from 3 days and 5 arms compared on them: the best arm can still be partly chosen by noise.
   - Different neighbour density between training days (sparse batch-2 frames) and val/test days (every frame)

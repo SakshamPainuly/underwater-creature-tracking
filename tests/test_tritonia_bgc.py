@@ -101,6 +101,10 @@ class OffsetsTest(unittest.TestCase):
     def test_never_uses_close_frames_or_itself_and_fails_when_too_few(self):
         with self.assertRaisesRegex(T.TritoniaError, "only 0 background frames"):
             B.pick_neighbours(100, [95, 99, 100, 101, 110, 119])
+        seven = [1000 + o for o in B.target_offsets()[:7]]  # exactly 7 usable frames: enough (D-045 amendment)
+        self.assertEqual(len(B.pick_neighbours(1000, seven)), 7)
+        with self.assertRaisesRegex(T.TritoniaError, "only 6 background frames"):
+            B.pick_neighbours(1000, seven[:6])
         start = B.pick_neighbours(1, list(range(1, 400)))  # day start: one side only
         self.assertEqual(len(start), B.PARAMS["n_per_side"])
         self.assertTrue(all(a > 1 for _, a in start))
