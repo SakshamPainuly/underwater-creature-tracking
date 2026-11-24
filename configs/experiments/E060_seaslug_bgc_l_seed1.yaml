@@ -1,0 +1,22 @@
+# E060 -- D-045 arm L-bgc (v9 bgc1 images, yolo26l), seed 1. GPU only (Kaggle).
+# Everything not listed under "changed" is exactly as in E051 (yolo26l, imgsz 640, 100 epochs, patience 30,
+# batch 16, deterministic, seed 1, Ultralytics defaults otherwise). v9 = v7's frames, split and boxes with bgc1
+# images (R original, G brighter than the day's median background x4, B CLAHE); fingerprint from the Kaggle build
+# at 16922f5, frozen 2026-11-23. workers: 2 pins the 2 dataloader workers of a 4-CPU / 2-GPU Kaggle session.
+# Selection = mean val point AP over 3 seeds (D-045); the training data file has no test split (CLAUDE.md rule 7).
+id: E060
+slug: seaslug_bgc_l_seed1
+parent: E051
+changed: "dataset v7 -> v9 (D-045 arm L-bgc: bgc1 images only; same frames, split and boxes)"
+dataset_version: v9
+dataset_fingerprint: "9bfe2ae5631b4665b90b59f78c0d5531e8486bd3d218ce81428a7d46a5d6f84f"
+model: yolo26l.pt
+ultralytics_version: "8.4.155"
+seed: 1
+train_args:
+  imgsz: 640
+  epochs: 100
+  patience: 30
+  batch: 16
+  deterministic: true
+  workers: 2

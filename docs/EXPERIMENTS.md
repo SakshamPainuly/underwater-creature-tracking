@@ -84,15 +84,15 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E050 | `configs/experiments/E050_seaslug_l_seed0.yaml` | E010 | model yolo26s.pt → yolo26l.pt only (D-045 arm L); dataset v7, seed 0, otherwise as E010 | planned; not run |
 | E051 | `configs/experiments/E051_seaslug_l_seed1.yaml` | E042 | model yolo26s.pt → yolo26l.pt only (D-045 arm L); dataset v7, seed 1, otherwise as E010 | planned; not run |
 | E052 | `configs/experiments/E052_seaslug_l_seed2.yaml` | E043 | model yolo26s.pt → yolo26l.pt only (D-045 arm L); dataset v7, seed 2, otherwise as E010 | planned; not run |
-| E053 | config after v9 is frozen (D-045 point 4) | E010 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 0 | planned; config not yet committed |
-| E054 | config after v9 is frozen (D-045 point 4) | E042 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 1 | planned; config not yet committed |
-| E055 | config after v9 is frozen (D-045 point 4) | E043 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 2 | planned; config not yet committed |
-| E056 | config after v9 is frozen (D-045 point 4) | E047 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 0 | planned; config not yet committed |
-| E057 | config after v9 is frozen (D-045 point 4) | E048 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 1 | planned; config not yet committed |
-| E058 | config after v9 is frozen (D-045 point 4) | E049 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 2 | planned; config not yet committed |
-| E059 | config after v9 is frozen (D-045 point 4) | E050 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 0 | planned; config not yet committed |
-| E060 | config after v9 is frozen (D-045 point 4) | E051 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 1 | planned; config not yet committed |
-| E061 | config after v9 is frozen (D-045 point 4) | E052 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 2 | planned; config not yet committed |
+| E053 | `configs/experiments/E053_seaslug_bgc_s_seed0.yaml` | E010 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 0 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
+| E054 | `configs/experiments/E054_seaslug_bgc_s_seed1.yaml` | E042 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 1 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
+| E055 | `configs/experiments/E055_seaslug_bgc_s_seed2.yaml` | E043 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 2 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
+| E056 | `configs/experiments/E056_seaslug_bgc_m_seed0.yaml` | E047 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 0 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
+| E057 | `configs/experiments/E057_seaslug_bgc_m_seed1.yaml` | E048 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 1 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
+| E058 | `configs/experiments/E058_seaslug_bgc_m_seed2.yaml` | E049 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 2 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
+| E059 | `configs/experiments/E059_seaslug_bgc_l_seed0.yaml` | E050 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 0 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
+| E060 | `configs/experiments/E060_seaslug_bgc_l_seed1.yaml` | E051 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 1 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
+| E061 | `configs/experiments/E061_seaslug_bgc_l_seed2.yaml` | E052 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 2 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
 
 **Model A tuning E011–E024 (D-038), declared 2026-11-11 before any of these runs:** the selection metric
 is **val mAP50-95** (class `lobster`), at both levels: Ultralytics picks each run's `best.pt` on it (in
