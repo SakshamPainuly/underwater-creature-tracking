@@ -1,0 +1,360 @@
+{
+  "schema": "uwct.run_record/1",
+  "created_utc": "2026-11-24T02:47:39+00:00",
+  "kind": "full",
+  "experiment": {
+    "id": "E049",
+    "slug": "seaslug_m_seed2",
+    "parent": "E043",
+    "changed": "model yolo26s.pt -> yolo26m.pt (D-045 arm M: model size only)",
+    "config_path": "configs/experiments/E049_seaslug_m_seed2.yaml",
+    "config_sha256": "3f64e76e4894d3ff382e666c66043978f87bf6ed951f32fbc5c39b01ed758f6a",
+    "config": {
+      "id": "E049",
+      "slug": "seaslug_m_seed2",
+      "parent": "E043",
+      "changed": "model yolo26s.pt -> yolo26m.pt (D-045 arm M: model size only)",
+      "dataset_version": "v7",
+      "dataset_fingerprint": "8ea6503cab38c9fed92f1c5be9d71fae5de6af3d43f17a31d533d8bf7854649a",
+      "model": "yolo26m.pt",
+      "ultralytics_version": "8.4.155",
+      "seed": 2,
+      "train_args": {
+        "imgsz": 640,
+        "epochs": 100,
+        "patience": 30,
+        "batch": 16,
+        "deterministic": true,
+        "workers": 2
+      }
+    }
+  },
+  "run_name": "E049",
+  "run_dir": "/kaggle/working/runs/E049",
+  "git": {
+    "commit": "020ef3a30899a135bf196ef083ce0a440dcf5b54",
+    "branch": "HEAD",
+    "dirty": false,
+    "allow_dirty": false
+  },
+  "dataset": {
+    "version": "v7",
+    "dataset_kind": "tritonia",
+    "status": "frozen",
+    "frozen_registry_verified": true,
+    "fingerprint": "8ea6503cab38c9fed92f1c5be9d71fae5de6af3d43f17a31d533d8bf7854649a",
+    "image_source": "tritonia_label_batch1",
+    "image_manifest_sha256": "e83a6b72e3a1aab73e2b044aa15bac4638c4c86eba06fe6e6420ace9b02840ef",
+    "split_manifest_sha256": "5c44983f742a94cc27ea981119183643e16fb1b2f0d7a94daa5356ff6cba4bc1",
+    "dataset_dir": "/tmp/uwct/data/yolo/tritonia_v7",
+    "splits_used_for_training": [
+      "train",
+      "val"
+    ],
+    "counts": {
+      "train": {
+        "images": 96,
+        "positive": 96,
+        "negative": 0,
+        "instances": 572
+      },
+      "val": {
+        "images": 27,
+        "positive": 27,
+        "negative": 0,
+        "instances": 153
+      }
+    },
+    "class_names": [
+      "lobster",
+      "sea_slug"
+    ],
+    "ultralytics_verification": {
+      "train": {
+        "seen": {
+          "images": 96,
+          "negative": 0,
+          "instances": 572
+        },
+        "match": true
+      },
+      "val": {
+        "seen": {
+          "images": 27,
+          "negative": 0,
+          "instances": 153
+        },
+        "match": true
+      }
+    }
+  },
+  "model": {
+    "name": "yolo26m.pt",
+    "family": "yolo",
+    "checkpoint_path": "/tmp/weights/yolo26m.pt",
+    "checkpoint_sha256": "401cea9ab23ad19246ff7744859816bc599f350e93c9dd30367b6f0a0745d0b7",
+    "in_ultralytics_asset_list": true
+  },
+  "ultralytics_version": "8.4.155",
+  "seed": 2,
+  "train_args": {
+    "imgsz": 640,
+    "epochs": 100,
+    "patience": 30,
+    "batch": 16,
+    "deterministic": true,
+    "workers": 2,
+    "data": "/kaggle/working/runs/E049/data_trainval.yaml",
+    "project": "/kaggle/working/runs/E049",
+    "name": "train",
+    "seed": 2,
+    "exist_ok": false,
+    "val": true,
+    "save": true
+  },
+  "ultralytics_args": {
+    "task": "detect",
+    "mode": "train",
+    "model": "/kaggle/working/runs/E049/train/weights/last.pt",
+    "data": "/kaggle/working/runs/E049/data_trainval.yaml",
+    "epochs": 100,
+    "time": null,
+    "patience": 30,
+    "batch": 16,
+    "imgsz": 640,
+    "save": true,
+    "save_period": -1,
+    "cache": false,
+    "device": "",
+    "workers": 2,
+    "project": "/kaggle/working/runs/E049",
+    "name": "train",
+    "exist_ok": false,
+    "pretrained": true,
+    "cls_remap": true,
+    "optimizer": "auto",
+    "verbose": true,
+    "seed": 2,
+    "deterministic": true,
+    "single_cls": false,
+    "rect": false,
+    "cos_lr": false,
+    "close_mosaic": 10,
+    "resume": "/kaggle/working/runs/E049/train/weights/last.pt",
+    "amp": true,
+    "fraction": 1.0,
+    "profile": false,
+    "freeze": null,
+    "multi_scale": 0.0,
+    "compile": false,
+    "channels_last": null,
+    "overlap_mask": true,
+    "mask_ratio": 4,
+    "dropout": 0.0,
+    "val": true,
+    "split": "val",
+    "save_json": false,
+    "conf": null,
+    "iou": 0.7,
+    "max_det": 300,
+    "quantize": null,
+    "dnn": false,
+    "plots": true,
+    "nms": null,
+    "source": null,
+    "vid_stride": 1,
+    "stream_buffer": false,
+    "visualize": false,
+    "augment": false,
+    "agnostic_nms": false,
+    "classes": null,
+    "retina_masks": false,
+    "embed": null,
+    "show": false,
+    "save_frames": false,
+    "save_txt": false,
+    "save_conf": false,
+    "save_crop": false,
+    "show_labels": true,
+    "show_conf": true,
+    "show_boxes": true,
+    "line_width": null,
+    "format": "torchscript",
+    "keras": false,
+    "optimize": false,
+    "dynamic": false,
+    "simplify": true,
+    "opset": null,
+    "workspace": null,
+    "lr0": 0.01,
+    "lrf": 0.01,
+    "momentum": 0.937,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 3.0,
+    "warmup_momentum": 0.8,
+    "warmup_bias_lr": 0.0,
+    "distill_model": null,
+    "dis": 6.0,
+    "box": 7.5,
+    "cls": 0.5,
+    "cls_pw": 0.0,
+    "dfl": 1.5,
+    "pose": 12.0,
+    "kobj": 1.0,
+    "rle": 1.0,
+    "angle": 1.0,
+    "dlog": 1.0,
+    "dgrad": 0.5,
+    "dlam": 1.0,
+    "nbs": 64,
+    "hsv_h": 0.015,
+    "hsv_s": 0.7,
+    "hsv_v": 0.4,
+    "degrees": 0.0,
+    "translate": 0.1,
+    "scale": 0.5,
+    "shear": 0.0,
+    "perspective": 0.0,
+    "flipud": 0.0,
+    "fliplr": 0.5,
+    "bgr": 0.0,
+    "mosaic": 1.0,
+    "mixup": 0.0,
+    "cutmix": 0.0,
+    "copy_paste": 0.0,
+    "copy_paste_mode": "flip",
+    "auto_augment": "randaugment",
+    "erasing": 0.4,
+    "cfg": null,
+    "tracker": "tracktrack.yaml",
+    "save_dir": "/kaggle/working/runs/E049/train"
+  },
+  "environment": {
+    "timestamp_utc": "2026-11-24T02:16:39+00:00",
+    "os": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "python": "3.13.16",
+    "cpu_count": 4,
+    "torch": "2.11.0+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "cudnn_version": 92700,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      }
+    ],
+    "ultralytics": "8.4.155",
+    "nvidia_smi": [
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      },
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      }
+    ]
+  },
+  "duration": {
+    "launches": [
+      {
+        "mode": "full",
+        "started_utc": "2026-11-24T02:16:39+00:00",
+        "git_commit": "020ef3a30899a135bf196ef083ce0a440dcf5b54",
+        "ended_utc": null,
+        "seconds": null,
+        "outcome": "interrupted"
+      },
+      {
+        "mode": "resume",
+        "started_utc": "2026-11-24T02:39:34+00:00",
+        "git_commit": "020ef3a30899a135bf196ef083ce0a440dcf5b54",
+        "ended_utc": "2026-11-24T02:47:34+00:00",
+        "seconds": 480.0,
+        "outcome": "completed"
+      }
+    ],
+    "train_seconds_recorded": 480.0,
+    "note": "Interrupted launches have no end time; their duration is not included."
+  },
+  "epochs_completed": 100,
+  "outputs": {
+    "best": {
+      "path": "/kaggle/working/runs/E049/train/weights/best.pt",
+      "size": 44004953,
+      "sha256": "e7f92cfc19a2194c8790cb1e1b3bfa15e1e4ec9257008cef23bac81efac467f8"
+    },
+    "last": {
+      "path": "/kaggle/working/runs/E049/train/weights/last.pt",
+      "size": 44004953,
+      "sha256": "9db41f17fb441a9d6334ea380e65baff5dd8a67b0d2bad9d1b5125c685df2159"
+    },
+    "results_csv": {
+      "path": "/kaggle/working/runs/E049/train/results.csv",
+      "size": 12112,
+      "sha256": "a8f997f3bb00f92fee7e9d0c41678d67931328e617f5e46110183ec096d6f2bb"
+    },
+    "ultralytics_args_yaml": {
+      "path": "/kaggle/working/runs/E049/train/args.yaml",
+      "size": 1781,
+      "sha256": "efefdfe21aab99447bbc5691339818a5717074cf7c8a41861cab16f68702c838"
+    }
+  },
+  "val_metrics": {
+    "split": "val",
+    "weights": "best.pt",
+    "precision": 0.41040307283476685,
+    "recall": 0.38562091503267976,
+    "map50": 0.28996352233778183,
+    "map50_95": 0.12855509686052108,
+    "ultralytics_results_dict": {
+      "metrics/precision(B)": 0.41040307283476685,
+      "metrics/recall(B)": 0.38562091503267976,
+      "metrics/mAP50(B)": 0.28996352233778183,
+      "metrics/mAP50-95(B)": 0.12855509686052108,
+      "fitness": 0.12855509686052108
+    },
+    "note": "Ultralytics val defaults (conf=0.001, iou=0.7); operating threshold not chosen yet."
+  },
+  "test_metrics": null,
+  "limitations": [
+    "Tritonia v3 (D-030): 150 frames from one setup over 16 days, split by day; val and test measure new days, not new sites or cameras (docs/DATASET_TRITONIA.md).",
+    "Frames are 15 s apart: sparse-frame/timelapse analysis, not video tracking. No calibration: no physical units.",
+    "Boxes were made by code from the image next to each MTrackJ cross and not reviewed (D-033): about half of the crosses have no box, some boxes are on texture.",
+    "The val metrics in this record (P, R, mAP) are against those automatic boxes, NOT accuracy. Accuracy is point-based against the crosses (scripts/tritonia_point_eval.py, D-033)."
+  ],
+  "environment_at_finalize": {
+    "timestamp_utc": "2026-11-24T02:47:39+00:00",
+    "os": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "python": "3.13.16",
+    "cpu_count": 4,
+    "torch": "2.11.0+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "cudnn_version": 92700,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "vram_gb": 14.56
+      }
+    ],
+    "ultralytics": "8.4.155",
+    "nvidia_smi": [
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      },
+      {
+        "name": "Tesla T4",
+        "memory_total": "15360 MiB",
+        "driver_version": "580.178.04"
+      }
+    ]
+  }
+}

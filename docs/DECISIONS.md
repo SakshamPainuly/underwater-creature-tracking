@@ -1541,6 +1541,21 @@ Short, dated records of project decisions. New dataset versions must reference a
     - removing it would break "v7's frames, only the images change";
     - a brightness-corrected method (bgc2) would change every image and was not needed to answer D-045.
     - The parameters are unchanged.
+- **Run notes, session 1 (OBSERVED, Kaggle, commit `020ef3a`, 2026-11-24; details and results in docs/EXPERIMENTS.md
+  "D-045 session 1"):**
+  - Cell 8 was started, stopped by Anu, and run twice more. Stopping the cell interrupted only the notebook's
+    waiting loop. Its training processes, started from background threads, kept running until they ended.
+  - E047–E055 were left part-trained (epoch 4–58; `last.pt` present). The later attempts refused to reuse their
+    folders, but overwrote their first-launch training logs.
+  - E056–E061 were refused by `train_yolo.py`'s parent check: a parent must be registered before its child runs.
+    Their parents E047–E052 had not run yet. The configs were written without checking this rule.
+  - Recovery (approved by Anu): each of E047–E055 completed with one `train_yolo.py --resume`, then got its val
+    point eval. Every run record lists both launches.
+  - E047–E055 were registered on 2026-11-24 from the downloaded records. E056–E061 run in a second session at a
+    later commit (approved by Anu, 2026-11-24). Their configs and parents are unchanged.
+  - Session-1 result: no arm wins (M 0.385, L 0.425, S-bgc 0.412 vs baseline 0.489).
+  - Notebook fix for session 2: stopping cell 8 now also stops its training processes; a second cell-8 run is
+    refused while a queue is still running; runs already registered at the commit are skipped.
 - **LIMITATIONS:**
   - 27 val frames from 3 days and 5 arms compared on them: the best arm can still be partly chosen by noise.
   - Different neighbour density between training days (sparse batch-2 frames) and val/test days (every frame)
