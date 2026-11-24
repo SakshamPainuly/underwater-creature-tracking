@@ -1521,6 +1521,26 @@ Short, dated records of project decisions. New dataset versions must reference a
   - Alternatives not taken: a wider tolerance would change many backgrounds; dropping the frame would break "v7's
     frames, only the images change"; more frames from the TIFF stack are not on Kaggle.
   - Not chosen on val or on any result (rule 7).
+- **Preprocessing run (OBSERVED, Kaggle, commit `16922f5`, 2026-11-23; numbers from `preprocess_report.json` and
+  `preprocess_manifest.csv`, copied from the notebook output):**
+  - All 150 v7 frames processed, with 7–20 background frames each. Counts of 7–14 are almost all at the start or end
+    of a day, where all background frames lie on one side.
+  - Mean |realised − target offset|: train 2.369, val 0.009, test 0.061 frames.
+  - Mean |frame − background| per frame, median / max: train 3.71 / 39.15; val 2.69 / 6.20; test 4.12 / 7.74.
+  - One clear outlier: `20130530all_15spf_t2164.png` (train) at 39.15, about 10× the train median. It is near the
+    end of its day: of its 11 background frames, 10 lie before it (t 1928–2144) and one after (2188).
+  - One moderate case: `20130522all_15spf_t0026.png` (train) at 15.23, at the start of its day. The next six are
+    7.3–9.6.
+  - The cause of the outlier is UNKNOWN — requires confirmation. HYPOTHESIS: a lighting change near the end of the
+    recording, so the one-sided background shows other lighting.
+  - The G channel of a typical frame (`20130519 t0454`, 3.35, looked at by Anu) also shows large diffuse patches
+    and a second burned-in text overlay at the bottom of each camera, besides the timestamps.
+  - **Handling (Claude's recommendation, left to Claude by Anu: "do whatever you think is appropriate"):** v9 is
+    kept as built, and the outlier is reported, not removed or reprocessed. Reasons:
+    - it is 1 of 96 training frames, and its R and B channels are unaffected;
+    - removing it would break "v7's frames, only the images change";
+    - a brightness-corrected method (bgc2) would change every image and was not needed to answer D-045.
+    - The parameters are unchanged.
 - **LIMITATIONS:**
   - 27 val frames from 3 days and 5 arms compared on them: the best arm can still be partly chosen by noise.
   - Different neighbour density between training days (sparse batch-2 frames) and val/test days (every frame)
