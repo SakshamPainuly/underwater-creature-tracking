@@ -1,0 +1,49 @@
+{
+  "name": "v9",
+  "parent": null,
+  "decision": "D-045",
+  "status": "frozen",
+  "created": "2026-11-24",
+  "dataset_kind": "tritonia",
+  "class_names": [
+    "lobster",
+    "sea_slug"
+  ],
+  "label_source": "tritonia_boxes_fixed2",
+  "label_source_report_sha256": "02946703cd993d05198ea746f7baffe4ca00d7bdbe464607fb07870990e61600",
+  "frame_batch": {
+    "manifest_sha256": "001133cc802deb27650ccb6d2f2b913c9a1e6fc152614237154a2e258c22af95",
+    "seed": 0,
+    "n": 150,
+    "min_gap": 40
+  },
+  "split_rule": {
+    "unit": "recording day",
+    "seed": 0,
+    "n_val": 3,
+    "n_test": 3
+  },
+  "derived_from": "v7",
+  "frame_batch_name": "tritonia_bgc1_v7",
+  "preprocessing": {
+    "method": "bgc1",
+    "params": {
+      "method": "bgc1",
+      "min_offset_frames": 20,
+      "window_frames": 240,
+      "n_per_side": 10,
+      "target_tol_frames": 15,
+      "min_neighbours": 7,
+      "gain": 4.0,
+      "clahe_clip": 1.5,
+      "clahe_tiles": 8,
+      "channels": {
+        "R": "original",
+        "G": "max(0, frame - median background) * gain",
+        "B": "CLAHE(original)"
+      }
+    },
+    "preprocess_report_sha256": "25174344b1ad3dea537d510494d10990b8859363638ecbaf15b97fadddec3b04",
+    "preprocess_manifest_sha256": "71e0159c9f695c5cfd71f2b1782fc723f589d8edd6f8947d59be3352ea5315a7"
+  }
+}
