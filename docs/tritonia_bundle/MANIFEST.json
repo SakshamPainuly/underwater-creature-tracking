@@ -3,9 +3,17 @@
   "created": "2026-11-17",
   "hash": "sha256",
   "files": {
+    "ADD_TO_GUI.md": {
+      "size_bytes": 2115,
+      "sha256": "c6bf8626d95aabf82e33ae9df209e77158db8cf307644373b8d2fc2d3fdd7f57"
+    },
     "AUDIT.md": {
       "size_bytes": 2075,
       "sha256": "903e6e9d51e9f17410025c73346cfb66023eab439ecd47d0505a0f50134404b5"
+    },
+    "REPORT.md": {
+      "size_bytes": 6278,
+      "sha256": "daa13ef21773f47c8770c6673648a21da58399321972db836a997223b7ea3f0c"
     },
     "check_predictions.json": {
       "size_bytes": 8989,
@@ -22,10 +30,6 @@
     "experiments/records/E010/val_eval_record.json": {
       "size_bytes": 1386,
       "sha256": "f13c87ffff4219359afd82f5ee16559cf13c8d138f55a29e07145e9c137c4743"
-    },
-    "REPORT.md": {
-      "size_bytes": 6278,
-      "sha256": "daa13ef21773f47c8770c6673648a21da58399321972db836a997223b7ea3f0c"
     },
     "samples/tritonia/images/test/20130520all_15spf_t0087.png": {
       "size_bytes": 180509,
