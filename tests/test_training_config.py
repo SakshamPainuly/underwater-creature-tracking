@@ -130,7 +130,8 @@ class ValidationTest(unittest.TestCase):
         self.assertFalse(X.mentions_test_split("contest_v2"))
 
     def test_field_rules(self):
-        self.assertInvalid(valid_cfg(dataset_version="v9"), "frozen dataset version")
+        # a name no version will ever have ("v9" was used here until v9 was frozen, D-045)
+        self.assertInvalid(valid_cfg(dataset_version="never_frozen"), "frozen dataset version")
         self.assertInvalid(valid_cfg(ultralytics_version="8.3.0"), "pinned version")
         self.assertInvalid(valid_cfg(model="weights/yolo26s.pt"), "official checkpoint name")
         self.assertInvalid(valid_cfg(seed=True), "non-negative integer")

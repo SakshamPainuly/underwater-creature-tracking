@@ -98,6 +98,18 @@
         "split_manifest.csv": "241ee19bbe79e1050fc30b91f5a8921ae1bcbb3725dab4450ae83aea1c40abe4",
         "VERSION.json": "ea7655367e873f8b628d465f903cb94b095746bc8e32f7cb44bbdb87b8f67fbf"
       }
+    },
+    "v9": {
+      "dir": "v9",
+      "parent": null,
+      "decision": "D-045",
+      "frozen_on": "2026-11-23",
+      "files": {
+        "image_manifest.csv": "8dcb678760e5eb15949cc72d44477ac62f116a26320ba2c1d636c7a75acc1bf7",
+        "preprocess_manifest.csv": "71e0159c9f695c5cfd71f2b1782fc723f589d8edd6f8947d59be3352ea5315a7",
+        "split_manifest.csv": "5c44983f742a94cc27ea981119183643e16fb1b2f0d7a94daa5356ff6cba4bc1",
+        "VERSION.json": "49896276c3c638b4fa5fc6ec919bb691297de5468c10331aa660ba735feabad6"
+      }
     }
   }
 }
