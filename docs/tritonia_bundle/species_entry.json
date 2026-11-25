@@ -1,0 +1,49 @@
+{
+  "key": "tritonia",
+  "label": "Tritonia sea slug",
+  "animal": "sea slug",
+  "icon": "🐌",
+  "models": [
+    {
+      "id": "E010",
+      "label": "E010 — YOLO26s, sea slugs in grayscale 6-camera timelapse frames",
+      "weights": "weights/E010_best.pt",
+      "description": "Trained on 96 frames (572 slugs) from 10 days of one lab/field camera setup, 2013. Boxes are a fixed 20x17 px square on each hand-clicked slug.",
+      "declared_conf": 0.16,
+      "declared_imgsz": 640,
+      "declared_source": "val_eval_record.json, max point F1 on val",
+      "classes_to_show": [
+        1
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "label": "val samples — used for tuning (labelled)",
+      "kind": "folder",
+      "path": "samples/tritonia/images/val",
+      "note": "9 frames from the 3 val days, used to choose the checkpoint and the confidence threshold."
+    },
+    {
+      "label": "test samples — held out (labelled)",
+      "kind": "folder",
+      "path": "samples/tritonia/images/test",
+      "held_out": true,
+      "note": "9 frames from the 3 test days; never used for training or tuning, evaluated once."
+    },
+    {
+      "label": "unseen samples (unlabelled)",
+      "kind": "folder",
+      "path": "samples/tritonia/unlabelled",
+      "note": "10 frames from 2013-05-18, a day with no labels that was in no split; same camera setup."
+    }
+  ],
+  "limitations": [
+    "Only one camera setup: other sites, cameras or colour video are untested.",
+    "Finds about half the slugs: test recall 0.24, precision 0.36 at conf 0.16.",
+    "Much worse on dark or crowded days (val day 2013-05-24 F1 0.15).",
+    "Boxes are fixed-size squares, so box size and shape mean nothing.",
+    "Grayscale timelapse (15 s per frame), not video; no size or speed in real units.",
+    "Class 0 'lobster' is an unused slot; ignore it."
+  ]
+}

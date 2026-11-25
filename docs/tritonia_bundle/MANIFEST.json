@@ -1,0 +1,224 @@
+{
+  "bundle": "tritonia_bundle",
+  "created": "2026-11-17",
+  "hash": "sha256",
+  "files": {
+    "AUDIT.md": {
+      "size_bytes": 2075,
+      "sha256": "903e6e9d51e9f17410025c73346cfb66023eab439ecd47d0505a0f50134404b5"
+    },
+    "check_predictions.json": {
+      "size_bytes": 8989,
+      "sha256": "0660c72afe9256eec902423e804ab76b08eb5551c9acc4d598bc5fe8466c69ba"
+    },
+    "experiments/records/E010/final_test_record.json": {
+      "size_bytes": 1784,
+      "sha256": "e336c98210cd1a8a2a6bad61de8952617f26a8afc2c0a6a26391696c40fc687b"
+    },
+    "experiments/records/E010/run_record.json": {
+      "size_bytes": 3159,
+      "sha256": "e63f9a449e4e6df6c87ca484e93964beefdd406b90b0dfdac1f587e2c5f2ca9b"
+    },
+    "experiments/records/E010/val_eval_record.json": {
+      "size_bytes": 1386,
+      "sha256": "f13c87ffff4219359afd82f5ee16559cf13c8d138f55a29e07145e9c137c4743"
+    },
+    "REPORT.md": {
+      "size_bytes": 6278,
+      "sha256": "daa13ef21773f47c8770c6673648a21da58399321972db836a997223b7ea3f0c"
+    },
+    "samples/tritonia/images/test/20130520all_15spf_t0087.png": {
+      "size_bytes": 180509,
+      "sha256": "c4f7e3fd580a844f303ba05abcc92cd357637173667cde6fe30d8d9c9857f7cf"
+    },
+    "samples/tritonia/images/test/20130520all_15spf_t0895.png": {
+      "size_bytes": 219763,
+      "sha256": "07158ec62854b1e57f1d4ea61de44c7220a1a13864478bb8cf77f7d35ca63915"
+    },
+    "samples/tritonia/images/test/20130520all_15spf_t1363.png": {
+      "size_bytes": 238727,
+      "sha256": "0be0d952fd2b12c954049ff069f34604ed5851d4a94cb62a4016f7bffadbe0ff"
+    },
+    "samples/tritonia/images/test/20130521all_15spf_t0307.png": {
+      "size_bytes": 228012,
+      "sha256": "ccd41c522591d31f8a33169046d5e992e8aa290b32fed3738116193ec1c16973"
+    },
+    "samples/tritonia/images/test/20130521all_15spf_t1011.png": {
+      "size_bytes": 204056,
+      "sha256": "dd23669cd2195b16c7439c98341ac3bd37a98f9b26f60e0749deb0b6b6edfa50"
+    },
+    "samples/tritonia/images/test/20130521all_15spf_t1513.png": {
+      "size_bytes": 188880,
+      "sha256": "15092e15abb708abd849795aee0f98cf626076e85482b529386e06a55f9098b5"
+    },
+    "samples/tritonia/images/test/20130528all_15spf_t0027.png": {
+      "size_bytes": 159902,
+      "sha256": "a6a7f4ba3aa1a0e5fd083f9f4b580ca3ea6743fb887f53a5eabbfc9b50306b2d"
+    },
+    "samples/tritonia/images/test/20130528all_15spf_t0661.png": {
+      "size_bytes": 229385,
+      "sha256": "0844793da6a41fd119c5fc1ae0a184fbe77829dd57d56cc6d07601df0ce052ed"
+    },
+    "samples/tritonia/images/test/20130528all_15spf_t0737.png": {
+      "size_bytes": 233908,
+      "sha256": "87294e5c2c7db1d7bedff74bcc0742d62aada1ce37eb6e2e2d68108752a57f7f"
+    },
+    "samples/tritonia/images/val/20130524all_15spf_t0045.png": {
+      "size_bytes": 148666,
+      "sha256": "87b120f9527313ad1d901d4ed29cec6e1d63182f13aab8b514751d18af23e2d1"
+    },
+    "samples/tritonia/images/val/20130524all_15spf_t1369.png": {
+      "size_bytes": 226419,
+      "sha256": "eaea3e1a789a28e034a96d8ef678beffcda70fbaa9a54e8ed73469b16741930c"
+    },
+    "samples/tritonia/images/val/20130524all_15spf_t2135.png": {
+      "size_bytes": 210066,
+      "sha256": "5ceb59803cd0f46d573927c52d883ea067e4f95db1001473e863b6c256ba6783"
+    },
+    "samples/tritonia/images/val/20130529all_15spf_t1429.png": {
+      "size_bytes": 190315,
+      "sha256": "f1455f3409c2bb78e0622ac18bebea8b17ba05fac5a780001baed14b8260b511"
+    },
+    "samples/tritonia/images/val/20130529all_15spf_t2361.png": {
+      "size_bytes": 217070,
+      "sha256": "41d05677b96ea4fa5e1610cff04f4cdffbdd46c3eea4d96e8ec9e70c3a67082b"
+    },
+    "samples/tritonia/images/val/20130529all_15spf_t2489.png": {
+      "size_bytes": 223889,
+      "sha256": "a348e33ed8b108b9697d77cbc8e85c7cea77f6d1f012082bf1f5ee384c742e52"
+    },
+    "samples/tritonia/images/val/20130602all_15spf_t0307.png": {
+      "size_bytes": 176018,
+      "sha256": "cf8c4b747ff44dda2fe3144460498927e9839166b6423fbd5453c5c349480ef0"
+    },
+    "samples/tritonia/images/val/20130602all_15spf_t1211.png": {
+      "size_bytes": 165509,
+      "sha256": "e1599aa7d8996c0376f38c9e0ec3490668e1d0218089ebddd0ffb6b373afbbb0"
+    },
+    "samples/tritonia/images/val/20130602all_15spf_t1506.png": {
+      "size_bytes": 178336,
+      "sha256": "32f2325659737ce6133372251420fa5ae414114f75ff3c31276045cb73946523"
+    },
+    "samples/tritonia/labels/test/20130520all_15spf_t0087.txt": {
+      "size_bytes": 38,
+      "sha256": "9fcf262a97748494a0f7ecb30b3630776a3aa8d382e64d07d221b048897b684e"
+    },
+    "samples/tritonia/labels/test/20130520all_15spf_t0895.txt": {
+      "size_bytes": 114,
+      "sha256": "936775d64fb27eae8fff86cdb8344bd684e9f2d699e6104add0a206a155370c4"
+    },
+    "samples/tritonia/labels/test/20130520all_15spf_t1363.txt": {
+      "size_bytes": 114,
+      "sha256": "8c749678987a5031705a887cf9fe4857d6686f880db5e2085dbfcd2378661c8c"
+    },
+    "samples/tritonia/labels/test/20130521all_15spf_t0307.txt": {
+      "size_bytes": 38,
+      "sha256": "8d3b3ab21f78fa0f4166559471022896189eb881495315667f3026e983a3ed27"
+    },
+    "samples/tritonia/labels/test/20130521all_15spf_t1011.txt": {
+      "size_bytes": 76,
+      "sha256": "eec8438aed31b90104b54f4e83a615cf958b96d10eae64203394822398b0bd57"
+    },
+    "samples/tritonia/labels/test/20130521all_15spf_t1513.txt": {
+      "size_bytes": 228,
+      "sha256": "b43b631f0204840f61978bb30203f7a756fb75b5cacb4c6319ab41f3c2284896"
+    },
+    "samples/tritonia/labels/test/20130528all_15spf_t0027.txt": {
+      "size_bytes": 114,
+      "sha256": "09494c87ce5104e8a8bb3f64dc49c779c7152597ae6938b70b94486d6ee9854f"
+    },
+    "samples/tritonia/labels/test/20130528all_15spf_t0661.txt": {
+      "size_bytes": 494,
+      "sha256": "62d36319ab447ed047e3937152e6c3dc2cec33b765f1233f4768d06409366cff"
+    },
+    "samples/tritonia/labels/test/20130528all_15spf_t0737.txt": {
+      "size_bytes": 380,
+      "sha256": "c4f7507aaafa827d493c1b6a521ade6b4fe14dfc1c5078b9006557d9a6c9d2c5"
+    },
+    "samples/tritonia/labels/val/20130524all_15spf_t0045.txt": {
+      "size_bytes": 38,
+      "sha256": "578e3082d79b7248da63ebabe5eaa0b2985f40506ba8f17bef5712bbbab61b75"
+    },
+    "samples/tritonia/labels/val/20130524all_15spf_t1369.txt": {
+      "size_bytes": 76,
+      "sha256": "7872f13393d20f9a27b7d79af491f4bb7146b5ccfef49e0ddab9856689e0c212"
+    },
+    "samples/tritonia/labels/val/20130524all_15spf_t2135.txt": {
+      "size_bytes": 114,
+      "sha256": "a3e5398d449d0474d0598552521cef65ef81722782ed4d44b8b9ce120cad8050"
+    },
+    "samples/tritonia/labels/val/20130529all_15spf_t1429.txt": {
+      "size_bytes": 456,
+      "sha256": "81e285af4f49af2210485121e1c6e618b81421afadff89e5a356355c25d62e87"
+    },
+    "samples/tritonia/labels/val/20130529all_15spf_t2361.txt": {
+      "size_bytes": 190,
+      "sha256": "775ce3b598e725104e16dbc52f464fa3fcb8b0eb020857333ab98310b5cf337d"
+    },
+    "samples/tritonia/labels/val/20130529all_15spf_t2489.txt": {
+      "size_bytes": 228,
+      "sha256": "ac33546df97c4b620b76167bb875fbc6e96d60360061295a4466b568bb52a1c6"
+    },
+    "samples/tritonia/labels/val/20130602all_15spf_t0307.txt": {
+      "size_bytes": 266,
+      "sha256": "0802e092f6fcda6334f57d548a89d25352093cba1092fb8931a1dfe0b87f8933"
+    },
+    "samples/tritonia/labels/val/20130602all_15spf_t1211.txt": {
+      "size_bytes": 418,
+      "sha256": "223c19360684af83815fb05759fe6750a0c852bc69b2d0c7c38518c00d018156"
+    },
+    "samples/tritonia/labels/val/20130602all_15spf_t1506.txt": {
+      "size_bytes": 38,
+      "sha256": "2c28567472ee87dde66317fac4af28bf2f12beaf4a912ac43587d054590ab990"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0001.png": {
+      "size_bytes": 202650,
+      "sha256": "4b0b80e747075d1c05a53a7c0a0528c64b1e4b0b5626f3de444f97f856bbe733"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0057.png": {
+      "size_bytes": 192723,
+      "sha256": "90da3800fb05e13dd3b7d3e17594c93387a83eb3e3cf9ee4192f60feabcd386a"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0113.png": {
+      "size_bytes": 204123,
+      "sha256": "a567081e1ed0d0d108d131452ad6deea9c2e1786d8bef1fba0160e38e35bb04b"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0170.png": {
+      "size_bytes": 199102,
+      "sha256": "edb030855ec4f2f4ef3a931c1a5e0cf1bc2488d5f83bece64b70f70384ceb030"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0226.png": {
+      "size_bytes": 198739,
+      "sha256": "3e7aef04085a22101bc3dde8afbb93c34c429ea65a6789efe80c4165edad625b"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0282.png": {
+      "size_bytes": 203101,
+      "sha256": "03949febb42902b76f7a8aead47af6a114e0da1732729d9eda5a32eec361285b"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0338.png": {
+      "size_bytes": 198066,
+      "sha256": "f8449f4885221dec3015b49c03008b06f9ddd946d90bb2627323734cd108c388"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0395.png": {
+      "size_bytes": 186445,
+      "sha256": "f33f5ad23cf8cde546080bc8ce6177ff1bccc69d986ebbafa4eeb03916f0152c"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0451.png": {
+      "size_bytes": 200325,
+      "sha256": "5a5e472648a23cc76946890f703166e63fb7727abd03ec72ff84ff2e8cd93bf8"
+    },
+    "samples/tritonia/unlabelled/20130518all_15spf_t0507.png": {
+      "size_bytes": 240282,
+      "sha256": "14c3adbfc9e12c1392d43d790eceaed286bccdcf4a3037963f3a6db0797d4a4a"
+    },
+    "species_entry.json": {
+      "size_bytes": 1900,
+      "sha256": "96e56c03114a047efaa2144fc399f275a3f0fad2d09f302d395a4a99f3975347"
+    },
+    "weights/E010_best.pt": {
+      "size_bytes": 20291141,
+      "sha256": "48d72b79770bf8085bf70530eae4c71648a0b6c88c1e3580b90ca84e98909ca5"
+    }
+  },
+  "updated": "2026-11-24"
+}
