@@ -1556,6 +1556,15 @@ Short, dated records of project decisions. New dataset versions must reference a
   - Session-1 result: no arm wins (M 0.385, L 0.425, S-bgc 0.412 vs baseline 0.489).
   - Notebook fix for session 2: stopping cell 8 now also stops its training processes; a second cell-8 run is
     refused while a queue is still running; runs already registered at the commit are skipped.
+- **Run notes, session 2 (OBSERVED, Kaggle, commit `06ab2a1`, 2026-11-24; details in docs/EXPERIMENTS.md
+  "D-045 session 2"):**
+  - Smoke runs E056 and E059 passed; cell 8 ran once and queued only E056–E061. Each run finished on its first launch
+    (no stop, no resume) in 7–11 min on one T4; every `best.pt` matches its run record. All 6 registered on 2026-11-24.
+  - Result: M-bgc 0.350 (seed range 0.056), L-bgc 0.393 (0.023) vs baseline 0.489.
+- **Outcome (OBSERVED, by point 5):** no arm wins. Means: L 0.425, S-bgc 0.412, L-bgc 0.393, M 0.385, M-bgc 0.350,
+  all below the baseline 0.489. Per point 6 there is no test, no final candidate, and E010 stays the Tritonia
+  reference. INFERRED, not tested: on 96 training frames the larger models and the bgc1 G channel both add false boxes
+  without matching more crosses.
 - **LIMITATIONS:**
   - 27 val frames from 3 days and 5 arms compared on them: the best arm can still be partly chosen by noise.
   - Different neighbour density between training days (sparse batch-2 frames) and val/test days (every frame)

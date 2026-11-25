@@ -87,12 +87,12 @@ Declared **before** any comparison (CLAUDE.md §5). E001 has been completed and 
 | E053 | `configs/experiments/E053_seaslug_bgc_s_seed0.yaml` | E010 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 0 | completed 2026-11-24 on Kaggle (Tesla T4) after an interrupted first launch and one `--resume` (D-045 run notes); 84 epochs (early stop); registered; val point AP 0.404; not a final candidate (D-045: arm S-bgc does not win) |
 | E054 | `configs/experiments/E054_seaslug_bgc_s_seed1.yaml` | E042 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 1 | completed 2026-11-24 on Kaggle (Tesla T4) after an interrupted first launch and one `--resume` (D-045 run notes); 101 epochs (results.csv repeats epoch 18, the resume point; trained to epoch 100); registered; val point AP 0.423; not a final candidate (D-045: arm S-bgc does not win) |
 | E055 | `configs/experiments/E055_seaslug_bgc_s_seed2.yaml` | E043 | dataset v7 → v9 only (D-045 arm S-bgc: bgc1 images); seed 2 | completed 2026-11-24 on Kaggle (Tesla T4) after an interrupted first launch and one `--resume` (D-045 run notes); 100 epochs; registered; val point AP 0.411; not a final candidate (D-045: arm S-bgc does not win) |
-| E056 | `configs/experiments/E056_seaslug_bgc_m_seed0.yaml` | E047 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 0 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
-| E057 | `configs/experiments/E057_seaslug_bgc_m_seed1.yaml` | E048 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 1 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
-| E058 | `configs/experiments/E058_seaslug_bgc_m_seed2.yaml` | E049 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 2 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
-| E059 | `configs/experiments/E059_seaslug_bgc_l_seed0.yaml` | E050 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 0 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
-| E060 | `configs/experiments/E060_seaslug_bgc_l_seed1.yaml` | E051 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 1 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
-| E061 | `configs/experiments/E061_seaslug_bgc_l_seed2.yaml` | E052 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 2 | planned; not run (v9 frozen 2026-11-23, fingerprint `9bfe2ae5…`) |
+| E056 | `configs/experiments/E056_seaslug_bgc_m_seed0.yaml` | E047 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 0 | completed 2026-11-24 on Kaggle (Tesla T4), session 2, one launch; 100 epochs; registered; val point AP 0.373; not a final candidate (D-045: arm M-bgc does not win) |
+| E057 | `configs/experiments/E057_seaslug_bgc_m_seed1.yaml` | E048 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 1 | completed 2026-11-24 on Kaggle (Tesla T4), session 2, one launch; 100 epochs; registered; val point AP 0.317; not a final candidate (D-045: arm M-bgc does not win) |
+| E058 | `configs/experiments/E058_seaslug_bgc_m_seed2.yaml` | E049 | dataset v7 → v9 only (D-045 arm M-bgc: bgc1 images); seed 2 | completed 2026-11-24 on Kaggle (Tesla T4), session 2, one launch; 77 epochs (early stop); registered; val point AP 0.361; not a final candidate (D-045: arm M-bgc does not win) |
+| E059 | `configs/experiments/E059_seaslug_bgc_l_seed0.yaml` | E050 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 0 | completed 2026-11-24 on Kaggle (Tesla T4), session 2, one launch; 86 epochs (early stop); registered; val point AP 0.395; not a final candidate (D-045: arm L-bgc does not win) |
+| E060 | `configs/experiments/E060_seaslug_bgc_l_seed1.yaml` | E051 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 1 | completed 2026-11-24 on Kaggle (Tesla T4), session 2, one launch; 100 epochs; registered; val point AP 0.404; not a final candidate (D-045: arm L-bgc does not win) |
+| E061 | `configs/experiments/E061_seaslug_bgc_l_seed2.yaml` | E052 | dataset v7 → v9 only (D-045 arm L-bgc: bgc1 images); seed 2 | completed 2026-11-24 on Kaggle (Tesla T4), session 2, one launch; 100 epochs; registered; val point AP 0.381; not a final candidate (D-045: arm L-bgc does not win) |
 
 **Model A tuning E011–E024 (D-038), declared 2026-11-11 before any of these runs:** the selection metric
 is **val mAP50-95** (class `lobster`), at both levels: Ultralytics picks each run's `best.pt` on it (in
@@ -317,6 +317,12 @@ added to `experiments/registry.csv` with `scripts/register_run.py` on the local 
 | E053 | 2026-11-24 | E010 | D-045 arm S-bgc, seed 0 (yolo26s.pt) | v9 | — | — | not mAP (D-033): val point AP 0.404; point P / R / F1 0.478 / 0.431 / 0.454 at conf 0.1; 84 epochs (early stop); first launch interrupted, resumed once (172 s recorded for the resume); best.pt recorded; Kaggle; registered |
 | E054 | 2026-11-24 | E042 | D-045 arm S-bgc, seed 1 (yolo26s.pt) | v9 | — | — | not mAP (D-033): val point AP 0.423; point P / R / F1 0.426 / 0.529 / 0.472 at conf 0.15; 101 epochs (results.csv repeats epoch 18, the resume point; trained to epoch 100); first launch interrupted, resumed once (278 s recorded for the resume); best.pt recorded; Kaggle; registered |
 | E055 | 2026-11-24 | E043 | D-045 arm S-bgc, seed 2 (yolo26s.pt) | v9 | — | — | not mAP (D-033): val point AP 0.411; point P / R / F1 0.493 / 0.444 / 0.467 at conf 0.14; 100 epochs; first launch interrupted, resumed once (305 s recorded for the resume); best.pt recorded; Kaggle; registered |
+| E056 | 2026-11-24 | E047 | D-045 arm M-bgc, seed 0 (yolo26m.pt) | v9 | — | — | not mAP (D-033): val point AP 0.373; point P / R / F1 0.412 / 0.444 / 0.428 at conf 0.13; 100 epochs; one launch (524 s); best.pt recorded; Kaggle; registered |
+| E057 | 2026-11-24 | E048 | D-045 arm M-bgc, seed 1 (yolo26m.pt) | v9 | — | — | not mAP (D-033): val point AP 0.317; point P / R / F1 0.333 / 0.451 / 0.383 at conf 0.05; 100 epochs; one launch (531 s); best.pt recorded; Kaggle; registered |
+| E058 | 2026-11-24 | E049 | D-045 arm M-bgc, seed 2 (yolo26m.pt) | v9 | — | — | not mAP (D-033): val point AP 0.361; point P / R / F1 0.438 / 0.392 / 0.414 at conf 0.16; 77 epochs (early stop); one launch (413 s); best.pt recorded; Kaggle; registered |
+| E059 | 2026-11-24 | E050 | D-045 arm L-bgc, seed 0 (yolo26l.pt) | v9 | — | — | not mAP (D-033): val point AP 0.395; point P / R / F1 0.414 / 0.516 / 0.459 at conf 0.06; 86 epochs (early stop); one launch (552 s); best.pt recorded; Kaggle; registered |
+| E060 | 2026-11-24 | E051 | D-045 arm L-bgc, seed 1 (yolo26l.pt) | v9 | — | — | not mAP (D-033): val point AP 0.404; point P / R / F1 0.532 / 0.431 / 0.476 at conf 0.17; 100 epochs; one launch (650 s); best.pt recorded; Kaggle; registered |
+| E061 | 2026-11-24 | E052 | D-045 arm L-bgc, seed 2 (yolo26l.pt) | v9 | — | — | not mAP (D-033): val point AP 0.381; point P / R / F1 0.492 / 0.405 / 0.444 at conf 0.12; 100 epochs; one launch (647 s); best.pt recorded; Kaggle; registered |
 
 E005 is registered in `experiments/registry.csv`; its run record is archived in `experiments/records/E005/`.
 The archived `run_record.json` was saved from the record printed in the Colab output (2026-10-17), not
@@ -672,6 +678,41 @@ Mean val point F1 per day (20130524 / 20130529 / 20130602; 15 / 77 / 61 crosses)
     interrupted (15, 13, 18). All trained to epoch 100. INFERRED: this is how Ultralytics 8.4.155 writes a resumed
     epoch.
   - 27 val frames from 3 days. Val numbers only (rule 7).
+
+### D-045 session 2: bgc1 m / l, val point scores (E056–E061), and the D-045 outcome
+
+Source (OBSERVED):
+- `d045_results (1).zip` (sha256 `70219e52…`) and `d045_weights (1).zip` (`1ff09bb4…`), downloaded by Anu on 2026-11-24
+  from an interactive Kaggle session (2 × Tesla T4, `notebooks/kaggle_tritonia_bgc_size.ipynb`, commit `06ab2a1`,
+  clean; `code_version.txt`).
+- Every run record names commit `06ab2a1`, dataset v9 (frozen registry verified, fingerprint `9bfe2ae5…`), model and
+  seed; every `best.pt` in the weights zip matches its recorded sha256.
+- All 6 are registered, and their `run_record.json` + `val_point_scores.json` are archived in `experiments/records/E0xx/`.
+- Smoke runs E056 and E059 passed (46 s each). Each run has one launch (`launches.jsonl`: one start, one end); no
+  resume and no interruption. The queue took 29.7 min.
+
+Val point AP (as session 1; the baseline and session-1 arms are repeated from above for the full table):
+
+| arm | images | model | runs (val point AP) | mean | seed range | mean P / R / F1 | mean matched / predictions | rule |
+|---|---|---|---|---:|---:|---|---|---|
+| baseline (D-042) | v7 raw | yolo26s | E010 0.496, E042 0.478, E043 0.493 | **0.489** | 0.018 | 0.621 / 0.455 / 0.520 | 69.7 / 114 | reference |
+| M | v7 raw | yolo26m | E047 0.400, E048 0.371, E049 0.383 | 0.385 | 0.029 | 0.442 / 0.462 / 0.449 | 70.7 / 161.7 | no evidence of a gain |
+| L | v7 raw | yolo26l | E050 0.438, E051 0.416, E052 0.422 | 0.425 | 0.022 | 0.496 / 0.451 / 0.472 | 69.0 / 139.7 | no evidence of a gain |
+| S-bgc | v9 bgc1 | yolo26s | E053 0.404, E054 0.423, E055 0.411 | 0.412 | 0.019 | 0.466 / 0.468 / 0.464 | 71.7 / 155.3 | no evidence of a gain |
+| M-bgc | v9 bgc1 | yolo26m | E056 0.373, E057 0.317, E058 0.361 | 0.350 | 0.056 | 0.394 / 0.429 / 0.408 | 65.7 / 169.7 | no evidence of a gain |
+| L-bgc | v9 bgc1 | yolo26l | E059 0.395, E060 0.404, E061 0.381 | 0.393 | 0.023 | 0.479 / 0.451 / 0.460 | 69.0 / 147.0 | no evidence of a gain |
+
+Mean val point F1 per day (20130524 / 20130529 / 20130602): M-bgc 0.137 / 0.584 / 0.335; L-bgc 0.182 / 0.639 / 0.366.
+
+- **Outcome of D-045 by the declared rule (point 5): no arm wins.** All five arms are below the baseline mean, by
+  0.064 (L) to 0.139 (M-bgc). E010 stays the Tritonia reference. No test (point 6, rule 7).
+- OBSERVED: as in session 1, the bgc arms match about as many crosses as the baseline (65.7 and 69.0 vs 69.7) with
+  more predictions (169.7 and 147.0 vs 114). Within each model size bgc1 is lower than raw (m 0.350 vs 0.385; l 0.393
+  vs 0.425; s 0.412 vs 0.489), and yolo26l is above yolo26m on both image types. These are descriptive only (D-045
+  point 5).
+- OBSERVED: M-bgc has the widest seed range of any Tritonia arm so far (0.056; E057 0.317 at conf 0.05).
+- LIMITATIONS: as session 1, except that these runs were not interrupted. 27 val frames from 3 days; five arms compared
+  on them. Val numbers only (rule 7).
 
 ### Val secondary metrics: E001 vs E004 (D-020)
 
